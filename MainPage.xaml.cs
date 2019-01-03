@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Shapes;
 using static SchemeCreator.Data.Scheme;
 using System;
 using System.Linq;
+using Windows.Foundation;
 
 //Разработать ПО для моделирования простых комбинационных логических схем.
 
@@ -119,8 +120,8 @@ namespace SchemeCreator
                 if ((e.OriginalSource as TextBlock).Text != "IN")
                     return;
 
-                userPoints[1].X = (e.OriginalSource as TextBlock).Margin.Left + dotSize;
-                userPoints[1].Y = (e.OriginalSource as TextBlock).Margin.Top + dotSize;
+                userPoints[1] = new Point((e.OriginalSource as TextBlock).Margin.Left + dotSize,
+                    (e.OriginalSource as TextBlock).Margin.Top + dotSize);
 
                 AddLineStartMode = false;
                 AddLineEndMode = true;
@@ -130,8 +131,8 @@ namespace SchemeCreator
                 if ((e.OriginalSource as TextBlock).Text != "OUT")
                     return;
 
-                userPoints[2].X = (e.OriginalSource as TextBlock).Margin.Left + dotSize;
-                userPoints[2].Y = (e.OriginalSource as TextBlock).Margin.Top + dotSize;
+                userPoints[2] = new Point((e.OriginalSource as TextBlock).Margin.Left + dotSize,
+                    (e.OriginalSource as TextBlock).Margin.Top + dotSize);
 
                 if (userPoints[1] == userPoints[2])
                     return;
@@ -167,8 +168,8 @@ namespace SchemeCreator
             if (!AddGateMode)
                 return;
 
-            userPoints[0].X = (e.OriginalSource as Ellipse).Margin.Left + lineStartOffset;
-            userPoints[0].Y = (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset;
+            userPoints[0] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
+                (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
 
             WorkSpace.Children.Clear();
             Frame.Navigate(typeof(UI.Dialogs.AddElement));
@@ -181,8 +182,8 @@ namespace SchemeCreator
             if (AddLineStartMode)
             {
                 //saving 1st element's X and Y
-                userPoints[1].X = (e.OriginalSource as Ellipse).Margin.Left + lineStartOffset;
-                userPoints[1].Y = (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset;
+                userPoints[1] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
+                    (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
 
                 //switching to next mode
                 AddLineStartMode = false;
@@ -191,8 +192,8 @@ namespace SchemeCreator
             else if (AddLineEndMode)
             {
                 //saving 2nd element's X and Y
-                userPoints[2].X = (e.OriginalSource as Ellipse).Margin.Left + lineStartOffset;
-                userPoints[2].Y = (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset;
+                userPoints[2] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
+                    (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
 
                 if (userPoints[1] == userPoints[2])
                     return;
