@@ -10,20 +10,29 @@ namespace SchemeCreator.Data
         public const int gateWidth = 50;
 
         //data
-        public static List<Gate> gates;
+        public static IList<Gate> gates;
+        public static IList<GateInfo> gateInfo;
 
         //constructor
-        static GateController() => gates = new List<Gate>();
-
-        public static void CreateGate(Point p, string gateName, int newGateInputs)
+        static GateController()
         {
-            Gate gate = new Gate(p, gateName, newGateInputs);
-            gates.Add(gate);
+            gates = new List<Gate>();
+            gateInfo = new List<GateInfo>();
         }
-        public static void CreateInOut(Point p, string gateName)
+
+        //function for creating IN, OUT and gate
+        public static void CreateGate(Point p, string gateName, int newGateInputs) => gates.Add(new Gate(p, gateName, newGateInputs));
+
+        public static void CreateInOut(Point p, string gateName) => gates.Add(new Gate(p, gateName));
+
+        //sync from gateInfo
+        public static void ReloadGates()
         {
-            Gate gate = new Gate(p, gateName);
-            gates.Add(gate);
+            foreach (GateInfo gInfo in gateInfo)
+                if (gInfo.newGateInputs == 0)
+                    CreateInOut(gInfo.point, gInfo.gateName);
+                else
+                    CreateGate(gInfo.point, gInfo.gateName, gInfo.newGateInputs);
         }
     }
 }
