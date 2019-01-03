@@ -7,10 +7,12 @@ namespace SchemeCreator.Data
 {
     public static class DotController
     {
-        public static List<Ellipse> dots;
         private static SolidColorBrush brush;
-        private static int netSize;
-        private static int dotSize;
+        private static int netSize, dotSize;
+        private static double width, heigh;
+
+        public static IList<Ellipse> dots;
+
         static DotController()
         {
             netSize = Scheme.netSize;
@@ -18,10 +20,16 @@ namespace SchemeCreator.Data
             brush = Scheme.darkBrush;
             dots = new List<Ellipse>();
         }
+
         public static void InitNet(double actW, double actH)
         {
-            double stepW = actW / (netSize + 2);
-            double stepH = actH / (netSize + 2);
+            if (width == 0 || heigh == 0)
+            {
+                width = actW;
+                heigh = actH;
+            }                
+            double stepW = width / (netSize + 2);
+            double stepH = heigh / (netSize + 2);
             Thickness margin;
 
             for (int i = 0; i < netSize; i++)
@@ -39,6 +47,7 @@ namespace SchemeCreator.Data
                         Width = dotSize,
                         Fill = brush
                     };
+
                     dots.Add(ellipse);
                 }
         }

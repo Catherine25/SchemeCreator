@@ -9,10 +9,15 @@ namespace SchemeCreator.Data
     {
         //data
         public static List<Line> lines;
+        public static IList<LineInfo> lineInfo;
 
         //constructor
-        static LineController() => lines = new List<Line>();
-        
+        static LineController()
+        {
+            lines = new List<Line>();
+            lineInfo = new List<LineInfo>();
+        }
+
         public static Line CreateLine(Point p1, Point p2)
         {
             Line line = new Line
@@ -37,6 +42,12 @@ namespace SchemeCreator.Data
             else if (value == false)
                 l.Stroke = Scheme.darkBrush;
             l.UpdateLayout();
+        }
+
+        public static void ReloadLines()
+        {
+            foreach (LineInfo lInfo in lineInfo)
+                CreateLine(lInfo.point1, lInfo.point2);
         }
     }
 }

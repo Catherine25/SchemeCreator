@@ -122,7 +122,9 @@
     <Compile Include="Data\DotController.cs" />
     <Compile Include="Data\Gate.cs" />
     <Compile Include="Data\GateController.cs" />
+    <Compile Include="Data\GateInfo.cs" />
     <Compile Include="Data\LineController.cs" />
+    <Compile Include="Data\LineInfo.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

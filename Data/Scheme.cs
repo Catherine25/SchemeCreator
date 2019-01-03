@@ -18,6 +18,7 @@ namespace SchemeCreator.Data
         public static bool AddLineEndMode = false;
         public static bool AddGateMode = false;
         public static bool ChangeValueMode = false;
+        public static bool Subscribed = false;
 
         //data
         public static SolidColorBrush lightBrush, darkBrush;
