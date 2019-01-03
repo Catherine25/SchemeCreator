@@ -32,7 +32,7 @@ namespace SchemeCreator
 {
     public sealed partial class MainPage : Page
     {
-        ///constructor
+        //constructor
         public MainPage()
         {
             InitializeComponent();
@@ -68,6 +68,7 @@ namespace SchemeCreator
                 AddGateMode = false;
             }
         }
+
         //----------------------------------------------------------------------------------------------------------//
         // event handlers for buttons
 
@@ -125,10 +126,16 @@ namespace SchemeCreator
 
                     if (userPoints[1] != userPoints[2])
                     {
-                        Data.LineController.lineInfo.Add(new Data.LineInfo(userPoints[1], userPoints[2]));
-                        WorkSpace.Children.Add(Data.LineController.CreateLine(userPoints[1], userPoints[2]));
+                        foreach (Data.Gate gate in Data.GateController.gates)
+                            if(gate.gateName == e.OriginalSource as TextBlock)
+                                if (!gate.isReserved)
+                                {
+                                    Data.LineController.lineInfo.Add(new Data.LineInfo(userPoints[1], userPoints[2]));
+                                    WorkSpace.Children.Add(Data.LineController.CreateLine(userPoints[1], userPoints[2]));
 
-                        AddLineEndMode = false;
+                                    gate.isReserved = true;
+                                    AddLineEndMode = false;
+                                }
                     }
                 }
             }
@@ -159,7 +166,7 @@ namespace SchemeCreator
 
         private void GateInOut_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            // Function for inputs and outputs of element
+            //function for inputs and outputs of the element
             //has 2 modes
             if (AddLineStartMode)
             {
@@ -208,6 +215,7 @@ namespace SchemeCreator
 
         //----------------------------------------------------------------------------------------------------------//
         // local functions
+
         private void UpdatePage()
         {
             Data.DotController.dots.Clear();
