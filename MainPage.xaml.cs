@@ -35,7 +35,6 @@ namespace SchemeCreator
         public MainPage()
         {
             InitializeComponent();
-            NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
             SizeChanged += MainPage_SizeChanged;
             NewSchemeBt.Click += NewSchemeBt_Click;
@@ -44,41 +43,51 @@ namespace SchemeCreator
             ChangeValueBt.Click += ChangeValueBt_Click;
             WorkBt.Click += WorkBt_Click;
             TraceBt.Click += TraceBt_Click;
+
+            //WorkSpace.DataContext = Data.GateController.gates;
+            WorkSpace.DataContext = Data.DotController.dots;
         }
         //----------------------------------------------------------------------------------------------------------//
         // event handlers for buttons
-        private void ChangeValueBt_Click(object sender, RoutedEventArgs e) => ChangeValueMode = true;
-        private void WorkBt_Click(object sender, RoutedEventArgs e)
-        {
-            bool? value;
-            foreach (Line l in Data.LineController.lines)
-            {
-                //get value from inputs
-                value = Data.Scheme.GetValue(l);
 
-                //send value to outputs
-                SendValue(value, l);
-            }
-                    
-        }
-        private void TraceBt_Click(object sender, RoutedEventArgs e) => throw new NotImplementedException();
+        private void ChangeValueBt_Click(object sender, RoutedEventArgs e) => ChangeValueMode = true;
         private void NewLineBt_Click(object sender, RoutedEventArgs e) => AddLineStartMode = true;
         private void NewElementBt_Click(object sender, RoutedEventArgs e) => AddGateMode = true;
+        private void TraceBt_Click(object sender, RoutedEventArgs e) => throw new NotImplementedException();
+
+        /// <summary>
+        /// Sends signals from outputs to inputs
+        /// </summary>
+        private void WorkBt_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Line l in Data.LineController.lines)
+                SendValue(Data.Scheme.GetValue(l), l); 
+        }
+        
+        /// <summary>
+        /// Provides initialization of grid's dots
+        /// </summary>
         private void NewSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            Data.DotController.InitNet(ActualWidth, ActualHeight);
             if (!SchemeCreated)
             {
+                Data.DotController.InitNet(ActualWidth, ActualHeight);
+
                 foreach (Ellipse ellipse in Data.DotController.dots)
                 {
                     ellipse.Tapped += Dot_Tapped;
                     WorkSpace.Children.Add(ellipse);
                 }
+
                 SchemeCreated = true;
             }
         }
         //----------------------------------------------------------------------------------------------------------//
         // event handlers for objects
+
+        /// <summary>
+        /// Event handler for page update
+        /// </summary>
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (SchemeCreated)
@@ -89,9 +98,21 @@ namespace SchemeCreator
                     Data.GateController.gates[Data.GateController.gates.Count - 1].gateName.Tapped += GateName_Tapped;
                 }
                 else
+                {
                     Data.GateController.CreateGate(userPoints[0], NewElementName, NewGateInputs);
+
+                    foreach (Data.Gate gate in Data.GateController.gates)
+                        foreach (Ellipse ellipse in Data.GateController.gates[Data.GateController.gates.Count - 1].inputEllipse)
+                            ellipse.Tapped += GateInOut_Tapped;
+                }
+
                 AddGateMode = false;
+
                 UpdatePage();
+
+                SubscribeDot(true);
+                SubscribeGateInOut(true);
+                SubscribeInOut(false);
             }
         }
         private void GateName_Tapped(object sender, TappedRoutedEventArgs e)
@@ -102,6 +123,7 @@ namespace SchemeCreator
                 {
                     userPoints[1].X = (e.OriginalSource as TextBlock).Margin.Left + dotSize;
                     userPoints[1].Y = (e.OriginalSource as TextBlock).Margin.Top + dotSize;
+
                     AddLineStartMode = false;
                     AddLineEndMode = true;
                 }
@@ -112,12 +134,13 @@ namespace SchemeCreator
                 {
                     userPoints[2].X = (e.OriginalSource as TextBlock).Margin.Left + dotSize;
                     userPoints[2].Y = (e.OriginalSource as TextBlock).Margin.Top + dotSize;
+
                     if (userPoints[1] != userPoints[2])
                     {
+                        Line l = Data.LineController.CreateLine(userPoints[1], userPoints[2]);
+                        WorkSpace.Children.Add(l);
+
                         AddLineEndMode = false;
-                        Data.LineController.CreateLine(userPoints[1], userPoints[2]);
-                        WorkSpace.Children.Add(Data.LineController.lines[Data.LineController.lines.Count - 1]);
-                        //UpdateLayout();
                     }
                 }
             }
@@ -133,17 +156,30 @@ namespace SchemeCreator
                 ChangeValueMode = false;
             }
         }
+
+        /// <summary>
+        /// dot's event handler 
+        /// </summary>
         private void Dot_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (AddGateMode)
             {
                 userPoints[0].X = (e.OriginalSource as Ellipse).Margin.Left + lineStartOffset;
                 userPoints[0].Y = (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset;
-                WorkSpace.Children.Clear();
+
+                SubscribeDot(false);
+                SubscribeInOut(false);
+                SubscribeGateInOut(false);
+
+                //WorkSpace.Children.Clear();
+
                 Frame.Navigate(typeof(UI.Dialogs.AddElement));
             }
         }
-        ///function for inputs and outputs of element
+
+        ///<summary>
+        /// function for inputs and outputs of element
+        /// </summary>
         private void GateInOut_Tapped(object sender, TappedRoutedEventArgs e)
         {
             //has 2 modes
@@ -165,13 +201,29 @@ namespace SchemeCreator
 
                 if (userPoints[1] != userPoints[2])
                 {
-                    //switching off the mode
-                    AddLineEndMode = false;
+                    //if choosed element is not reserved
+                    foreach (Data.Gate g in Data.GateController.gates)
+                    {
+                        //for IN OUT elements 
+                        if (g.inputEllipse == null)
+                            continue;
 
-                    //creating line
-                    Data.LineController.CreateLine(userPoints[1], userPoints[2]);
-                    //saving it to the current Workspace
-                    WorkSpace.Children.Add(Data.LineController.lines[Data.LineController.lines.Count - 1]);
+                        for (int i = 0; i < g.inputEllipse.Length; i++)
+                            if ((e.OriginalSource as Ellipse) == g.inputEllipse[i])
+                                if (!g.inputReserved[i])
+                                {
+                                    //creating line and saving it to the current grid
+                                    Line l = Data.LineController.CreateLine(userPoints[1], userPoints[2]);
+                                    WorkSpace.Children.Add(l);
+
+                                    UpdateLayout();
+
+                                    //reserving the input
+                                    g.inputReserved[i] = true;
+                                    //switching off the mode
+                                    AddLineEndMode = false;
+                                }
+                    }
                 }
             }
         }
@@ -180,32 +232,33 @@ namespace SchemeCreator
         // local functions
         private void UpdatePage()
         {
+            return;
             //clean up children
             WorkSpace.Children.Clear();
             //lines
             foreach (Line l in Data.LineController.lines)
                 WorkSpace.Children.Add(l);
             //dots
-            SubscribeDot(false);
+            //SubscribeDot(false);
             foreach (Ellipse e in Data.DotController.dots)
                 WorkSpace.Children.Add(e);
-            SubscribeDot(true);
+            //SubscribeDot(true);
             //gates
             foreach(Data.Gate g in Data.GateController.gates)
             {
                 WorkSpace.Children.Add(g.gateRect);
-                SubscribeInOut(false);
+                //SubscribeInOut(false);
                 WorkSpace.Children.Add(g.gateName);
-                SubscribeInOut(true);
+                //SubscribeInOut(true);
                 if (g.gateName.Text != "IN" && g.gateName.Text != "OUT")
                 {
                     //gate out
-                    SubscribeGateInOut(false);
+                    //SubscribeGateInOut(false);
                     WorkSpace.Children.Add(g.outputEllipse);
                     //gate in
                     foreach (Ellipse e in g.inputEllipse)
                         WorkSpace.Children.Add(e);
-                    SubscribeGateInOut(true);
+                    //SubscribeGateInOut(true);
                 }
             }
         }

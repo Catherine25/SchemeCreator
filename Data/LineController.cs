@@ -7,17 +7,13 @@ namespace SchemeCreator.Data
 {
     public static class LineController
     {
+        //data
         public static List<Line> lines;
-        private static double lineStartOffset;
-        private static SolidColorBrush darkBrush, lightBrush;
-        static LineController()
-        {
-            lineStartOffset = Scheme.lineStartOffset;
-            lines = new List<Line>();
-            darkBrush = Scheme.darkBrush;
-            lightBrush = Scheme.lightBrush;
-        }
-        public static void CreateLine(Point p1, Point p2)
+
+        //constructor
+        static LineController() => lines = new List<Line>();
+        
+        public static Line CreateLine(Point p1, Point p2)
         {
             Line line = new Line
             {
@@ -25,17 +21,21 @@ namespace SchemeCreator.Data
                 Y1 = p1.Y,
                 X2 = p2.X,
                 Y2 = p2.Y,
-                StrokeThickness = lineStartOffset,
-                Stroke = darkBrush
+                StrokeThickness = Scheme.lineStartOffset,
+                Stroke = Scheme.darkBrush,
+                StrokeEndLineCap = PenLineCap.Round
             };
+
             lines.Add(line);
+            return line;
         }
+
         public static void ColorLine(Line l, bool? value)
         {
             if (value == true)
-                l.Stroke = lightBrush;
+                l.Stroke = Scheme.lightBrush;
             else if (value == false)
-                l.Stroke = darkBrush;
+                l.Stroke = Scheme.darkBrush;
             l.UpdateLayout();
         }
     }

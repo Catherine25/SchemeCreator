@@ -6,20 +6,25 @@ namespace SchemeCreator.Data
 {
     static class Scheme
     {
-        public static Point[] userPoints;
+        //constants
+        public const int netSize = 8;
+        public const int dotSize = 10;
+        public const double offset = 10.0;
+        public const double lineStartOffset = 5.0;
+
+        //flags
+        public static bool SchemeCreated;
         public static bool AddLineStartMode = false;
         public static bool AddLineEndMode = false;
         public static bool AddGateMode = false;
         public static bool ChangeValueMode = false;
+
         //data
         public static SolidColorBrush lightBrush, darkBrush;
-        public const double offset = 10.0;
-        public const double lineStartOffset = 5.0;
-        public const int netSize = 8;
-        public const int dotSize = 10;
-        public static bool SchemeCreated;
+        public static Point[] userPoints;
         public static int NewGateInputs;
         public static string NewElementName;
+
         //public enum GateId
         //{
         //    IN, OUT,
@@ -28,6 +33,7 @@ namespace SchemeCreator.Data
         //    OR, NOR,
         //    XOR, XNOR
         //};
+
         //constructors
         static Scheme()
         {
@@ -36,6 +42,7 @@ namespace SchemeCreator.Data
             userPoints = new Point[3];
             //GateId gateId = new GateId();
         }
+
         public static bool? GetValue(Line l)
         {
             foreach (Gate g in GateController.gates)
@@ -59,6 +66,7 @@ namespace SchemeCreator.Data
                 }
             return null;
         }
+
         public static void SendValue(bool? value, Line l)
         {
             foreach (Gate g in GateController.gates)
