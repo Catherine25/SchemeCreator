@@ -10,6 +10,7 @@ namespace SchemeCreator.Data
         //this element data
         public Rectangle gateRect;
         public TextBlock gateName;
+        public bool isReserved;
         //inputs data
         public Ellipse[] inputEllipse;
         public bool[] inputReserved;
@@ -57,8 +58,9 @@ namespace SchemeCreator.Data
                 HorizontalAlignment = HorizontalAlignment.Left
             };
 
-            //setting flag to false
+            //setting flags to false
             outputValue = false;
+            isReserved = false;
         }
 
         /// <summary>
