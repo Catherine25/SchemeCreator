@@ -125,6 +125,7 @@
     <Compile Include="Data\GateInfo.cs" />
     <Compile Include="Data\LineController.cs" />
     <Compile Include="Data\LineInfo.cs" />
+    <Compile Include="Data\Tracing.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

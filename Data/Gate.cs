@@ -64,7 +64,7 @@ namespace SchemeCreator.Data
         }
 
         /// <summary>
-        /// Specified constructor for elements extcluding IN and OUT
+        /// Specified constructor for elements excluding IN and OUT
         /// </summary>
         public Gate(Point p, string name, int newGateInputs)
         {
