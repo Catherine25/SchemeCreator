@@ -3,7 +3,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using static SchemeCreator.Data.Scheme;
-using System;
 using System.Linq;
 using Windows.Foundation;
 
@@ -84,7 +83,7 @@ namespace SchemeCreator
         private void ChangeValueBt_Click(object sender, RoutedEventArgs e) => ChangeValueMode = true;
         private void NewLineBt_Click(object sender, RoutedEventArgs e) => AddLineStartMode = true;
         private void NewElementBt_Click(object sender, RoutedEventArgs e) => AddGateMode = true;
-        private void TraceBt_Click(object sender, RoutedEventArgs e) => throw new NotImplementedException();
+        private void TraceBt_Click(object sender, RoutedEventArgs e) => Tracing();
         private void QuitBt_Click(object sender, RoutedEventArgs e) => Application.Current.Exit();
         private void WorkBt_Click(object sender, RoutedEventArgs e)
         {
@@ -120,8 +119,9 @@ namespace SchemeCreator
                 if ((e.OriginalSource as TextBlock).Text != "IN")
                     return;
 
-                userPoints[1] = new Point((e.OriginalSource as TextBlock).Margin.Left + dotSize,
-                    (e.OriginalSource as TextBlock).Margin.Top + dotSize);
+                //saving line start X and Y
+                userPoints[1] = new Point((e.OriginalSource as TextBlock).Margin.Left + lineStartOffset * 2,
+                    (e.OriginalSource as TextBlock).Margin.Top + lineStartOffset * 2);
 
                 AddLineStartMode = false;
                 AddLineEndMode = true;
@@ -131,8 +131,9 @@ namespace SchemeCreator
                 if ((e.OriginalSource as TextBlock).Text != "OUT")
                     return;
 
-                userPoints[2] = new Point((e.OriginalSource as TextBlock).Margin.Left + dotSize,
-                    (e.OriginalSource as TextBlock).Margin.Top + dotSize);
+                //saving line end X and Y
+                userPoints[2] = new Point((e.OriginalSource as TextBlock).Margin.Left + lineStartOffset * 2,
+                    (e.OriginalSource as TextBlock).Margin.Top + lineStartOffset * 2);
 
                 if (userPoints[1] == userPoints[2])
                     return;
@@ -144,6 +145,7 @@ namespace SchemeCreator
                 {
                     Data.LineController.lineInfo.Add(new Data.LineInfo(userPoints[1], userPoints[2]));
                     WorkSpace.Children.Add(Data.LineController.CreateLine(userPoints[1], userPoints[2]));
+
                     gate.isReserved = true;
                     AddLineEndMode = false;
                 }
@@ -168,6 +170,7 @@ namespace SchemeCreator
             if (!AddGateMode)
                 return;
 
+            //saving element X and Y
             userPoints[0] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
                 (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
 
@@ -272,6 +275,14 @@ namespace SchemeCreator
                     e.Tapped += GateInOut_Tapped;
                 }
             }
+        }
+
+        private void Tracing()
+        {
+            Data.Tracing.ShowTracing(); //Testing
+
+            foreach (TextBlock tb in Data.Tracing.textBlocks)
+                WorkSpace.Children.Add(tb);
         }
     }
 }
