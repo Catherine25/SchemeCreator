@@ -27,7 +27,7 @@
         <Button x:Name="OR" Content="OR" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button x:Name="NOR" Content="NOR" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button x:Name="XOR" Content="XOR" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Button x:Name="XNOR" Content="XOR" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Button x:Name="XNOR" Content="XNOR" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button x:Name="Input" Content="Input" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button x:Name="Output" Content="Output" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock x:Name="InputsCount" Text="Inputs count:" Grid.Row="3" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left"/>
