@@ -97,5 +97,32 @@ namespace SchemeCreator.Data
                 }
             }
         }
+
+        public static bool LineConnects(LineInfo li, Gate gate)
+        {
+            if (gate.gateName.Text == "IN" || gate.gateName.Text == "OUT")
+            {
+                if (gate.gateName.Margin.Left + (lineStartOffset * 2) == li.point1.X)
+                    if (gate.gateName.Margin.Top + (lineStartOffset * 2) == li.point1.Y)
+                        return true;
+            }
+            else
+            {
+                if (gate.outputEllipse.Margin.Left + lineStartOffset == li.point1.X)
+                    if (gate.outputEllipse.Margin.Top + lineStartOffset == li.point1.Y)
+                        return true;
+
+                return LineConnectsToGateIn(li, gate);
+            }
+            return false;
+        }
+        public static bool LineConnectsToGateIn(LineInfo li, Gate gate)
+        {
+            foreach (Ellipse ellipse in gate.inputEllipse)
+                if (ellipse.Margin.Left + lineStartOffset == li.point1.X)
+                    if (ellipse.Margin.Top + lineStartOffset == li.point1.Y)
+                        return true;
+            return false;
+        }
     }
 }
