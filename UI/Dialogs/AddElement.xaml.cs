@@ -32,15 +32,15 @@ namespace SchemeCreator.UI.Dialogs
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             if (Input2.IsChecked == true)
-                Data.Scheme.NewGateInputs = 2;
-            if (Input3.IsChecked == true)
-                Data.Scheme.NewGateInputs = 3;
-            if (Input4.IsChecked == true)
-                Data.Scheme.NewGateInputs = 4;
-            if (Input6.IsChecked == true)
-                Data.Scheme.NewGateInputs = 6;
-            if (Input8.IsChecked == true)
-                Data.Scheme.NewGateInputs = 8;
+                Data.NewGateData.inputs = 2;
+            else if (Input3.IsChecked == true)
+                Data.NewGateData.inputs = 3;
+            else if (Input4.IsChecked == true)
+                Data.NewGateData.inputs = 4;
+            else if (Input6.IsChecked == true)
+                Data.NewGateData.inputs = 6;
+            else if (Input8.IsChecked == true)
+                Data.NewGateData.inputs = 8;
 
             if (Input2.IsChecked == true || Input3.IsChecked == true || Input4.IsChecked == true || Input6.IsChecked == true || Input8.IsChecked == true)
                 Frame.Navigate(typeof(MainPage));
@@ -48,15 +48,13 @@ namespace SchemeCreator.UI.Dialogs
 
         private void Buffer_Click(object sender, RoutedEventArgs e)
         {
-            Data.Scheme.NewGateInputs = 1;
-            Data.Scheme.NewElementName = "Buffer";
+            Data.NewGateData.SetAll((int)Data.Scheme.GateId.Buffer, 1);
             Frame.Navigate(typeof(MainPage));
         }
 
         private void NOT_Click(object sender, RoutedEventArgs e)
         {
-            Data.Scheme.NewElementName = "NOT";
-            Data.Scheme.NewGateInputs = 1;
+            Data.NewGateData.SetAll((int)Data.Scheme.GateId.NOT, 1);
             Frame.Navigate(typeof(MainPage));
         }
 
@@ -68,7 +66,7 @@ namespace SchemeCreator.UI.Dialogs
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.Scheme.NewElementName = "AND";
+            Data.NewGateData.id = (int)Data.Scheme.GateId.AND;
         }
 
         private void NAND_Click(object sender, RoutedEventArgs e)
@@ -79,7 +77,7 @@ namespace SchemeCreator.UI.Dialogs
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.Scheme.NewElementName = "NAND";
+            Data.NewGateData.id = (int)Data.Scheme.GateId.NAND;
         }
 
         private void OR_Click(object sender, RoutedEventArgs e)
@@ -90,7 +88,7 @@ namespace SchemeCreator.UI.Dialogs
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.Scheme.NewElementName = "OR";
+            Data.NewGateData.id = (int)Data.Scheme.GateId.OR;
         }
 
         private void NOR_Click(object sender, RoutedEventArgs e)
@@ -101,7 +99,7 @@ namespace SchemeCreator.UI.Dialogs
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.Scheme.NewElementName = "NOR";
+            Data.NewGateData.id = (int)Data.Scheme.GateId.NOR;
         }
 
         private void XOR_Click(object sender, RoutedEventArgs e)
@@ -112,7 +110,7 @@ namespace SchemeCreator.UI.Dialogs
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.Scheme.NewElementName = "XOR";
+            Data.NewGateData.id = (int)Data.Scheme.GateId.XOR;
         }
 
         private void XNOR_Click(object sender, RoutedEventArgs e)
@@ -123,20 +121,18 @@ namespace SchemeCreator.UI.Dialogs
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.Scheme.NewElementName = "XNOR";
+            Data.NewGateData.id = (int)Data.Scheme.GateId.XNOR;
         }
 
         private void Input_Click(object sender, RoutedEventArgs e)
         {
-            Data.Scheme.NewElementName = "IN";
-            Data.Scheme.NewGateInputs = 1;
+            Data.NewGateData.SetAll((int)Data.Scheme.GateId.IN, 1);
             Frame.Navigate(typeof(MainPage));
         }
 
         private void Output_Click(object sender, RoutedEventArgs e)
         {
-            Data.Scheme.NewElementName = "OUT";
-            Data.Scheme.NewGateInputs = 1;
+            Data.NewGateData.SetAll((int)Data.Scheme.GateId.OUT, 1);
             Frame.Navigate(typeof(MainPage));
         }
     }

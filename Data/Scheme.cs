@@ -14,27 +14,26 @@ namespace SchemeCreator.Data
         public const double lineStartOffset = 5.0;
 
         //flags
-        public static bool SchemeCreated = false;
-        public static bool AddLineStartMode = false;
-        public static bool AddLineEndMode = false;
-        public static bool AddGateMode = false;
-        public static bool ChangeValueMode = false;
-        public static bool Subscribed = false;
+        public static bool schemeCreated = false;
+        public static bool addLineStartMode = false;
+        public static bool addLineEndMode = false;
+        public static bool addGateMode = false;
+        public static bool changeValueMode = false;
+        public static bool subscribed = false;
 
         //data
         public static SolidColorBrush lightBrush, darkBrush;
         public static Point[] userPoints;
-        public static int NewGateInputs;
-        public static string NewElementName;
 
-        //public enum GateId
-        //{
-        //    IN, OUT,
-        //    Buffer, NOT,
-        //    AND, NAND,
-        //    OR, NOR,
-        //    XOR, XNOR
-        //};
+        public enum GateId
+        {
+            IN, OUT,
+            Buffer, NOT,
+            AND, NAND,
+            OR, NOR,
+            XOR, XNOR
+        };
+        public static string[] gateNames = { "IN", "OUT", "Buffer", "NOT", "AND", "NAND", "OR", "NOR", "XOR", "XNOR" };
 
         //constructors
         static Scheme()
@@ -42,23 +41,22 @@ namespace SchemeCreator.Data
             lightBrush = new SolidColorBrush(Windows.UI.Colors.Cyan);
             darkBrush = new SolidColorBrush(Windows.UI.Colors.DarkCyan);
             userPoints = new Point[3];
-            //GateId gateId = new GateId();
         }
 
         //gets logic value from gate output or scheme input
         public static bool? GetValue(Line l)
         {
             foreach (Gate g in GateController.gates)
-                if (g.gateName.Text == "IN")
+                if (g.id == (int)GateId.IN)
                 {
-                    if (l.X1 == g.gateName.Margin.Left + dotSize)
-                        if (l.Y1 == g.gateName.Margin.Top + dotSize)
+                    if (l.X1 == g.title.Margin.Left + dotSize)
+                        if (l.Y1 == g.title.Margin.Top + dotSize)
                         {
                             LineController.ColorLine(l, g.outputValue);
                             return g.outputValue;
                         }
                 }
-                else if (g.gateName.Text != "OUT")
+                else if (g.id != (int)GateId.OUT)
                 {
                     if (l.X1 == g.outputEllipse.Margin.Left + lineStartOffset)
                         if (l.Y1 == g.outputEllipse.Margin.Top + lineStartOffset)
@@ -75,17 +73,17 @@ namespace SchemeCreator.Data
         {
             foreach (Gate g in GateController.gates)
             {
-                if(g.gateName.Text == "OUT")
+                if(g.id == (int)GateId.OUT)
                 {
-                    if (l.X2 == g.gateName.Margin.Left + dotSize)
-                        if (l.Y2 == g.gateName.Margin.Top + dotSize)
+                    if (l.X2 == g.title.Margin.Left + dotSize)
+                        if (l.Y2 == g.title.Margin.Top + dotSize)
                         {
                             g.outputValue = value;
                             g.ColorByValue();
                         }
                             
                 }
-                else if (g.gateName.Text != "IN")
+                else if (g.id != (int)GateId.IN)
                 {
                     foreach (Ellipse e in g.inputEllipse)
                     {
@@ -104,10 +102,10 @@ namespace SchemeCreator.Data
         //determines line connection to the gate
         public static bool LineConnects(LineInfo li, Gate gate)
         {
-            if (gate.gateName.Text == "IN" || gate.gateName.Text == "OUT")
+            if (gate.id == (int)GateId.IN || gate.id == (int)GateId.OUT)
             {
-                if (gate.gateName.Margin.Left + (lineStartOffset * 2) == li.point1.X)
-                    if (gate.gateName.Margin.Top + (lineStartOffset * 2) == li.point1.Y)
+                if (gate.title.Margin.Left + (lineStartOffset * 2) == li.point1.X)
+                    if (gate.title.Margin.Top + (lineStartOffset * 2) == li.point1.Y)
                         return true;
             }
             else

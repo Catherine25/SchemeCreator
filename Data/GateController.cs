@@ -21,18 +21,18 @@ namespace SchemeCreator.Data
         }
 
         //function for creating IN, OUT and gate
-        public static void CreateGate(Point p, string gateName, int newGateInputs) => gates.Add(new Gate(p, gateName, newGateInputs));
+        public static void CreateGate(Point p, int id, int newGateInputs, bool[] isInputsReserved) => gates.Add(new Gate(p, newGateInputs, id, isInputsReserved));
 
-        public static void CreateInOut(Point p, string gateName) => gates.Add(new Gate(p, gateName));
+        public static void CreateInOut(Point p, int id, bool isReserved) => gates.Add(new Gate(p, id, isReserved));
 
         //sync from gateInfo
         public static void ReloadGates()
         {
             foreach (GateInfo gInfo in gateInfo)
-                if (gInfo.newGateInputs == 0)
-                    CreateInOut(gInfo.point, gInfo.gateName);
+                if (gInfo.id == (int)Scheme.GateId.IN || gInfo.id == (int)Scheme.GateId.OUT)
+                    CreateInOut(gInfo.point, gInfo.id, gInfo.isInputsReserved[0]);
                 else
-                    CreateGate(gInfo.point, gInfo.gateName, gInfo.newGateInputs);
+                    CreateGate(gInfo.point, gInfo.id, gInfo.newGateInputs, gInfo.isInputsReserved);
         }
     }
 }

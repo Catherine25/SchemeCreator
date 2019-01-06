@@ -5,14 +5,16 @@ namespace SchemeCreator.Data
     public class GateInfo
     {
         public Point point;
-        public string gateName;
+        public int id;
         public int newGateInputs;
+        public bool[] isInputsReserved;
 
-        public GateInfo(Point p, string name, int inputs)
+        public GateInfo(Point p, int _id, int inputs)
         {
             point = p;
-            gateName = name;
+            id = _id;
             newGateInputs = inputs;
+            isInputsReserved = new bool[inputs];
         }
     }
 }

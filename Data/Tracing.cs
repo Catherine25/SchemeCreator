@@ -101,7 +101,7 @@ namespace SchemeCreator.Data
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //looking for inputs
-                                     where gate.gateName.Text == "IN"
+                                     where gate.title.Text == "IN"
                                      //comparing inputs coordinates with line coordinates
                                      where Scheme.LineConnects(LineController.lineInfo[i], gate)
                                      select gate)
@@ -118,8 +118,8 @@ namespace SchemeCreator.Data
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //looking for regular gates
-                                     where gate.gateName.Text != "IN"
-                                     where gate.gateName.Text != "OUT"
+                                     where gate.title.Text != "IN"
+                                     where gate.title.Text != "OUT"
                                      //comparing inputs coordinates with line coordinates
                                      where Scheme.LineConnects(LineController.lineInfo[i], gate)
                                      select gate)
@@ -135,7 +135,7 @@ namespace SchemeCreator.Data
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //looking for for outputs
-                                     where gate.gateName.Text == "OUT"
+                                     where gate.title.Text == "OUT"
                                      //comparing inputs coordinates with line coordinates
                                      where Scheme.LineConnects(LineController.lineInfo[i], gate)
                                      select gate)

@@ -28,7 +28,8 @@ namespace SchemeCreator.Data
                 Y2 = p2.Y,
                 StrokeThickness = Scheme.lineStartOffset,
                 Stroke = Scheme.darkBrush,
-                StrokeEndLineCap = PenLineCap.Round
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeStartLineCap = PenLineCap.Round
             };
 
             lines.Add(line);
