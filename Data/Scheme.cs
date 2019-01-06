@@ -13,7 +13,7 @@ namespace SchemeCreator.Data
         public const double lineStartOffset = 5.0;
 
         //flags
-        public static bool SchemeCreated;
+        public static bool SchemeCreated = false;
         public static bool AddLineStartMode = false;
         public static bool AddLineEndMode = false;
         public static bool AddGateMode = false;
@@ -44,6 +44,7 @@ namespace SchemeCreator.Data
             //GateId gateId = new GateId();
         }
 
+        //gets logic value from gate output or scheme input
         public static bool? GetValue(Line l)
         {
             foreach (Gate g in GateController.gates)
@@ -68,6 +69,7 @@ namespace SchemeCreator.Data
             return null;
         }
 
+        //sends the value to the gate input or to scheme output
         public static void SendValue(bool? value, Line l)
         {
             foreach (Gate g in GateController.gates)
@@ -98,6 +100,7 @@ namespace SchemeCreator.Data
             }
         }
 
+        //determines line connection to the gate
         public static bool LineConnects(LineInfo li, Gate gate)
         {
             if (gate.gateName.Text == "IN" || gate.gateName.Text == "OUT")
@@ -116,6 +119,7 @@ namespace SchemeCreator.Data
             }
             return false;
         }
+        //specified function to determine line connection to the gate inputs
         public static bool LineConnectsToGateIn(LineInfo li, Gate gate)
         {
             foreach (Ellipse ellipse in gate.inputEllipse)
