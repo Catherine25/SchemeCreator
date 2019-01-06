@@ -1,4 +1,5 @@
 ﻿using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
@@ -119,8 +120,9 @@ namespace SchemeCreator.Data
             }
             return false;
         }
+
         //specified function to determine line connection to the gate inputs
-        public static bool LineConnectsToGateIn(LineInfo li, Gate gate)
+        private static bool LineConnectsToGateIn(LineInfo li, Gate gate)
         {
             foreach (Ellipse ellipse in gate.inputEllipse)
                 if (ellipse.Margin.Left + lineStartOffset == li.point1.X)
@@ -128,5 +130,15 @@ namespace SchemeCreator.Data
                         return true;
             return false;
         }
+
+        //function to simplify saving points from Ellipse
+        public static void SaveUserPointFromEllipse(int index, Ellipse e) =>
+            userPoints[index] = new Point(e.Margin.Left + lineStartOffset,
+                    e.Margin.Top + lineStartOffset);
+
+        //function to simplify saving points from TextBlock
+        public static void SaveUserPointFromTextBlock(int index, TextBlock tb) =>
+            userPoints[index] = new Point(tb.Margin.Left + (lineStartOffset * 2),
+                tb.Margin.Top + (lineStartOffset * 2));
     }
 }

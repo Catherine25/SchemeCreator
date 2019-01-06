@@ -120,8 +120,7 @@ namespace SchemeCreator
                     return;
 
                 //saving line start X and Y
-                userPoints[1] = new Point((e.OriginalSource as TextBlock).Margin.Left + lineStartOffset * 2,
-                    (e.OriginalSource as TextBlock).Margin.Top + lineStartOffset * 2);
+                SaveUserPointFromTextBlock(1, e.OriginalSource as TextBlock);
 
                 AddLineStartMode = false;
                 AddLineEndMode = true;
@@ -132,8 +131,7 @@ namespace SchemeCreator
                     return;
 
                 //saving line end X and Y
-                userPoints[2] = new Point((e.OriginalSource as TextBlock).Margin.Left + lineStartOffset * 2,
-                    (e.OriginalSource as TextBlock).Margin.Top + lineStartOffset * 2);
+                SaveUserPointFromTextBlock(2, e.OriginalSource as TextBlock);
 
                 if (userPoints[1] == userPoints[2])
                     return;
@@ -171,8 +169,7 @@ namespace SchemeCreator
                 return;
 
             //saving element X and Y
-            userPoints[0] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
-                (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
+            SaveUserPointFromEllipse(0, e.OriginalSource as Ellipse);
 
             WorkSpace.Children.Clear();
             Frame.Navigate(typeof(UI.Dialogs.AddElement));
@@ -185,8 +182,7 @@ namespace SchemeCreator
             if (AddLineStartMode)
             {
                 //saving 1st element's X and Y
-                userPoints[1] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
-                    (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
+                SaveUserPointFromEllipse(1, e.OriginalSource as Ellipse);
 
                 //switching to next mode
                 AddLineStartMode = false;
@@ -195,8 +191,7 @@ namespace SchemeCreator
             else if (AddLineEndMode)
             {
                 //saving 2nd element's X and Y
-                userPoints[2] = new Point((e.OriginalSource as Ellipse).Margin.Left + lineStartOffset,
-                    (e.OriginalSource as Ellipse).Margin.Top + lineStartOffset);
+                SaveUserPointFromEllipse(2, e.OriginalSource as Ellipse);
 
                 if (userPoints[1] == userPoints[2])
                     return;
