@@ -36,17 +36,16 @@ namespace SchemeCreator.Data
 
             for (int i = 0; i < startLinesId.Count; i++)
             {
-                Thickness t = new Thickness
-                {
-                    Left = (LineController.lineInfo[startLinesId.ElementAt(i)].point1.X + LineController.lineInfo[startLinesId.ElementAt(i)].point2.X) / 2,
-                    Top = ((LineController.lineInfo[startLinesId.ElementAt(i)].point1.Y + LineController.lineInfo[startLinesId.ElementAt(i)].point2.Y) / 2) + Scheme.offset
-                };
-
                 counter++;
 
                 TextBlock tb = new TextBlock()
                 {
-                    Margin = t,
+                    Margin = new Thickness
+                    {
+                        Left = (LineController.lineInfo[startLinesId.ElementAt(i)].point1.X + LineController.lineInfo[startLinesId.ElementAt(i)].point2.X) / 2,
+                        Top = ((LineController.lineInfo[startLinesId.ElementAt(i)].point1.Y + LineController.lineInfo[startLinesId.ElementAt(i)].point2.Y) / 2) + Scheme.offset
+                    },
+
                     Text = counter.ToString(),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top
@@ -57,17 +56,16 @@ namespace SchemeCreator.Data
 
             for (int i = 0; i < middleLinesId.Count; i++)
             {
-                Thickness t = new Thickness
-                {
-                    Left = (LineController.lineInfo[middleLinesId.ElementAt(i)].point1.X + LineController.lineInfo[middleLinesId.ElementAt(i)].point2.X) / 2,
-                    Top = ((LineController.lineInfo[middleLinesId.ElementAt(i)].point1.Y + LineController.lineInfo[middleLinesId.ElementAt(i)].point2.Y) / 2) + Scheme.offset
-                };
-
                 counter++;
 
                 TextBlock tb = new TextBlock()
                 {
-                    Margin = t,
+                    Margin = new Thickness
+                    {
+                        Left = (LineController.lineInfo[middleLinesId.ElementAt(i)].point1.X + LineController.lineInfo[middleLinesId.ElementAt(i)].point2.X) / 2,
+                        Top = ((LineController.lineInfo[middleLinesId.ElementAt(i)].point1.Y + LineController.lineInfo[middleLinesId.ElementAt(i)].point2.Y) / 2) + Scheme.offset
+                    },
+
                     Text = counter.ToString(),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top
@@ -78,17 +76,16 @@ namespace SchemeCreator.Data
 
             for (int i = 0; i < endLinesId.Count; i++)
             {
-                Thickness t = new Thickness
-                {
-                    Left = (LineController.lineInfo[endLinesId.ElementAt(i)].point1.X + LineController.lineInfo[endLinesId.ElementAt(i)].point2.X) / 2,
-                    Top = ((LineController.lineInfo[endLinesId.ElementAt(i)].point1.Y + LineController.lineInfo[endLinesId.ElementAt(i)].point2.Y) / 2) + Scheme.offset
-                };
-
                 counter++;
 
                 TextBlock tb = new TextBlock()
                 {
-                    Margin = t,
+                    Margin = new Thickness
+                    {
+                        Left = (LineController.lineInfo[endLinesId.ElementAt(i)].point1.X + LineController.lineInfo[endLinesId.ElementAt(i)].point2.X) / 2,
+                        Top = ((LineController.lineInfo[endLinesId.ElementAt(i)].point1.Y + LineController.lineInfo[endLinesId.ElementAt(i)].point2.Y) / 2) + Scheme.offset
+                    },
+
                     Text = counter.ToString(),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top
