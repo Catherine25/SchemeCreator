@@ -8,9 +8,10 @@ namespace SchemeCreator.Data
     public class Gate
     {
         //this element data
-        public Rectangle gateRect;
-        public TextBlock gateName;
-        public bool isReserved;
+        public Rectangle body;
+        public TextBlock title;
+        public bool isReserved = false;
+        public int id;
         //inputs data
         public Ellipse[] inputEllipse;
         public bool[] inputReserved;
@@ -21,10 +22,8 @@ namespace SchemeCreator.Data
         //default constructor
         public Gate() { }
 
-        /// <summary>
-        /// Specified constructor for IN and OUT
-        /// </summary>
-        public Gate(Point p, string name)
+        // Specified constructor for IN and OUT
+        public Gate(Point p, int _id, bool _isReserved)
         {
             //creating thickness
             Thickness t = new Thickness()
@@ -34,7 +33,7 @@ namespace SchemeCreator.Data
             };
 
             //initializing gate body
-            gateRect = new Rectangle()
+            body = new Rectangle()
             {
                 Width = Scheme.dotSize * 2,
                 Height = Scheme.dotSize * 2,
@@ -45,11 +44,11 @@ namespace SchemeCreator.Data
             };
 
             //initializing gate name
-            gateName = new TextBlock()
+            title = new TextBlock()
             {
                 Width = Scheme.dotSize * 2,
                 Height = Scheme.dotSize * 2,
-                Text = name,
+                Text = Scheme.gateNames[_id],
                 FontSize = 10,
                 Margin = t,
                 TextAlignment = TextAlignment.Center,
@@ -57,16 +56,13 @@ namespace SchemeCreator.Data
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
-
-            //setting flags to false
             outputValue = false;
-            isReserved = false;
+            id = _id;
+            isReserved = _isReserved;
         }
 
-        /// <summary>
-        /// Specified constructor for elements excluding IN and OUT
-        /// </summary>
-        public Gate(Point p, string name, int newGateInputs)
+        // Specified constructor for elements excluding IN and OUT
+        public Gate(Point p, int newGateInputs, int _id, bool[] isInputsReserved)
         {
             //setting initial margin
             Thickness t = new Thickness
@@ -76,9 +72,9 @@ namespace SchemeCreator.Data
             };
 
             //gate name
-            gateName = new TextBlock()
+            title = new TextBlock()
             {
-                Text = name,
+                Text = Scheme.gateNames[_id],
                 TextAlignment = TextAlignment.Center,
                 Height = GateController.gateHeight,
                 Width = GateController.gateWidth,
@@ -88,7 +84,7 @@ namespace SchemeCreator.Data
             };
 
             //body of gate
-            gateRect = new Rectangle()
+            body = new Rectangle()
             {
                 Height = GateController.gateHeight,
                 Width = GateController.gateWidth,
@@ -105,14 +101,14 @@ namespace SchemeCreator.Data
             for (int i = 0; i < inputEllipse.Length; i++)
             {
                 //setting margin
-                t.Top += gateRect.Height / (inputEllipse.Length + 1);
+                t.Top += body.Height / (inputEllipse.Length + 1);
 
                 if (i == 0)
                     t.Top -= Scheme.lineStartOffset;
 
-                t.Left = gateRect.Margin.Left - Scheme.lineStartOffset;
+                t.Left = body.Margin.Left - Scheme.lineStartOffset;
 
-                //creatinf inputs array
+                //creating inputs array
                 inputEllipse[i] = new Ellipse()
                 {
                     Height = Scheme.dotSize,
@@ -123,13 +119,16 @@ namespace SchemeCreator.Data
                     HorizontalAlignment = HorizontalAlignment.Left
                 };
 
-                inputReserved[i] = false;
+                if(isInputsReserved == null)
+                    inputReserved[i] = false;
+                else
+                    inputReserved[i] = isInputsReserved[i];
             }
 
             //output
             //setting margin
-            t.Left += gateRect.Width;
-            t.Top = gateRect.Margin.Top + (GateController.gateHeight / 2) - Scheme.lineStartOffset;
+            t.Left += body.Width;
+            t.Top = body.Margin.Top + (GateController.gateHeight / 2) - Scheme.lineStartOffset;
 
             outputEllipse = new Ellipse()
             {
@@ -140,6 +139,7 @@ namespace SchemeCreator.Data
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
+            id = _id;
         }
 
         //methods
@@ -150,30 +150,31 @@ namespace SchemeCreator.Data
                 outputValue = value;
                 return;
             }
-            switch (gateName.Text)
+
+            switch (id)
             {
-                case "Buffer":
+                case 2: //Buffer
                     outputValue = value;
                     break;
-                case "NOT":
+                case 3: //NOT
                     outputValue = !value;
                     break;
-                case "AND":
+                case 4: //AND
                     outputValue &= value;
                     break;
-                case "NAND":
+                case 5: //NAND
                     outputValue &= !value;
                     break;
-                case "OR":
+                case 6: //OR
                     outputValue |= value;
                     break;
-                case "NOR":
+                case 7: //NOR
                     outputValue |= !value;
                     break;
-                case "XOR":
+                case 8: //XOR
                     outputValue ^= value;
                     break;
-                case "XNOR":
+                case 9: //XNOR
                     outputValue ^= !value;
                     break;
                 default:
@@ -184,9 +185,9 @@ namespace SchemeCreator.Data
         public void ColorByValue()
         {
             if (outputValue == true)
-                gateRect.Fill = Scheme.lightBrush;
+                body.Fill = Scheme.lightBrush;
             else if (outputValue == false)
-                gateRect.Fill = Scheme.darkBrush;
+                body.Fill = Scheme.darkBrush;
         }
     }
 }
