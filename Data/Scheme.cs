@@ -120,6 +120,7 @@ namespace SchemeCreator.Data
         }
 
         //specified function to determine line connection to the gate inputs
+        //changes the isReserved bit
         public static bool LineConnectsToGateIn(LineInfo li, Gate gate, bool invertIsReserved)
         {
             if (gate.id != (int)GateId.IN && gate.id != (int)GateId.OUT)
