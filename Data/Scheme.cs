@@ -99,7 +99,8 @@ namespace SchemeCreator.Data
         }
 
         //determines line connection to the gate
-        public static bool LineConnects(LineInfo li, Gate gate)
+        //changes the isReserved bit
+        public static bool LineConnects(LineInfo li, Gate gate, bool invertIsReserved)
         {
             if (gate.id == (int)GateId.IN || gate.id == (int)GateId.OUT)
             {
@@ -113,18 +114,30 @@ namespace SchemeCreator.Data
                     if (gate.outputEllipse.Margin.Top + lineStartOffset == li.point1.Y)
                         return true;
 
-                return LineConnectsToGateIn(li, gate);
+                return LineConnectsToGateIn(li, gate, invertIsReserved);
             }
             return false;
         }
 
         //specified function to determine line connection to the gate inputs
-        private static bool LineConnectsToGateIn(LineInfo li, Gate gate)
+        public static bool LineConnectsToGateIn(LineInfo li, Gate gate, bool invertIsReserved)
         {
-            foreach (Ellipse ellipse in gate.inputEllipse)
-                if (ellipse.Margin.Left + lineStartOffset == li.point1.X)
-                    if (ellipse.Margin.Top + lineStartOffset == li.point1.Y)
-                        return true;
+            if (gate.id != (int)GateId.IN && gate.id != (int)GateId.OUT)
+            {
+                for (int i = 0; i < gate.inputEllipse.Length; i++)
+                {
+                    if (gate.inputEllipse[i].Margin.Left + lineStartOffset != li.point2.X)
+                        continue;
+                    if (gate.inputEllipse[i].Margin.Top + lineStartOffset != li.point2.Y)
+                        continue;
+
+                    if (invertIsReserved)
+                        foreach (GateInfo gateInfo in GateController.gateInfo)
+                            if(gateInfo.point == new Point(gate.body.Margin.Left, gate.body.Margin.Top))
+                                gateInfo.isInputsReserved[i] = !gateInfo.isInputsReserved[i];
+                    return true;
+                }
+            }
             return false;
         }
 
