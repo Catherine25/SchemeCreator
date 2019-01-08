@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data
 {
+    //class for UI
     public class Gate
     {
         //this element data
