@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using static SchemeCreator.Data.Scheme;
 using System.Linq;
+using Windows.Foundation;
 
 //Разработать ПО для моделирования простых комбинационных логических схем.
 
@@ -37,16 +38,13 @@ namespace SchemeCreator
         {
             InitializeComponent();
 
-            NewSchemeBt.Click += NewSchemeBt_Click;
             NewElementBt.Click += NewElementBt_Click;
             NewLineBt.Click += NewLineBt_Click;
             ChangeValueBt.Click += ChangeValueBt_Click;
             WorkBt.Click += WorkBt_Click;
             TraceBt.Click += TraceBt_Click;
+            DeleteLineBt.Click += DeleteLineBt_Click;
             QuitBt.Click += QuitBt_Click;
-
-            if (!schemeCreated)
-                return;
 
             if (addGateMode)
             {
@@ -79,36 +77,27 @@ namespace SchemeCreator
             addGateMode = false;
         }
 
+
         //----------------------------------------------------------------------------------------------------------//
         // event handlers for buttons
 
         private void ChangeValueBt_Click(object sender, RoutedEventArgs e) => changeValueMode = true;
         private void NewLineBt_Click(object sender, RoutedEventArgs e) => addLineStartMode = true;
         private void NewElementBt_Click(object sender, RoutedEventArgs e) => addGateMode = true;
+        private void DeleteLineBt_Click(object sender, RoutedEventArgs e) => deleteLineMode = true;
         private void TraceBt_Click(object sender, RoutedEventArgs e) => Tracing();
         private void QuitBt_Click(object sender, RoutedEventArgs e) => Application.Current.Exit();
         private void WorkBt_Click(object sender, RoutedEventArgs e)
         {
+            // Clearing the elements data
+            foreach (var gate in from Data.Gate gate in Data.GateController.gates
+                                 where gate.id != (int)GateId.IN
+                                 select gate)
+            { gate.outputValue = null; }
+
             // Sends signals from outputs to inputs
             foreach (Line l in Data.LineController.lines)
-                SendValue(Data.Scheme.GetValue(l), l); 
-        }
-        
-        private void NewSchemeBt_Click(object sender, RoutedEventArgs e)
-        {
-            // Provides initialization of grid's dots
-            if (!schemeCreated)
-            {
-                Data.DotController.InitNet(ActualWidth, ActualHeight);
-
-                foreach (Ellipse ellipse in Data.DotController.dots)
-                {
-                    ellipse.Tapped += Dot_Tapped;
-                    WorkSpace.Children.Add(ellipse);
-                }
-
-                schemeCreated = true;
-            }
+                SendValue(Data.Scheme.GetValue(l), l);
         }
 
         //----------------------------------------------------------------------------------------------------------//
@@ -138,7 +127,7 @@ namespace SchemeCreator
                 if (userPoints[1] == userPoints[2])
                     return;
 
-                for(int i = 0; i < Data.GateController.gates.Count; i++)
+                for (int i = 0; i < Data.GateController.gates.Count; i++)
                 {
                     if (Data.GateController.gates[i].title != e.OriginalSource as TextBlock)
                         continue;
@@ -147,7 +136,9 @@ namespace SchemeCreator
 
                     //adding new line
                     Data.LineController.lineInfo.Add(new Data.LineInfo(userPoints[1], userPoints[2]));
-                    WorkSpace.Children.Add(Data.LineController.CreateLine(userPoints[1], userPoints[2]));
+                    Line line = Data.LineController.CreateLine(userPoints[1], userPoints[2]);
+                    line.Tapped += Line_Tapped;
+                    WorkSpace.Children.Add(line);
 
                     //reserving flags
                     Data.GateController.gates[i].isReserved = true;
@@ -161,6 +152,7 @@ namespace SchemeCreator
             {
                 foreach (var g in from Data.Gate g in Data.GateController.gates
                                   where g.title == e.OriginalSource as TextBlock
+                                  where g.id == (int)GateId.IN
                                   select g)
                 {
                     g.outputValue = !g.outputValue;
@@ -190,12 +182,19 @@ namespace SchemeCreator
             //has 2 modes
             if (addLineStartMode)
             {
-                //saving 1st element's X and Y
-                SaveUserPointFromEllipse(1, e.OriginalSource as Ellipse);
+                //saving only from outputs
+                foreach (Data.Gate gate in Data.GateController.gates)
+                    if (gate.outputEllipse == null) //looking for regular gates
+                        continue;
+                    else if ((e.OriginalSource as Ellipse).Margin == gate.outputEllipse.Margin) //looking for gate outputs
+                    {
+                        //saving 1st element's X and Y
+                        SaveUserPointFromEllipse(1, e.OriginalSource as Ellipse);
 
-                //switching to next mode
-                addLineStartMode = false;
-                addLineEndMode = true;
+                        //switching to next mode
+                        addLineStartMode = false;
+                        addLineEndMode = true;
+                    }
             }
             else if (addLineEndMode)
             {
@@ -207,7 +206,7 @@ namespace SchemeCreator
 
                 //if choosed element is not reserved
                 for (int j = 0; j < Data.GateController.gates.Count; j++)
-                { 
+                {
                     //for IN/OUT elements 
                     if (Data.GateController.gates[j].inputEllipse == null)
                         continue;
@@ -222,14 +221,13 @@ namespace SchemeCreator
 
                         //creating line and saving it to the current grid
                         Data.LineController.lineInfo.Add(new Data.LineInfo(userPoints[1], userPoints[2]));
-                        WorkSpace.Children.Add(Data.LineController.CreateLine(userPoints[1], userPoints[2]));
-
-                        UpdateLayout();
+                        Line line = Data.LineController.CreateLine(userPoints[1], userPoints[2]);
+                        line.Tapped += Line_Tapped;
+                        WorkSpace.Children.Add(line);
 
                         //reserving the input
                         Data.GateController.gates[j].inputReserved[i] = true;
                         Data.GateController.gateInfo[j].isInputsReserved[i] = true;
-
 
                         //switching off the mode
                         addLineEndMode = false;
@@ -237,17 +235,34 @@ namespace SchemeCreator
                 }
             }
         }
+        private void Line_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!deleteLineMode)
+                return;
+            
+            for (int i = 0; i < Data.LineController.lineInfo.Count; i++)
+            {
+                if (Data.LineController.lineInfo[i].point1 == new Point((e.OriginalSource as Line).X1, (e.OriginalSource as Line).Y1))
+                    if (Data.LineController.lineInfo[i].point2 == new Point((e.OriginalSource as Line).X2, (e.OriginalSource as Line).Y2))
+                        Data.LineController.lineInfo.Remove(Data.LineController.lineInfo[i]);
+            }
+
+            deleteLineMode = true;
+            UpdatePage();
+        }
 
         //----------------------------------------------------------------------------------------------------------//
         // local functions
 
         private void UpdatePage()
         {
+            WorkSpace.Children.Clear();
+
             Data.DotController.dots.Clear();
             Data.LineController.lines.Clear();
             Data.GateController.gates.Clear();
 
-            Data.DotController.InitNet(ActualHeight, ActualWidth);
+            Data.DotController.InitNet(Window.Current.Bounds.Width, Window.Current.Bounds.Height);
             Data.LineController.ReloadLines();
             Data.GateController.ReloadGates();
 
@@ -258,7 +273,11 @@ namespace SchemeCreator
             }
 
             foreach (Line line in Data.LineController.lines)
+            {
                 WorkSpace.Children.Add(line);
+                line.Tapped += Line_Tapped;
+            }
+                
 
             //gates
             foreach (Data.Gate g in Data.GateController.gates)
