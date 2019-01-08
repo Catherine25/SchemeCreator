@@ -304,6 +304,8 @@ namespace SchemeCreator
 
         private void Tracing()
         {
+            UpdatePage();
+
             Data.Tracing.ShowTracing();
 
             foreach (TextBlock tb in Data.Tracing.textBlocks)
