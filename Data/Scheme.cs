@@ -14,12 +14,11 @@ namespace SchemeCreator.Data
         public const double lineStartOffset = 5.0;
 
         //flags
-        public static bool schemeCreated = false;
         public static bool addLineStartMode = false;
         public static bool addLineEndMode = false;
         public static bool addGateMode = false;
         public static bool changeValueMode = false;
-        public static bool subscribed = false;
+        public static bool deleteLineMode = false;
 
         //data
         public static SolidColorBrush lightBrush, darkBrush;
