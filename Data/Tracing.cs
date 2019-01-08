@@ -8,15 +8,13 @@ namespace SchemeCreator.Data
     static class Tracing
     {
         //data
-        public static SortedSet<int> sortedLinesId, startLinesId, middleLinesId, endLinesId;
+        public static SortedSet<int> startLinesId, middleLinesId, endLinesId;
         public static List<TextBlock> textBlocks;
         public static int counter;
 
         //constructor
         static Tracing()
         {
-            sortedLinesId = new SortedSet<int>();
-
             startLinesId = new SortedSet<int>();
             middleLinesId = new SortedSet<int>();
             endLinesId = new SortedSet<int>();
@@ -109,7 +107,6 @@ namespace SchemeCreator.Data
                                      select gate)
                 {
                     //saving index
-                    sortedLinesId.Add(i);
                     startLinesId.Add(i);
                 }
         }
@@ -129,7 +126,6 @@ namespace SchemeCreator.Data
                                      select gate)
                 {
                     //saving index
-                    sortedLinesId.Add(i);
                     middleLinesId.Add(i);
                 }
         }
@@ -147,7 +143,6 @@ namespace SchemeCreator.Data
                                      select gate)
                 {
                     //saving index
-                    sortedLinesId.Add(i);
                     endLinesId.Add(i);
                 }
         }
