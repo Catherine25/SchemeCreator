@@ -103,7 +103,7 @@ namespace SchemeCreator.Data
                                          //looking for inputs
                                      where gate.title.Text == "IN"
                                      //comparing inputs coordinates with line coordinates
-                                     where Scheme.LineConnects(LineController.lineInfo[i], gate)
+                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
                                      select gate)
                 {
                     //saving index
@@ -122,7 +122,7 @@ namespace SchemeCreator.Data
                                      where gate.title.Text != "IN"
                                      where gate.title.Text != "OUT"
                                      //comparing inputs coordinates with line coordinates
-                                     where Scheme.LineConnects(LineController.lineInfo[i], gate)
+                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
                                      select gate)
                 {
                     //saving index
@@ -139,7 +139,7 @@ namespace SchemeCreator.Data
                                          //looking for for outputs
                                      where gate.title.Text == "OUT"
                                      //comparing inputs coordinates with line coordinates
-                                     where Scheme.LineConnects(LineController.lineInfo[i], gate)
+                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
                                      select gate)
                 {
                     //saving index
