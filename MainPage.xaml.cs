@@ -239,16 +239,23 @@ namespace SchemeCreator
         {
             if (!deleteLineMode)
                 return;
-            
+
             for (int i = 0; i < Data.LineController.lineInfo.Count; i++)
             {
-                if (Data.LineController.lineInfo[i].point1 == new Point((e.OriginalSource as Line).X1, (e.OriginalSource as Line).Y1))
-                    if (Data.LineController.lineInfo[i].point2 == new Point((e.OriginalSource as Line).X2, (e.OriginalSource as Line).Y2))
+                if (Data.LineController.lineInfo[i].point1 == new Point((e.OriginalSource as Line).X1,
+                    (e.OriginalSource as Line).Y1))
+                    if (Data.LineController.lineInfo[i].point2 == new Point((e.OriginalSource as Line).X2,
+                        (e.OriginalSource as Line).Y2))
+                    {
+                        foreach (Data.Gate gate in Data.GateController.gates)
+                            LineConnectsToGateIn(Data.LineController.lineInfo[i], gate, true);
+
                         Data.LineController.lineInfo.Remove(Data.LineController.lineInfo[i]);
+                    }
             }
 
-            deleteLineMode = true;
             UpdatePage();
+            deleteLineMode = false;
         }
 
         //----------------------------------------------------------------------------------------------------------//
