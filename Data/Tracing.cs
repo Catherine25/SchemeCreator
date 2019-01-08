@@ -98,6 +98,8 @@ namespace SchemeCreator.Data
         //firstly numerating the input lines
         private static void NumerateInputLines()
         {
+            startLinesId.Clear();
+
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //looking for inputs
@@ -115,6 +117,8 @@ namespace SchemeCreator.Data
         //numerating lines without inputs and outputs
         private static void NumerateCenterLines()
         {
+            middleLinesId.Clear();
+
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //looking for regular gates
@@ -132,6 +136,8 @@ namespace SchemeCreator.Data
         //numerating the output lines
         private static void NumerateOutputLines()
         {
+            endLinesId.Clear();
+
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //looking for for outputs
