@@ -103,7 +103,7 @@ namespace SchemeCreator.Data
                                          //looking for inputs
                                      where gate.title.Text == "IN"
                                      //comparing inputs coordinates with line coordinates
-                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
+                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false, 0)
                                      select gate)
                 {
                     //saving index
@@ -119,7 +119,7 @@ namespace SchemeCreator.Data
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
                                          //comparing inputs coordinates with line coordinates
-                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
+                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false, 0)
                                      select gate)
                 {
                     //looking for regular gates
@@ -141,7 +141,7 @@ namespace SchemeCreator.Data
                                          //looking for for outputs
                                      where gate.title.Text == "OUT"
                                      //comparing inputs coordinates with line coordinates
-                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
+                                     where Scheme.LineConnects(LineController.lineInfo[i], gate, false, 0)
                                      select gate)
                 {
                     //saving index
