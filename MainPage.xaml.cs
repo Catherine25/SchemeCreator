@@ -247,8 +247,16 @@ namespace SchemeCreator
                     if (Data.LineController.lineInfo[i].point2 == new Point((e.OriginalSource as Line).X2,
                         (e.OriginalSource as Line).Y2))
                     {
-                        foreach (Data.Gate gate in Data.GateController.gates)
-                            LineConnectsToGateIn(Data.LineController.lineInfo[i], gate, true);
+                        for (int j = 0; j < Data.GateController.gates.Count; j++)
+                        {
+                            LineConnectsToGateIn(Data.LineController.lineInfo[i], Data.GateController.gates[j], true, j);
+
+                            if (Data.GateController.gates[j].id == (int)GateId.OUT)
+                            {
+                                LineConnects(Data.LineController.lineInfo[i], Data.GateController.gates[j], false, 0);
+                                Data.GateController.gateInfo[j].isInputsReserved[0] = false;
+                            }
+                        }
 
                         Data.LineController.lineInfo.Remove(Data.LineController.lineInfo[i]);
                     }
