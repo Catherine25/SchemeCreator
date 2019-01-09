@@ -148,6 +148,12 @@ namespace SchemeCreator.Data
         {
             if (outputValue == null)
             {
+                if (id == (int)Scheme.GateId.NOT)
+                {
+                    outputValue = !value;
+                    return;
+                } 
+
                 outputValue = value;
                 return;
             }
