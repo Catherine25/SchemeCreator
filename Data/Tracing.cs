@@ -118,15 +118,17 @@ namespace SchemeCreator.Data
 
             for (int i = 0; i < LineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in GateController.gates
-                                         //looking for regular gates
-                                     where gate.title.Text != "IN"
-                                     where gate.title.Text != "OUT"
-                                     //comparing inputs coordinates with line coordinates
+                                         //comparing inputs coordinates with line coordinates
                                      where Scheme.LineConnects(LineController.lineInfo[i], gate, false)
                                      select gate)
                 {
+                    //looking for regular gates
+                    if (gate.title.Text == "IN" || gate.title.Text == "OUT")
+                        break;
+
                     //saving index
                     middleLinesId.Add(i);
+                    break;
                 }
         }
         //numerating the output lines
