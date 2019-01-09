@@ -100,7 +100,7 @@ namespace SchemeCreator.Data
 
         //determines line connection to the gate
         //changes the isReserved bit
-        public static bool LineConnects(LineInfo li, Gate gate, bool invertIsReserved)
+        public static bool LineConnects(LineInfo li, Gate gate, bool invertIsReserved, int index)
         {
             if (gate.id == (int)GateId.IN || gate.id == (int)GateId.OUT)
             {
@@ -114,14 +114,14 @@ namespace SchemeCreator.Data
                     if (gate.outputEllipse.Margin.Top + lineStartOffset == li.point1.Y)
                         return true;
 
-                return LineConnectsToGateIn(li, gate, invertIsReserved);
+                return LineConnectsToGateIn(li, gate, invertIsReserved, index);
             }
             return false;
         }
 
         //specified function to determine line connection to the gate inputs
         //changes the isReserved bit
-        public static bool LineConnectsToGateIn(LineInfo li, Gate gate, bool invertIsReserved)
+        public static bool LineConnectsToGateIn(LineInfo li, Gate gate, bool invertIsReserved, int index)
         {
             if (gate.id != (int)GateId.IN && gate.id != (int)GateId.OUT)
             {
@@ -133,9 +133,7 @@ namespace SchemeCreator.Data
                         continue;
 
                     if (invertIsReserved)
-                        foreach (GateInfo gateInfo in GateController.gateInfo)
-                            if(gateInfo.point == new Point(gate.body.Margin.Left, gate.body.Margin.Top))
-                                gateInfo.isInputsReserved[i] = !gateInfo.isInputsReserved[i];
+                        GateController.gateInfo[index].isInputsReserved[i] = !GateController.gateInfo[index].isInputsReserved[i];
                     return true;
                 }
             }
