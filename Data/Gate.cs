@@ -3,11 +3,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 
-namespace SchemeCreator.Data
-{
+namespace SchemeCreator.Data {
     //class for UI
-    public class Gate
-    {
+    public class Gate {
         //this element data
         public Rectangle body;
         public TextBlock title;
@@ -24,32 +22,28 @@ namespace SchemeCreator.Data
         public Gate() { }
 
         // Specified constructor for IN and OUT
-        public Gate(Point p, int _id, bool _isReserved)
-        {
+        public Gate(Point p, int _id, bool _isReserved) {
             //creating thickness
-            Thickness t = new Thickness()
-            {
-                Left = p.X -  Scheme.offset,
-                Top = p.Y - Scheme.offset
+            Thickness t = new Thickness() {
+                Left = p.X - SchemeCreator.Constants.offset,
+                Top = p.Y - SchemeCreator.Constants.offset
             };
 
             //initializing gate body
-            body = new Rectangle()
-            {
-                Width = Scheme.dotSize * 2,
-                Height = Scheme.dotSize * 2,
-                Fill = Scheme.darkBrush,
+            body = new Rectangle() {
+                Width = SchemeCreator.Constants.dotSize * 2,
+                Height = SchemeCreator.Constants.dotSize * 2,
+                Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1],
                 Margin = t,
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
 
             //initializing gate name
-            title = new TextBlock()
-            {
-                Width = Scheme.dotSize * 2,
-                Height = Scheme.dotSize * 2,
-                Text = Scheme.gateNames[_id],
+            title = new TextBlock() {
+                Width = SchemeCreator.Constants.dotSize * 2,
+                Height = SchemeCreator.Constants.dotSize * 2,
+                Text = SchemeCreator.Constants.gateNames[(Constants.GateEnum)_id],
                 FontSize = 10,
                 Margin = t,
                 TextAlignment = TextAlignment.Center,
@@ -63,19 +57,16 @@ namespace SchemeCreator.Data
         }
 
         // Specified constructor for elements excluding IN and OUT
-        public Gate(Point p, int newGateInputs, int _id, bool[] isInputsReserved)
-        {
+        public Gate(Point p, int newGateInputs, int _id, bool[] isInputsReserved) {
             //setting initial margin
-            Thickness t = new Thickness
-            {
+            Thickness t = new Thickness {
                 Top = p.Y - (GateController.gateHeight / 2),
                 Left = p.X - (GateController.gateWidth / 2)
             };
 
             //gate name
-            title = new TextBlock()
-            {
-                Text = Scheme.gateNames[_id],
+            title = new TextBlock() {
+                Text = SchemeCreator.Constants.gateNames[(Constants.GateEnum)_id],
                 TextAlignment = TextAlignment.Center,
                 Height = GateController.gateHeight,
                 Width = GateController.gateWidth,
@@ -85,11 +76,10 @@ namespace SchemeCreator.Data
             };
 
             //body of gate
-            body = new Rectangle()
-            {
+            body = new Rectangle() {
                 Height = GateController.gateHeight,
                 Width = GateController.gateWidth,
-                Fill = Scheme.darkBrush,
+                Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1],
                 Margin = t,
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
@@ -99,22 +89,20 @@ namespace SchemeCreator.Data
             inputReserved = new bool[newGateInputs];
 
             //inputs
-            for (int i = 0; i < inputEllipse.Length; i++)
-            {
+            for (int i = 0; i < inputEllipse.Length; i++) {
                 //setting margin
                 t.Top += body.Height / (inputEllipse.Length + 1);
 
                 if (i == 0)
-                    t.Top -= Scheme.lineStartOffset;
+                    t.Top -= SchemeCreator.Constants.lineStartOffset;
 
-                t.Left = body.Margin.Left - Scheme.lineStartOffset;
+                t.Left = body.Margin.Left - SchemeCreator.Constants.lineStartOffset;
 
                 //creating inputs array
-                inputEllipse[i] = new Ellipse()
-                {
-                    Height = Scheme.dotSize,
-                    Width = Scheme.dotSize,
-                    Fill = Scheme.lightBrush,
+                inputEllipse[i] = new Ellipse() {
+                    Height = SchemeCreator.Constants.dotSize,
+                    Width = SchemeCreator.Constants.dotSize,
+                    Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
                     Margin = t,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left
@@ -129,13 +117,12 @@ namespace SchemeCreator.Data
             //output
             //setting margin
             t.Left += body.Width;
-            t.Top = body.Margin.Top + (GateController.gateHeight / 2) - Scheme.lineStartOffset;
+            t.Top = body.Margin.Top + (GateController.gateHeight / 2) - SchemeCreator.Constants.lineStartOffset;
 
-            outputEllipse = new Ellipse()
-            {
-                Height = Scheme.offset,
-                Width = Scheme.offset,
-                Fill = Scheme.lightBrush,
+            outputEllipse = new Ellipse() {
+                Height = SchemeCreator.Constants.offset,
+                Width = SchemeCreator.Constants.offset,
+                Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
                 Margin = t,
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
@@ -144,12 +131,9 @@ namespace SchemeCreator.Data
         }
 
         //methods
-        public void Work(bool? value)
-        {
-            if (outputValue == null)
-            {
-                if (id == (int)Scheme.GateId.NOT)
-                {
+        public void Work(bool? value) {
+            if (outputValue == null) {
+                if (id == (int)SchemeCreator.Constants.GateEnum.NOT) {
                     outputValue = !value;
                     return;
                 } 
@@ -158,8 +142,7 @@ namespace SchemeCreator.Data
                 return;
             }
 
-            switch (id)
-            {
+            switch (id) {
                 case 2: //Buffer
                     outputValue = value;
                     break;
@@ -189,12 +172,11 @@ namespace SchemeCreator.Data
             }
             ColorByValue();
         }
-        public void ColorByValue()
-        {
+        public void ColorByValue() {
             if (outputValue == true)
-                body.Fill = Scheme.lightBrush;
+                body.Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1];
             else if (outputValue == false)
-                body.Fill = Scheme.darkBrush;
+                body.Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1];
         }
     }
 }
