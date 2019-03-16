@@ -1,16 +1,16 @@
-﻿using Windows.Foundation;
+﻿using System.Runtime.Serialization;
+using Windows.Foundation;
 
-namespace SchemeCreator.Data
-{
-    public class GateInfo
-    {
-        public Point point;
-        public int id;
-        public int newGateInputs;
-        public bool[] isInputsReserved;
+namespace SchemeCreator.Data {
+    [DataContract] public class GateInfo {
+        [DataMember] public Point point;
+        [DataMember] public int id;
+        [DataMember] public int newGateInputs;
+        [DataMember] public bool[] isInputsReserved;
 
-        public GateInfo(Point p, int _id, int inputs)
-        {
+        public GateInfo() { }
+
+        public GateInfo(Point p, int _id, int inputs) {
             point = p;
             id = _id;
             newGateInputs = inputs;

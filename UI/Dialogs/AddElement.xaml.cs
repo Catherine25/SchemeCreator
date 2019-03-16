@@ -1,12 +1,9 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace SchemeCreator.UI.Dialogs
-{
-    public sealed partial class AddElement : Page
-    {
-        public AddElement()
-        {
+namespace SchemeCreator.UI.Dialogs {
+    public sealed partial class AddElement : Page {
+        public AddElement() {
             InitializeComponent();
 
             Buffer.Click += Buffer_Click;
@@ -29,8 +26,7 @@ namespace SchemeCreator.UI.Dialogs
             Input8.IsEnabled = false;
         }
 
-        private void OK_Click(object sender, RoutedEventArgs e)
-        {
+        private void OK_Click(object sender, RoutedEventArgs e) {
             if (Input2.IsChecked == true)
                 Data.NewGateData.inputs = 2;
             else if (Input3.IsChecked == true)
@@ -46,93 +42,83 @@ namespace SchemeCreator.UI.Dialogs
                 Frame.Navigate(typeof(MainPage));
         }
 
-        private void Buffer_Click(object sender, RoutedEventArgs e)
-        {
-            Data.NewGateData.SetAll((int)Data.Scheme.GateId.Buffer, 1);
+        private void Buffer_Click(object sender, RoutedEventArgs e) {
+            Data.NewGateData.SetAll((int)Constants.GateEnum.Buffer, 1);
             Frame.Navigate(typeof(MainPage));
         }
 
-        private void NOT_Click(object sender, RoutedEventArgs e)
-        {
-            Data.NewGateData.SetAll((int)Data.Scheme.GateId.NOT, 1);
+        private void NOT_Click(object sender, RoutedEventArgs e) {
+            Data.NewGateData.SetAll((int)Constants.GateEnum.NOT, 1);
             Frame.Navigate(typeof(MainPage));
         }
 
-        private void AND_Click(object sender, RoutedEventArgs e)
-        {
+        private void AND_Click(object sender, RoutedEventArgs e) {
             Input1.IsEnabled = false;
             Input2.IsEnabled = true;
             Input3.IsEnabled = true;
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.NewGateData.id = (int)Data.Scheme.GateId.AND;
+            Data.NewGateData.id = (int)Constants.GateEnum.AND;
         }
 
-        private void NAND_Click(object sender, RoutedEventArgs e)
-        {
+        private void NAND_Click(object sender, RoutedEventArgs e) {
             Input1.IsEnabled = false;
             Input2.IsEnabled = true;
             Input3.IsEnabled = true;
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.NewGateData.id = (int)Data.Scheme.GateId.NAND;
+            Data.NewGateData.id = (int)Constants.GateEnum.NAND;
         }
 
-        private void OR_Click(object sender, RoutedEventArgs e)
-        {
+        private void OR_Click(object sender, RoutedEventArgs e) {
             Input1.IsEnabled = false;
             Input2.IsEnabled = true;
             Input3.IsEnabled = true;
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.NewGateData.id = (int)Data.Scheme.GateId.OR;
+            Data.NewGateData.id = (int)Constants.GateEnum.OR;
         }
 
-        private void NOR_Click(object sender, RoutedEventArgs e)
-        {
+        private void NOR_Click(object sender, RoutedEventArgs e) {
             Input1.IsEnabled = false;
             Input2.IsEnabled = true;
             Input3.IsEnabled = true;
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.NewGateData.id = (int)Data.Scheme.GateId.NOR;
+            Data.NewGateData.id = (int)Constants.GateEnum.NOR;
         }
 
-        private void XOR_Click(object sender, RoutedEventArgs e)
-        {
+        private void XOR_Click(object sender, RoutedEventArgs e) {
             Input1.IsEnabled = false;
             Input2.IsEnabled = true;
             Input3.IsEnabled = true;
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.NewGateData.id = (int)Data.Scheme.GateId.XOR;
+            Data.NewGateData.id = (int)Constants.GateEnum.XOR;
         }
 
-        private void XNOR_Click(object sender, RoutedEventArgs e)
-        {
+        private void XNOR_Click(object sender, RoutedEventArgs e) {
             Input1.IsEnabled = false;
             Input2.IsEnabled = true;
             Input3.IsEnabled = true;
             Input4.IsEnabled = true;
             Input6.IsEnabled = true;
             Input8.IsEnabled = true;
-            Data.NewGateData.id = (int)Data.Scheme.GateId.XNOR;
+            Data.NewGateData.id = (int)Constants.GateEnum.XNOR;
         }
 
-        private void Input_Click(object sender, RoutedEventArgs e)
-        {
-            Data.NewGateData.SetAll((int)Data.Scheme.GateId.IN, 1);
+        private void Input_Click(object sender, RoutedEventArgs e) {
+            Data.NewGateData.SetAll((int)Constants.GateEnum.IN, 1);
             Frame.Navigate(typeof(MainPage));
         }
 
-        private void Output_Click(object sender, RoutedEventArgs e)
-        {
-            Data.NewGateData.SetAll((int)Data.Scheme.GateId.OUT, 1);
+        private void Output_Click(object sender, RoutedEventArgs e) {
+            Data.NewGateData.SetAll((int)Constants.GateEnum.OUT, 1);
             Frame.Navigate(typeof(MainPage));
         }
     }

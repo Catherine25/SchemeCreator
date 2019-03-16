@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\DotController.cs" />
     <Compile Include="Data\Gate.cs" />
     <Compile Include="Data\GateController.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Data\LineController.cs" />
     <Compile Include="Data\LineInfo.cs" />
     <Compile Include="Data\NewGateData.cs" />
+    <Compile Include="Data\Serializator.cs" />
     <Compile Include="Data\Tracing.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -135,6 +137,11 @@
     <Compile Include="UI\Dialogs\AddElement.xaml.cs">
       <DependentUpon>AddElement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\FrameManager.cs" />
+    <Compile Include="UI\MenuController.cs" />
+    <Compile Include="UI\ModeManager.cs" />
+    <Compile Include="UI\NewGateMenuController.cs" />
+    <Compile Include="UI\WorkspaceController.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

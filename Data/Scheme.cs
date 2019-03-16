@@ -1,66 +1,32 @@
 ﻿using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
-namespace SchemeCreator.Data
-{
-    static class Scheme
-    {
-        //constants
-        public const int netSize = 8;
-        public const int dotSize = 10;
-        public const double offset = 10.0;
-        public const double lineStartOffset = 5.0;
-
-        //flags
-        public static bool addLineStartMode = false;
-        public static bool addLineEndMode = false;
-        public static bool addGateMode = false;
-        public static bool changeValueMode = false;
-        public static bool deleteLineMode = false;
-
-        //data
-        public static SolidColorBrush lightBrush, darkBrush;
-        public static Point[] userPoints;
-
-        public enum GateId
-        {
-            IN, OUT,
-            Buffer, NOT,
-            AND, NAND,
-            OR, NOR,
-            XOR, XNOR
-        };
-        public static string[] gateNames = { "IN", "OUT", "Buffer", "NOT", "AND", "NAND", "OR", "NOR", "XOR", "XNOR" };
-
+namespace SchemeCreator.Data {
+    class Scheme {
+        public UI.FrameManager frameManager;
+        public LineController lineController = new LineController();
+        public GateController gateController = new GateController();
+        public DotController dotController = new DotController();
         //constructors
-        static Scheme()
-        {
-            lightBrush = new SolidColorBrush(Windows.UI.Colors.Cyan);
-            darkBrush = new SolidColorBrush(Windows.UI.Colors.DarkCyan);
-            userPoints = new Point[3];
-        }
+        public Scheme(Grid _grid) {
+            frameManager = new SchemeCreator.UI.FrameManager(this, _grid);
+        } 
 
         //gets logic value from gate output or scheme input
-        public static bool? GetValue(Line l)
-        {
-            foreach (Gate g in GateController.gates)
-                if (g.id == (int)GateId.IN)
-                {
-                    if (l.X1 == g.title.Margin.Left + dotSize)
-                        if (l.Y1 == g.title.Margin.Top + dotSize)
-                        {
-                            LineController.ColorLine(l, g.outputValue);
+        public bool? GetValue(Line l) {
+            foreach (Gate g in gateController.gates)
+                if (g.id == (int)Constants.GateEnum.IN) {
+                    if (l.X1 == g.title.Margin.Left + Constants.dotSize)
+                        if (l.Y1 == g.title.Margin.Top + Constants.dotSize) {
+                            lineController.ColorLine(l, g.outputValue);
                             return g.outputValue;
                         }
                 }
-                else if (g.id != (int)GateId.OUT)
-                {
-                    if (l.X1 == g.outputEllipse.Margin.Left + lineStartOffset)
-                        if (l.Y1 == g.outputEllipse.Margin.Top + lineStartOffset)
-                        {
-                            LineController.ColorLine(l, g.outputValue);
+                else if (g.id != (int)Constants.GateEnum.OUT) {
+                    if (l.X1 == g.outputEllipse.Margin.Left + Constants.lineStartOffset)
+                        if (l.Y1 == g.outputEllipse.Margin.Top + Constants.lineStartOffset) {
+                            lineController.ColorLine(l, g.outputValue);
                             return g.outputValue;
                         }
                 }
@@ -68,27 +34,19 @@ namespace SchemeCreator.Data
         }
 
         //sends the value to the gate input or to scheme output
-        public static void SendValue(bool? value, Line l)
-        {
-            foreach (Gate g in GateController.gates)
-            {
-                if(g.id == (int)GateId.OUT)
-                {
-                    if (l.X2 == g.title.Margin.Left + dotSize)
-                        if (l.Y2 == g.title.Margin.Top + dotSize)
-                        {
+        public void SendValue(bool? value, Line l) {
+            foreach (Gate g in gateController.gates) {
+                if(g.id == (int)Constants.GateEnum.OUT) {
+                    if (l.X2 == g.title.Margin.Left + Constants.dotSize)
+                        if (l.Y2 == g.title.Margin.Top + Constants.dotSize) {
                             g.outputValue = value;
                             g.ColorByValue();
                         }
-                            
                 }
-                else if (g.id != (int)GateId.IN)
-                {
-                    foreach (Ellipse e in g.inputEllipse)
-                    {
-                        if (l.X2 == e.Margin.Left + lineStartOffset)
-                            if (l.Y2 == e.Margin.Top + lineStartOffset)
-                            {
+                else if (g.id != (int)Constants.GateEnum.IN) {
+                    foreach (Ellipse e in g.inputEllipse) {
+                        if (l.X2 == e.Margin.Left + Constants.lineStartOffset)
+                            if (l.Y2 == e.Margin.Top + Constants.lineStartOffset) {
                                 g.Work(value);
                                 g.ColorByValue();
                                 break;
@@ -100,20 +58,16 @@ namespace SchemeCreator.Data
 
         //determines line connection to the gate
         //changes the isReserved bit
-        public static bool LineConnects(LineInfo li, Gate gate, bool invertIsReserved, int index)
-        {
-            if (gate.id == (int)GateId.IN || gate.id == (int)GateId.OUT)
-            {
-                if (gate.title.Margin.Left + (lineStartOffset * 2) == li.point1.X)
-                    if (gate.title.Margin.Top + (lineStartOffset * 2) == li.point1.Y)
+        public bool LineConnects(LineInfo li, Gate gate, bool invertIsReserved, int index) {
+            if (gate.id == (int)Constants.GateEnum.IN || gate.id == (int)Constants.GateEnum.OUT) {
+                if (gate.title.Margin.Left + (Constants.lineStartOffset * 2) == li.point1.X)
+                    if (gate.title.Margin.Top + (Constants.lineStartOffset * 2) == li.point1.Y)
                         return true;
             }
-            else
-            {
-                if (gate.outputEllipse.Margin.Left + lineStartOffset == li.point1.X)
-                    if (gate.outputEllipse.Margin.Top + lineStartOffset == li.point1.Y)
+            else {
+                if (gate.outputEllipse.Margin.Left + Constants.lineStartOffset == li.point1.X)
+                    if (gate.outputEllipse.Margin.Top + Constants.lineStartOffset == li.point1.Y)
                         return true;
-
                 return LineConnectsToGateIn(li, gate, invertIsReserved, index);
             }
             return false;
@@ -121,19 +75,16 @@ namespace SchemeCreator.Data
 
         //specified function to determine line connection to the gate inputs
         //changes the isReserved bit
-        public static bool LineConnectsToGateIn(LineInfo li, Gate gate, bool invertIsReserved, int index)
-        {
-            if (gate.id != (int)GateId.IN && gate.id != (int)GateId.OUT)
-            {
-                for (int i = 0; i < gate.inputEllipse.Length; i++)
-                {
-                    if (gate.inputEllipse[i].Margin.Left + lineStartOffset != li.point2.X)
+        public bool LineConnectsToGateIn(LineInfo li, Gate gate, bool invertIsReserved, int index) {
+            if (gate.id != (int)Constants.GateEnum.IN && gate.id != (int)Constants.GateEnum.OUT) {
+                for (int i = 0; i < gate.inputEllipse.Length; i++) {
+                    if (gate.inputEllipse[i].Margin.Left + Constants.lineStartOffset != li.point2.X)
                         continue;
-                    if (gate.inputEllipse[i].Margin.Top + lineStartOffset != li.point2.Y)
+                    if (gate.inputEllipse[i].Margin.Top + Constants.lineStartOffset != li.point2.Y)
                         continue;
 
                     if (invertIsReserved)
-                        GateController.gateInfo[index].isInputsReserved[i] = !GateController.gateInfo[index].isInputsReserved[i];
+                        gateController.gateInfo[index].isInputsReserved[i] = !gateController.gateInfo[index].isInputsReserved[i];
                     return true;
                 }
             }
@@ -141,13 +92,13 @@ namespace SchemeCreator.Data
         }
 
         //function to simplify saving points from Ellipse
-        public static void SaveUserPointFromEllipse(int index, Ellipse e) =>
-            userPoints[index] = new Point(e.Margin.Left + lineStartOffset,
-                    e.Margin.Top + lineStartOffset);
+    //     public void SaveUserPointFromEllipse(int index, Ellipse e) =>
+    //         userPoints[index] = new Point(e.Margin.Left + Constants.lineStartOffset,
+    //                 e.Margin.Top + Constants.lineStartOffset);
 
-        //function to simplify saving points from TextBlock
-        public static void SaveUserPointFromTextBlock(int index, TextBlock tb) =>
-            userPoints[index] = new Point(tb.Margin.Left + (lineStartOffset * 2),
-                tb.Margin.Top + (lineStartOffset * 2));
+    //     //function to simplify saving points from TextBlock
+    //     public void SaveUserPointFromTextBlock(int index, TextBlock tb) =>
+    //         userPoints[index] = new Point(tb.Margin.Left + (Constants.lineStartOffset * 2),
+    //             tb.Margin.Top + (Constants.lineStartOffset * 2));
     }
 }
