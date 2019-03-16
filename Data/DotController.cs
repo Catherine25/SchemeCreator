@@ -1,51 +1,32 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
-namespace SchemeCreator.Data
-{
-    public static class DotController
-    {
-        private static SolidColorBrush brush;
-        private static int netSize, dotSize;
-        private static double width, heigh;
+namespace SchemeCreator.Data {
+    public class DotController {
+        private double width, heigh;
+        public IList<Ellipse> dots = new List<Ellipse>();
 
-        public static IList<Ellipse> dots;
+        public void InitNet(double actW, double actH) {
+            width = actW;
+            heigh = actH;
 
-        static DotController()
-        {
-            netSize = Scheme.netSize;
-            dotSize = Scheme.dotSize;
-            brush = Scheme.darkBrush;
-            dots = new List<Ellipse>();
-        }
-
-        public static void InitNet(double actW, double actH)
-        {
-            if (width == 0 || heigh == 0)
-            {
-                width = actW;
-                heigh = actH;
-            }                
-            double stepW = width / (netSize + 2);
-            double stepH = heigh / (netSize + 2);
+            double stepW = width / (Constants.netSize+1),
+                stepH = heigh / (Constants.netSize+1);
             Thickness margin;
 
-            for (int i = 0; i < netSize; i++)
-                for (int j = 0; j < netSize; j++)
-                {
-                    margin.Left = stepW * i + stepW;
-                    margin.Top = stepH * j + stepH;
+            for (int i = 1; i <= Constants.netSize; i++)
+                for (int j = 1; j <= Constants.netSize; j++) {
+                    margin.Left = stepW * i;
+                    margin.Top = (stepH*0.9) * j;
 
-                    Ellipse ellipse = new Ellipse
-                    {
+                    Ellipse ellipse = new Ellipse {
                         Margin = margin,
                         VerticalAlignment = VerticalAlignment.Top,
                         HorizontalAlignment = HorizontalAlignment.Left,
-                        Height = dotSize,
-                        Width = dotSize,
-                        Fill = brush
+                        Height = Constants.dotSize,
+                        Width = Constants.dotSize,
+                        Fill = Constants.brushes[Constants.AccentEnum.dark1]
                     };
 
                     dots.Add(ellipse);
