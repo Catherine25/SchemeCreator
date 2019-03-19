@@ -5,39 +5,39 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI {
-    class WorkspaceController {
-        /*      constructor     */
-        public WorkspaceController(Grid _grid) => _grid.Children.Add(grid);
-        public delegate void DotTappedHandler(Ellipse sender, DotTappedEventArgs e);
-        public event DotTappedHandler DotTappedEvent;
-        //static SchemeCreator.Data.Scheme scheme; 
-        
-        /*      public methods      */
-        public void UpdateView(double height, double width) {
+    class WorkspaceController : IFrameInterface {
+        /*      methods      */
+        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
+        public void Hide() {
+            grid.Children.Clear();
+            isActive = false;
+        }
+        public void Update(double width, double height) {
             grid.Height = height;
             grid.Width = width;
         }
-        public void ReloadDots(SchemeCreator.Data.Scheme scheme) {
-            scheme.dotController.InitNet(grid.Width, grid.Height);
+        public void ShowDots(ref Data.Scheme scheme) {
+            scheme.dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
             foreach(Ellipse e in scheme.dotController.dots) {
                 grid.Children.Add(e);
                 e.Tapped += DotTapped;
             }
+            isActive = true;
         }
-        /*      handlers        */
-        public void DotTapped (object sender, TappedRoutedEventArgs e) {
-            if(DotTappedEvent != null)
-                DotTappedEvent(sender as Ellipse, new DotTappedEventArgs(sender as Ellipse));
-        }
-        public void Dispose() => grid.Children.Clear();
+        /*      events        */
+        public delegate void DotTappedHandler(Ellipse sender, DotTappedEventArgs e);
+        public event DotTappedHandler DotTappedEvent;
+        public void DotTapped(object sender, TappedRoutedEventArgs e) =>
+            DotTappedEvent(sender as Ellipse, new DotTappedEventArgs(sender as Ellipse));
+
         /*      data        */
+        public bool IsActive { get => isActive; }
+        bool isActive;
         Grid grid = new Grid() { Margin = new Windows.UI.Xaml.Thickness(0, 60, 0, 0) };
     }
+
     class DotTappedEventArgs {
-        public DotTappedEventArgs(Ellipse e) {
-            if(e != dot)
-                dot = e;
-        }
+        public DotTappedEventArgs(Ellipse e) => dot = e;
         public Ellipse dot;
     }
 }
