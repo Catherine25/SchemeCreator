@@ -18,7 +18,7 @@ namespace SchemeCreator.Data {
             for (int i = 1; i <= Constants.netSize; i++)
                 for (int j = 1; j <= Constants.netSize; j++) {
                     margin.Left = stepW * i;
-                    margin.Top = (stepH*0.9) * j;
+                    margin.Top = stepH * j;
 
                     Ellipse ellipse = new Ellipse {
                         Margin = margin,

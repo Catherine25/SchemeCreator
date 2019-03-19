@@ -1,32 +1,26 @@
 using System;
 using System.Collections.Generic;
+using SchemeCreator.Data;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI {
-    class NewGateMenuController {
+    class NewGateMenuController : IFrameInterface {
 
-        //constructors
-        public NewGateMenuController(Grid _grid) {
-            _grid.Children.Add(grid);
+        /*      constructor     */
+        public NewGateMenuController() {
             //The cast to (GateId[]) is not strictly necessary, but does make the code faster
-            foreach (Constants.GateEnum id in (Constants.GateEnum[]) Enum.GetValues(typeof(Constants.GateEnum)))
-                buttons.Add(id, CreateButton(btText[id]));
+            foreach (Constants.GateEnum id in (Constants.GateEnum[]) Enum.GetValues(typeof(Constants.GateEnum))) {
+                buttons.Add(id,
+                    new Button {
+                        Height = 50,
+                        Width = grid.Width - 20,
+                        Content = btText[id]
+                    }
+                );
+            }
         }
-
-        //public methods
-
-        //private methods
-        Button CreateButton(string text) {
-            Button button = new Button() {
-                Height = 25,
-                Width = grid.Width,
-                Content = text
-            };
-            return button;
-        }
-
-        //data
+        /*      data        */
         Dictionary<Constants.GateEnum, Button> buttons = new Dictionary<Constants.GateEnum, Button>();
         Dictionary<Constants.GateEnum, string> btText = new Dictionary<Constants.GateEnum, string> {
             { Constants.GateEnum.AND, "AND" },
@@ -44,10 +38,32 @@ namespace SchemeCreator.UI {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Top
         };
-        public void Dispose() => grid.Children.Clear();
-        public void UpdateView(double width, double height) {
+        public bool IsActive { get => isActive; }
+        bool isActive;
+
+        /*      methods     */
+        public void Update(double width, double height) {
             grid.Width = width;
             grid.Height = height;
+
+            foreach(Button button in grid.Children)
+                button.Width = grid.ActualWidth;
         }
+
+        public void SetParentGrid(Grid parentGrid) {
+            parentGrid.Children.Add(grid);
+            grid.Width = parentGrid.ActualWidth;
+            grid.Height = parentGrid.ActualHeight;
+
+            foreach (Button button in buttons.Values)
+                grid.Children.Add(button);
+        }
+
+        public void Show() {
+            foreach(Button button in buttons.Values)
+                grid.Children.Add(button);  
+        }
+
+        public void Hide() => grid.Children.Clear();
     }
 }

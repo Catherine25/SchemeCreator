@@ -1,15 +1,30 @@
 ﻿using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI {
     class FrameManager {
-        public FrameManager(Data.Scheme _scheme, Grid _grid) {
-            scheme = _scheme;
-            workspaceController = new WorkspaceController(_grid);
-            menuController = new MenuController(_grid);
-            newGateMenuController = new NewGateMenuController(_grid);
 
+        /*      constructor     */
+        public FrameManager(Data.Scheme _scheme) {
+            scheme = _scheme;
+
+            workspaceController = new WorkspaceController();
+            menuController = new MenuController();
+            newGateMenuController = new NewGateMenuController();
+
+            menuController.SetParentGrid(Grid);
+            workspaceController.SetParentGrid(Grid);
+            newGateMenuController.SetParentGrid(Grid);
+
+            SwitchToFrame(Constants.FrameEnum.workspace, Grid);
+            
+            EventSubscribe();
+        }
+
+        /*      methods     */
+        private void EventSubscribe() {
             workspaceController.DotTappedEvent += DotTappedEvent;
             menuController.NewSchemeBtClickEvent += NewSchemeEvent;
             menuController.LoadSchemeBtClickEvent += LoadSchemeEvent;
@@ -20,22 +35,27 @@ namespace SchemeCreator.UI {
             menuController.AddLineBtClickEvent += AddLineEvent;
             menuController.RemoveLineBtClickEvent += RemoveLineEvent;
         }
+        public Constants.FrameEnum GetActiveFrame() => currentFrame;
+
+        /*      data        */
         WorkspaceController workspaceController;
         MenuController menuController;
         NewGateMenuController newGateMenuController;
         ModeManager modeManager = new ModeManager();
         Data.Scheme scheme;
         Constants.FrameEnum currentFrame;
-        //public Point[] userPoints = new Point[3];
+        public Grid Grid { get; } = new Grid {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top
+        };
+
+        /*      events      */
         private void DotTappedEvent(object sender, DotTappedEventArgs e) {
-            if(modeManager.CurrentMode == Constants.ModeEnum.addGateMode) {
-                    //disable current button's border (automaticly)
-                    //close this frame
-                    //go to another frame
-                }
+            if(modeManager.CurrentMode == Constants.ModeEnum.addGateMode)
+                SwitchToFrame(Constants.FrameEnum.newGate, Grid);
         }
         private void NewSchemeEvent(object sender, LastClickedButtonEventArgs e) =>
-            workspaceController.ReloadDots(scheme);
+            workspaceController.ShowDots(ref scheme);
         private void LoadSchemeEvent(object sender, LastClickedButtonEventArgs e) => Data.Serializer.DeserializeAll(scheme);
         private void SaveSchemeEvent(object sender, LastClickedButtonEventArgs e) => Data.Serializer.SerializeAll(scheme);
         private void TraceSchemeEvent(object sender, LastClickedButtonEventArgs e) => Data.Tracing.ShowTracing(scheme);
@@ -55,34 +75,39 @@ namespace SchemeCreator.UI {
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.addGateMode;
         }
         private void AddLineEvent(object sender, LastClickedButtonEventArgs e) {
+            menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
-        }
-            
+        }         
         private void RemoveLineEvent(object sender, LastClickedButtonEventArgs e) {
+            menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.removeLineMode;
         }
-        public Constants.FrameEnum GetActiveFrame() => currentFrame;
+        
         public void SwitchToFrame(Constants.FrameEnum frame, Grid grid) {
-            if(frame!=currentFrame) {
-                currentFrame = frame;
-                DisposeAll();
-                if(frame == Constants.FrameEnum.newGate)
-                    newGateMenuController = new NewGateMenuController(grid);
-                else {
-                    menuController = new MenuController(grid);
-                    workspaceController = new WorkspaceController(grid);
-                }
-            }   
-        }
-        public void DisposeAll() {
-            workspaceController.Dispose();
-            menuController.Dispose();
-            newGateMenuController.Dispose();
+            currentFrame = frame;
+            if(frame == Constants.FrameEnum.newGate) {
+                menuController.Hide();
+                workspaceController.Hide();
+                newGateMenuController.Show();
+            }
+            else {
+                newGateMenuController.Hide();
+                menuController.Show();
+            }
         }
         public void UpdateView(double width, double height) {
-            menuController.UpdateView(width, height);
-        }
+
+            System.Diagnostics.Debug.Assert(Grid.Width != 0);
+            System.Diagnostics.Debug.Assert(Grid.Height != 0);
+
+            if (currentFrame == Constants.FrameEnum.newGate)
+                newGateMenuController.Update(width, height);
+            else {
+                menuController.Update(width, height);
+                workspaceController.Update(width, height);
+            }
+        } 
     }
 }
