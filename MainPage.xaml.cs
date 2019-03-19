@@ -1,9 +1,5 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Shapes;
-using System.Linq;
-using Windows.Foundation;
 
 //Разработать ПО для моделирования простых комбинационных логических схем.
 
@@ -28,24 +24,20 @@ using Windows.Foundation;
 //Состав библиотеки логических элементов может быть расширен другими функциональными компонентами
 //(мультиплексоры, дешифраторы, компараторы, триггеры) по желанию разработчиков.
 
-namespace SchemeCreator {
+namespace SchemeCreator
+{
     public sealed partial class MainPage : Page {
-        Data.Scheme scheme;
-        Grid grid = new Grid {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top
-        };
+        Data.Scheme scheme = new Data.Scheme();
         //constructor
         public MainPage() {
             InitializeComponent();
             Constants.Test();
-            Content = grid;
-            scheme = new Data.Scheme(grid);
+            Content = scheme.frameManager.Grid;
             SizeChanged += MainPageSizeChanged;
         }
         private void MainPageSizeChanged(object sender, SizeChangedEventArgs e) {
-            grid.Height = ActualHeight;
-            grid.Width = ActualWidth;
+            scheme.frameManager.Grid.Height = ActualHeight;
+            scheme.frameManager.Grid.Width = ActualWidth;
             
             scheme.frameManager.UpdateView(ActualWidth, ActualHeight);
         }
