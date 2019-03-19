@@ -9,9 +9,7 @@ namespace SchemeCreator.Data {
         public GateController gateController = new GateController();
         public DotController dotController = new DotController();
         //constructors
-        public Scheme(Grid _grid) {
-            frameManager = new SchemeCreator.UI.FrameManager(this, _grid);
-        } 
+        public Scheme() => frameManager = new UI.FrameManager(this);
 
         //gets logic value from gate output or scheme input
         public bool? GetValue(Line l) {
@@ -90,15 +88,5 @@ namespace SchemeCreator.Data {
             }
             return false;
         }
-
-        //function to simplify saving points from Ellipse
-    //     public void SaveUserPointFromEllipse(int index, Ellipse e) =>
-    //         userPoints[index] = new Point(e.Margin.Left + Constants.lineStartOffset,
-    //                 e.Margin.Top + Constants.lineStartOffset);
-
-    //     //function to simplify saving points from TextBlock
-    //     public void SaveUserPointFromTextBlock(int index, TextBlock tb) =>
-    //         userPoints[index] = new Point(tb.Margin.Left + (Constants.lineStartOffset * 2),
-    //             tb.Margin.Top + (Constants.lineStartOffset * 2));
     }
 }
