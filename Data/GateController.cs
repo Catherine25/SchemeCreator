@@ -17,19 +17,10 @@ namespace SchemeCreator.Data {
         }
 
         //function for creating IN, OUT and gate
-        public void CreateGate(Point p, int id, int newGateInputs, bool[] isInputsReserved) => gates.Add(new Gate(p, newGateInputs, id, isInputsReserved));
+        //public void CreateGate(Point p, Constants.GateEnum type, int newGateInputs) =>
+        //    gates.Add(new Gate(p, newGateInputs, type));
 
-        public void CreateInOut(Point p, int id, bool isReserved) => gates.Add(new Gate(p, id, isReserved));
-
-        //sync from gateInfo
-        public void ReloadGates() {
-            if (gateInfo != null)
-                foreach (GateInfo gInfo in gateInfo)
-                    if (gInfo.id == (int)SchemeCreator.Constants.GateEnum.IN ||
-                    gInfo.id == (int)SchemeCreator.Constants.GateEnum.OUT)
-                        CreateInOut(gInfo.point, gInfo.id, gInfo.isInputsReserved[0]);
-                    else
-                        CreateGate(gInfo.point, gInfo.id, gInfo.newGateInputs, gInfo.isInputsReserved);
-        }
+        //public void CreateInOut(Point p, Constants.GateEnum type) =>
+        //    gates.Add(new Gate(p, type));
     }
 }
