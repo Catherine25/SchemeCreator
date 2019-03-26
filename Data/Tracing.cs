@@ -97,11 +97,10 @@ namespace SchemeCreator.Data {
             for (int i = 0; i < scheme.lineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in scheme.gateController.gates
                                          //looking for inputs
-                                     where gate.title.Text == "IN"
+                                     where gate.type == Constants.GateEnum.IN
                                      //comparing inputs coordinates with line coordinates
-                                     where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-                                     select gate)
-                {
+                                     //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
+                                     select gate) {
                     //saving index
                     startLinesId.Add(i);
                 }
@@ -114,11 +113,11 @@ namespace SchemeCreator.Data {
             for (int i = 0; i < scheme.lineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in scheme.gateController.gates
                                          //comparing inputs coordinates with line coordinates
-                                     where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
+                                     //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
                                      select gate)
                 {
                     //looking for regular gates
-                    if (gate.title.Text == "IN" || gate.title.Text == "OUT")
+                    if (Constants.external.Contains(gate.type))
                         break;
 
                     //saving index
@@ -133,9 +132,9 @@ namespace SchemeCreator.Data {
             for (int i = 0; i < scheme.lineController.lineInfo.Count; i++)
                 foreach (var gate in from Gate gate in scheme.gateController.gates
                                          //looking for for outputs
-                                     where gate.title.Text == "OUT"
+                                     where gate.type == Constants.GateEnum.OUT
                                      //comparing inputs coordinates with line coordinates
-                                     where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
+                                     //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
                                      select gate) {
                     //saving index
                     endLinesId.Add(i);
