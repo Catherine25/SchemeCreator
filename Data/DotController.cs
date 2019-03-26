@@ -6,6 +6,7 @@ namespace SchemeCreator.Data {
     public class DotController {
         private double width, heigh;
         public IList<Ellipse> dots = new List<Ellipse>();
+        public Ellipse lastTapped;
 
         public void InitNet(double actW, double actH) {
             width = actW;
@@ -30,7 +31,7 @@ namespace SchemeCreator.Data {
                     };
 
                     dots.Add(ellipse);
-                }
+            }
         }
     }
 }
