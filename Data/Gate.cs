@@ -4,179 +4,115 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data {
-    //class for UI
     public class Gate {
-        //this element data
-        public Rectangle body;
-        public TextBlock title;
-        public bool isReserved = false;
-        public int id;
-        //inputs data
-        public Ellipse[] inputEllipse;
-        public bool[] inputReserved;
-        //outputs data
-        public bool? outputValue;
-        public Ellipse outputEllipse;
+        /*      data        */
+        public Constants.GateEnum type;
+        public bool isExternal;
+        public int inputs, outputs, x, y;
+        public bool[] values;
 
-        //default constructor
-        public Gate() { }
-
-        // Specified constructor for IN and OUT
-        public Gate(Point p, int _id, bool _isReserved) {
-            //creating thickness
-            Thickness t = new Thickness() {
-                Left = p.X - SchemeCreator.Constants.offset,
-                Top = p.Y - SchemeCreator.Constants.offset
-            };
-
-            //initializing gate body
-            body = new Rectangle() {
-                Width = SchemeCreator.Constants.dotSize * 2,
-                Height = SchemeCreator.Constants.dotSize * 2,
-                Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1],
-                Margin = t,
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
-
-            //initializing gate name
-            title = new TextBlock() {
-                Width = SchemeCreator.Constants.dotSize * 2,
-                Height = SchemeCreator.Constants.dotSize * 2,
-                Text = SchemeCreator.Constants.gateNames[(Constants.GateEnum)_id],
-                FontSize = 10,
-                Margin = t,
-                TextAlignment = TextAlignment.Center,
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
-            outputValue = false;
-            id = _id;
-            isReserved = _isReserved;
+        public Gate(Constants.GateEnum type,
+            bool isExternal,
+            int inputs,
+            int outputs,
+            int x,
+            int y) {
+                this.type = type;
+                this.isExternal = isExternal;
+                this.inputs = inputs;
+                this.outputs = outputs;
+                this.x = x;
+                this.y = y;
+                this.values = new bool[inputs];
         }
 
-        // Specified constructor for elements excluding IN and OUT
-        public Gate(Point p, int newGateInputs, int _id, bool[] isInputsReserved) {
-            //setting initial margin
-            Thickness t = new Thickness {
-                Top = p.Y - (GateController.gateHeight / 2),
-                Left = p.X - (GateController.gateWidth / 2)
-            };
+        public Button DrawBody() {
+            if(isExternal)
+                return new Button {
+                    Margin = new Thickness(x, y, 0, 0),
+                    Height = Constants.dotSize * 2,
+                    Width = Constants.dotSize * 2,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Background = Constants.brushes[Constants.AccentEnum.dark1],
+                    Foreground = Constants.brushes[Constants.AccentEnum.light1],
+                    Content = type.ToString() };
+            else {
+                if (Constants.singleInput.Contains(type)) {
+                    return new Button {
+                        Margin = new Thickness(x, y, 0, 0),
+                        Width = Constants.gateWidth,
+                        Height = Constants.gateHeight,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        Background = Constants.brushes[Constants.AccentEnum.dark1],
+                        Foreground = Constants.brushes[Constants.AccentEnum.light1],
+                        Content = type.ToString() }; }
+                else {
+                    return new Button {
+                        Margin = new Thickness(x, y, 0, 0),
+                        VerticalAlignment = VerticalAlignment.Top,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        Background = Constants.brushes[Constants.AccentEnum.dark1],
+                        Foreground = Constants.brushes[Constants.AccentEnum.light1],
+                        Content = type.ToString() + inputs.ToString() + " in " + outputs.ToString() };
+                }
+            }
+        }
 
-            //gate name
-            title = new TextBlock() {
-                Text = SchemeCreator.Constants.gateNames[(Constants.GateEnum)_id],
-                TextAlignment = TextAlignment.Center,
-                Height = GateController.gateHeight,
-                Width = GateController.gateWidth,
-                Margin = t,
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
+        public Ellipse[] DrawGateInputs() {
 
-            //body of gate
-            body = new Rectangle() {
-                Height = GateController.gateHeight,
-                Width = GateController.gateWidth,
-                Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1],
-                Margin = t,
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
+            Ellipse[] ellipses = new Ellipse[inputs];
+            Thickness t = new Thickness{
+                Left = x - SchemeCreator.Constants.offset,
+                Top = y - SchemeCreator.Constants.offset
+            };                 
 
-            inputEllipse = new Ellipse[newGateInputs];
-            inputReserved = new bool[newGateInputs];
-
-            //inputs
-            for (int i = 0; i < inputEllipse.Length; i++) {
-                //setting margin
-                t.Top += body.Height / (inputEllipse.Length + 1);
+            for (int i = 0; i < inputs; i++) {                
+                //margin set
+                t.Top += Constants.gateHeight / (inputs + 1);
 
                 if (i == 0)
                     t.Top -= SchemeCreator.Constants.lineStartOffset;
 
-                t.Left = body.Margin.Left - SchemeCreator.Constants.lineStartOffset;
+                t.Left = x - SchemeCreator.Constants.lineStartOffset;
 
-                //creating inputs array
-                inputEllipse[i] = new Ellipse() {
+                //create inputs array
+                ellipses[i] = new Ellipse() {
                     Height = SchemeCreator.Constants.dotSize,
                     Width = SchemeCreator.Constants.dotSize,
                     Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
                     Margin = t,
                     VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left
-                };
-
-                if(isInputsReserved == null)
-                    inputReserved[i] = false;
-                else
-                    inputReserved[i] = isInputsReserved[i];
+                    HorizontalAlignment = HorizontalAlignment.Left };
             }
 
-            //output
-            //setting margin
-            t.Left += body.Width;
-            t.Top = body.Margin.Top + (GateController.gateHeight / 2) - SchemeCreator.Constants.lineStartOffset;
-
-            outputEllipse = new Ellipse() {
-                Height = SchemeCreator.Constants.offset,
-                Width = SchemeCreator.Constants.offset,
-                Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
-                Margin = t,
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
-            id = _id;
+            return ellipses;
         }
 
-        //methods
-        public void Work(bool? value) {
-            if (outputValue == null) {
-                if (id == (int)SchemeCreator.Constants.GateEnum.NOT) {
-                    outputValue = !value;
-                    return;
-                } 
+        public Ellipse[] DrawGateOutputs() {
+            Ellipse[] ellipses = new Ellipse[outputs];
+            Thickness t = new Thickness();
+            
+            t.Left = x + Constants.gateWidth + Constants.lineStartOffset;
+            t.Top = x + (GateController.gateHeight / 2) - SchemeCreator.Constants.lineStartOffset;
+            
+            for (int i = 0; i<outputs; i++) {
+                t.Top += Constants.gateHeight / (inputs + 1);
 
-                outputValue = value;
-                return;
-            }
-
-            switch (id) {
-                case 2: //Buffer
-                    outputValue = value;
-                    break;
-                case 3: //NOT
-                    outputValue = !value;
-                    break;
-                case 4: //AND
-                    outputValue &= value;
-                    break;
-                case 5: //NAND
-                    outputValue &= !value;
-                    break;
-                case 6: //OR
-                    outputValue |= value;
-                    break;
-                case 7: //NOR
-                    outputValue |= !value;
-                    break;
-                case 8: //XOR
-                    outputValue ^= value;
-                    break;
-                case 9: //XNOR
-                    outputValue ^= !value;
-                    break;
-                default:
-                    break;
-            }
-            ColorByValue();
-        }
-        public void ColorByValue() {
-            if (outputValue == true)
-                body.Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1];
-            else if (outputValue == false)
-                body.Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1];
+                if(i == 0)
+                    t.Top -= SchemeCreator.Constants.lineStartOffset;
+                t.Left = x - SchemeCreator.Constants.lineStartOffset;
+                
+                ellipses[i] = new Ellipse() {
+                    Height = SchemeCreator.Constants.dotSize,
+                    Width = SchemeCreator.Constants.dotSize,
+                    Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
+                    Margin = t,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left };
+                }
+                return ellipses;
         }
     }
 }
