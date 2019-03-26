@@ -134,10 +134,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Scheme.cs" />
+    <Compile Include="Test\Test.cs" />
     <Compile Include="UI\FrameManager.cs" />
     <Compile Include="UI\IFrameInterface.cs" />
     <Compile Include="UI\MenuController.cs" />
     <Compile Include="UI\ModeManager.cs" />
+    <Compile Include="UI\NewGateBt.cs" />
     <Compile Include="UI\NewGateMenuController.cs" />
     <Compile Include="UI\WorkspaceController.cs" />
   </ItemGroup>
