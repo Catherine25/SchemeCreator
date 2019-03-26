@@ -7,8 +7,8 @@ namespace SchemeCreator.UI {
     class MenuController : IFrameInterface {
 
         /*      events      */
-        public delegate void LastClickedButtonHandler(object sender, LastClickedButtonEventArgs e);
-        public event LastClickedButtonHandler NewSchemeBtClickEvent,
+        public delegate void LastClickedBtEventHandler(object sender, LastClickedBtEventArgs e);
+        public event LastClickedBtEventHandler NewSchemeBtClickEvent,
             LoadSchemeBtClickEvent,
             SaveSchemeBtClickEvent,
             TraceSchemeBtClickEvent,
@@ -52,25 +52,25 @@ namespace SchemeCreator.UI {
             buttons[Constants.BtId.removeLineBt].Click += RemoveLineBtClick;
         }
         private void NewSchemeBtClick(object sender, RoutedEventArgs e) =>
-            NewSchemeBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.newSchemeBt));
+            NewSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.newSchemeBt));
         private void LoadSchemeBtClick(object sender, RoutedEventArgs e) =>
-            LoadSchemeBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.loadSchemeBt));
+            LoadSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.loadSchemeBt));
         private void SaveSchemeBtClick(object sender, RoutedEventArgs e) =>
-            SaveSchemeBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.saveSchemeBt));
+            SaveSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.saveSchemeBt));
         private void TraceSchemeBtClick(object sender, RoutedEventArgs e) =>
-            TraceSchemeBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.traceSchemeBt));
+            TraceSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.traceSchemeBt));
         private void WorkSchemeBtClick(object sender, RoutedEventArgs e) =>
-            WorkSchemeBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.workSchemeBt));
+            WorkSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.workSchemeBt));
         private void AddGateBtClick(object sender, RoutedEventArgs e) {
-            AddGateBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.addGateBt));
+            AddGateBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.addGateBt));
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }
         private void AddLineBtClick(object sender, RoutedEventArgs e) {
-            AddLineBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.addLineBt));
+            AddLineBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.addLineBt));
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }       
         private void RemoveLineBtClick (object sender, RoutedEventArgs e) {
-            RemoveLineBtClickEvent(this, new LastClickedButtonEventArgs(sender as Button, Constants.BtId.removeLineBt));
+            RemoveLineBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.removeLineBt));
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }
 
@@ -78,29 +78,33 @@ namespace SchemeCreator.UI {
         public void Update(double width, double height) {
             int i = 0;
             foreach (Button button in buttons.Values) {
-                button.Height = height/20;
+                button.Height = height / 20;
                 button.Width = width / (buttons.Count);
-                button.Margin = new Thickness((i*button.Width), 10, 0, 0); 
+                button.Margin = new Thickness((i*button.Width), 0, 0, 0); 
                 i++;
             }
         }
+
         public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
+        
         public void Show() {
-            foreach (Button button in buttons.Values) {
+            foreach (Button button in buttons.Values)
                 grid.Children.Add(button);
-            }
         }
+        
         public void Hide() => grid.Children.Clear();
+        
         public void InActivateModeButtons() {
             buttons[Constants.BtId.addGateBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.removeLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
         }
     }
-    class LastClickedButtonEventArgs {
+
+    class LastClickedBtEventArgs {
         public Constants.BtId btId;
         public Button button;
-        public LastClickedButtonEventArgs(Button _b, Constants.BtId _btId) {
+        public LastClickedBtEventArgs(Button _b, Constants.BtId _btId) {
             button = _b;
             btId = _btId;
         }

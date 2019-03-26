@@ -24,8 +24,7 @@ using Windows.UI.Xaml.Controls;
 //Состав библиотеки логических элементов может быть расширен другими функциональными компонентами
 //(мультиплексоры, дешифраторы, компараторы, триггеры) по желанию разработчиков.
 
-namespace SchemeCreator
-{
+namespace SchemeCreator {
     public sealed partial class MainPage : Page {
         Data.Scheme scheme = new Data.Scheme();
         //constructor
@@ -39,7 +38,7 @@ namespace SchemeCreator
             scheme.frameManager.Grid.Height = ActualHeight;
             scheme.frameManager.Grid.Width = ActualWidth;
             
-            scheme.frameManager.UpdateView(ActualWidth, ActualHeight);
+            scheme.frameManager.SizeChanged(ActualWidth, ActualHeight);
         }
     }
 }
