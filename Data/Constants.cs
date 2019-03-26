@@ -5,14 +5,32 @@ using System;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator {
-    static class Constants {
+    static public class Constants {
         static Constants() { }
         static public void Test() {
             System.Diagnostics.Debug.Assert(gateNames != null);
             System.Diagnostics.Debug.Assert(brushes != null);
         }
-        public const int netSize = 8, dotSize = 10;
+        public const int netSize = 8, dotSize = 10, gateWidth = 50, gateHeight = 70;
         public const double offset = 10.0, lineStartOffset = 5.0;
+        public static SortedSet<GateEnum> singleInput = new SortedSet<GateEnum> {
+            GateEnum.AND,
+            GateEnum.Buffer,
+            GateEnum.NAND,
+            GateEnum.NOR,
+            GateEnum.NOT,
+            GateEnum.OR,
+            GateEnum.XNOR,
+            GateEnum.XOR
+        };
+        public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
+            GateEnum.Buffer,
+            GateEnum.NOT
+        };
+        public static SortedSet<GateEnum> external = new SortedSet<GateEnum> {
+            GateEnum.IN,
+            GateEnum.OUT
+        };
         public static Dictionary<GateEnum, string> gateNames = new Dictionary<GateEnum, string> {
             { GateEnum.AND, "AND" },
             { GateEnum.Buffer, "Buffer" },
