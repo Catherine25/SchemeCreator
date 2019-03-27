@@ -55,6 +55,7 @@ namespace SchemeCreator.UI {
         private void btClick(object sender, RoutedEventArgs e) =>
             new NewGateBtClickedEventArgs(
                 buttons[sender as Button].inputCount,
+                buttons[sender as Button].outputCount,
                 buttons[sender as Button].type,
                 buttons[sender as Button].isExternal);
 
@@ -99,11 +100,14 @@ namespace SchemeCreator.UI {
         };
         RadioButton[] inputCount = new RadioButton[6];
         public bool IsActive { get; private set; }
+
         /*      events      */
+
         public delegate void NewGateBtClickedEventHandler(object sender, NewGateBtClickedEventArgs e);
         public event NewGateBtClickedEventHandler NewGateBtClickedEvent;
         
         /*      methods     */
+
         public void Update(double width, double height) {
             
             System.Diagnostics.Debug.Assert(width != 0);
@@ -138,6 +142,7 @@ namespace SchemeCreator.UI {
         private void btClicked(object sender, RoutedEventArgs e) =>
             NewGateBtClickedEvent(sender, new NewGateBtClickedEventArgs(
                 buttons[sender as Button].inputCount,
+                buttons[sender as Button].outputCount,
                 buttons[sender as Button].type,
                 buttons[sender as Button].isExternal));
 
@@ -153,14 +158,21 @@ namespace SchemeCreator.UI {
             IsActive = false;
         }
     }
+
     class NewGateBtClickedEventArgs {
-        public NewGateBtClickedEventArgs(int _inputs,
-        Constants.GateEnum _type, bool _isExternal) {
+        public NewGateBtClickedEventArgs(
+            int _inputs,
+            int _outputs,
+            Constants.GateEnum _type,
+            bool _isExternal) {
+            
             inputs = _inputs;
+            outputs = _outputs;
             type = _type;
             isExternal = _isExternal;
         }
-        public int inputs;
+
+        public int inputs, outputs;
         public Constants.GateEnum type;
         public bool isExternal;
     }
