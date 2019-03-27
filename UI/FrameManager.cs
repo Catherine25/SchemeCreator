@@ -65,19 +65,32 @@ namespace SchemeCreator.UI {
                 SwitchToFrame(Constants.FrameEnum.newGate, Grid);
             scheme.dotController.lastTapped = e.dot;
         }
+
         private void NewGateBtClickedEvent(object sender, NewGateBtClickedEventArgs e) {
-            scheme.gateController.gateInfo.Add(new Data.GateInfo(new Point(
-                scheme.dotController.lastTapped.Margin.Left - Constants.dotSize,
-                scheme.dotController.lastTapped.Margin.Top - Constants.dotSize),
+
+            if(Constants.external.Contains(e.type))
+                scheme.gateController.gates.Add(new Data.Gate(
+                    e.type,
+                    e.isExternal,
+                    e.inputs,
+                    e.outputs,
+                    scheme.dotController.lastTapped.Margin.Left + Constants.dotSize,
+                    scheme.dotController.lastTapped.Margin.Top + Constants.dotSize
+                ));
+            else scheme.gateController.gates.Add(new Data.Gate(
                 e.type,
-                e.inputs));
+                e.isExternal,
+                e.inputs,
+                e.outputs,
+                scheme.dotController.lastTapped.Margin.Left + Constants.dotSize / 2 - Constants.gateWidth / 2,
+                scheme.dotController.lastTapped.Margin.Top + Constants.dotSize / 2 - Constants.gateHeight / 2));
 
             SwitchToFrame(Constants.FrameEnum.workspace, Grid);
-            workspaceController.ShowDots(ref scheme);
+            workspaceController.ShowAll(ref scheme);
         }
 
         private void NewSchemeEvent(object sender, LastClickedBtEventArgs e) =>
-            workspaceController.ShowDots(ref scheme);
+            workspaceController.ShowAll(ref scheme);
 
         private void LoadSchemeEvent(object sender, LastClickedBtEventArgs e) => Data.Serializer.DeserializeAll(scheme);
 
@@ -95,16 +108,19 @@ namespace SchemeCreator.UI {
             // foreach (Line l in scheme.lineController.lines)
             //     scheme.SendValue(scheme.GetValue(l), l);
         }
+        
         private void AddGateEvent(object sender, LastClickedBtEventArgs e) {
             menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.addGateMode;
         }
+        
         private void AddLineEvent(object sender, LastClickedBtEventArgs e) {
             menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
-        }         
+        }        
+
         private void RemoveLineEvent(object sender, LastClickedBtEventArgs e) {
             menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];

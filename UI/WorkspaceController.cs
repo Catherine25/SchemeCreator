@@ -1,6 +1,4 @@
-﻿using System;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
@@ -30,11 +28,37 @@ namespace SchemeCreator.UI {
             isActive = true;
         }
 
-        public void ReloadGates(SchemeCreator.Data.Scheme scheme) {
+        public void ShowGates(ref Data.Scheme scheme) {
+
             foreach(Data.Gate gate in scheme.gateController.gates) {
                 grid.Children.Add(gate.DrawBody());
+
+                foreach(Ellipse e in gate.DrawGateInputs())
+                    grid.Children.Add(e);
+
+                foreach(Ellipse e in gate.DrawGateOutputs())
+                    grid.Children.Add(e);
+            }
+        }
+
+        public void ShowLines(ref Data.Scheme scheme) {
+
+        }
+
+        public void ShowAll(ref Data.Scheme scheme) {
+            ShowDots(ref scheme);
+            ShowGates(ref scheme);
+            ShowLines(ref scheme);
+        }
+
+        public void ReloadGates(SchemeCreator.Data.Scheme scheme) {
+
+            foreach(Data.Gate gate in scheme.gateController.gates) {
+                grid.Children.Add(gate.DrawBody());
+                
                 foreach (Ellipse ellipse in gate.DrawGateInputs())
                     grid.Children.Add(ellipse);
+                
                 foreach (Ellipse ellipse in gate.DrawGateOutputs())
                     grid.Children.Add(ellipse);
             }
