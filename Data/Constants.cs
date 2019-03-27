@@ -7,10 +7,6 @@ using Windows.UI.Xaml.Controls;
 namespace SchemeCreator {
     static public class Constants {
         static Constants() { }
-        static public void Test() {
-            System.Diagnostics.Debug.Assert(gateNames != null);
-            System.Diagnostics.Debug.Assert(brushes != null);
-        }
         public const int netSize = 8, dotSize = 10, gateWidth = 50, gateHeight = 70;
         public const double offset = 10.0, lineStartOffset = 5.0;
         public static SortedSet<GateEnum> singleInput = new SortedSet<GateEnum> {
