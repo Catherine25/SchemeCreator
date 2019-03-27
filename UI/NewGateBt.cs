@@ -13,8 +13,9 @@ namespace SchemeCreator.Data {
         outputCount = _outputCount;
         isExternal = _isExternal;
     }
+
     public SchemeCreator.Constants.GateEnum type;
-    public int inputCount, outputCount;
+    public int inputCount, outputCount, x, y;
     public bool isExternal;
     }
 }
