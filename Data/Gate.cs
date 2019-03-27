@@ -8,15 +8,16 @@ namespace SchemeCreator.Data {
         /*      data        */
         public Constants.GateEnum type;
         public bool isExternal;
-        public int inputs, outputs, x, y;
+        public int inputs, outputs;
+        public double x, y;
         public bool[] values;
 
         public Gate(Constants.GateEnum type,
             bool isExternal,
             int inputs,
             int outputs,
-            int x,
-            int y) {
+            double x,
+            double y) {
                 this.type = type;
                 this.isExternal = isExternal;
                 this.inputs = inputs;
