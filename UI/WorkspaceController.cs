@@ -26,7 +26,9 @@ namespace SchemeCreator.UI {
 
             scheme.dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
 
-            foreach(Ellipse e in scheme.dotController.dots) {
+            for(int i = 0; i < scheme.dotController.getDotCount(); i++) {
+                
+                Ellipse e = scheme.dotController.getDotByIndex(i);
                 grid.Children.Add(e);
                 e.Tapped += DotTapped;
             }
@@ -53,9 +55,7 @@ namespace SchemeCreator.UI {
             //TODO: DRAW EXTERNAL
         }
 
-        public void ShowLines(ref Data.Scheme scheme) {
-
-        }
+        public void ShowLines(ref Data.Scheme scheme) { }
 
         public void ShowAll(ref Data.Scheme scheme) {
 
