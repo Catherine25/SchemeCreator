@@ -10,6 +10,7 @@ namespace SchemeCreator.Data {
 
         public Wire getWireByIndex(int index) => wires[index];
         public int getWireCount() => wires.Count;
+        public int getIndexOf(Wire wire) => wires.IndexOf(wire);
         public void addWire(Wire w) => wires.Add(w);
 
         public void createWireByPoints(Point p1, Point p2) =>
