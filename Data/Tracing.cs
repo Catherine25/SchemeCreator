@@ -34,10 +34,10 @@ namespace SchemeCreator.Data {
 
                 TextBlock tb = new TextBlock() {
                     Margin = new Thickness {
-                        Left = (scheme.lineController.wires[startLinesId.ElementAt(i)].start.X +
-                        scheme.lineController.wires[startLinesId.ElementAt(i)].end.X) / 2,
-                        Top = ((scheme.lineController.wires[startLinesId.ElementAt(i)].start.Y +
-                        scheme.lineController.wires[startLinesId.ElementAt(i)].end.Y) / 2) + SchemeCreator.Constants.offset
+                        Left = (scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.X +
+                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.X) / 2,
+                        Top = ((scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.Y +
+                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.Y) / 2) + SchemeCreator.Constants.offset
                     },
 
                     Text = counter.ToString(),
@@ -53,11 +53,11 @@ namespace SchemeCreator.Data {
 
                 TextBlock tb = new TextBlock() {
                     Margin = new Thickness {
-                        Left = (scheme.lineController.wires[middleLinesId.ElementAt(i)].start.X +
-                        scheme.lineController.wires[middleLinesId.ElementAt(i)].end.X) / 2,
+                        Left = (scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.X +
+                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.X) / 2,
 
-                        Top = ((scheme.lineController.wires[middleLinesId.ElementAt(i)].start.Y +
-                        scheme.lineController.wires[middleLinesId.ElementAt(i)].end.Y) / 2) +
+                        Top = ((scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.Y +
+                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.Y) / 2) +
                         SchemeCreator.Constants.offset
                     },
 
@@ -74,10 +74,10 @@ namespace SchemeCreator.Data {
 
                 TextBlock tb = new TextBlock() {
                     Margin = new Thickness {
-                        Left = (scheme.lineController.wires[endLinesId.ElementAt(i)].start.X +
-                        scheme.lineController.wires[endLinesId.ElementAt(i)].end.X) / 2,
-                        Top = ((scheme.lineController.wires[endLinesId.ElementAt(i)].start.Y +
-                        scheme.lineController.wires[endLinesId.ElementAt(i)].end.Y) / 2) + SchemeCreator.Constants.offset
+                        Left = (scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.X +
+                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.X) / 2,
+                        Top = ((scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.Y +
+                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.Y) / 2) + SchemeCreator.Constants.offset
                     },
 
                     Text = counter.ToString(),
@@ -91,53 +91,54 @@ namespace SchemeCreator.Data {
 
         //firstly numerating the input lines
         private static void NumerateInputLines(Scheme scheme) {
-            startLinesId.Clear();
+            // startLinesId.Clear();
 
-            for (int i = 0; i < scheme.lineController.wires.Count; i++)
-                foreach (var gate in from Gate gate in scheme.gateController.gates
-                                         //looking for inputs
-                                     where gate.type == Constants.GateEnum.IN
-                                     //comparing inputs coordinates with line coordinates
-                                     //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-                                     select gate) {
-                    //saving index
-                    startLinesId.Add(i);
-                }
+            // for (int i = 0; i < scheme.lineController.getWireCount(); i++)
+            
+            //     foreach (var gate in from Gate gate in scheme.gateController.gates
+            //                              //looking for inputs
+            //                          where gate.type == Constants.GateEnum.IN
+            //                          //comparing inputs coordinates with line coordinates
+            //                          //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
+            //                          select gate) {
+            //         //saving index
+            //         startLinesId.Add(i);
+            //     }
         }
 
         //numerating lines without inputs and outputs
         private static void NumerateCenterLines(Scheme scheme) {
-            middleLinesId.Clear();
+            // middleLinesId.Clear();
 
-            for (int i = 0; i < scheme.lineController.wires.Count; i++)
-                foreach (var gate in from Gate gate in scheme.gateController.gates
-                                         //comparing inputs coordinates with line coordinates
-                                     //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-                                     select gate)
-                {
-                    //looking for regular gates
-                    if (Constants.external.Contains(gate.type))
-                        break;
+            // for (int i = 0; i < scheme.lineController.getWireCount(); i++)
+            //     foreach (var gate in from Gate gate in scheme.gateController.gates
+            //                              //comparing inputs coordinates with line coordinates
+            //                          //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
+            //                          select gate)
+            //     {
+            //         //looking for regular gates
+            //         if (Constants.external.Contains(gate.type))
+            //             break;
 
-                    //saving index
-                    middleLinesId.Add(i);
-                    break;
-                }
+            //         //saving index
+            //         middleLinesId.Add(i);
+            //         break;
+            //     }
         }
         //numerating the output lines
         private static void NumerateOutputLines(Scheme scheme) {
-            endLinesId.Clear();
+            // endLinesId.Clear();
 
-            for (int i = 0; i < scheme.lineController.wires.Count; i++)
-                foreach (var gate in from Gate gate in scheme.gateController.gates
-                                         //looking for for outputs
-                                     where gate.type == Constants.GateEnum.OUT
-                                     //comparing inputs coordinates with line coordinates
-                                     //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-                                     select gate) {
-                    //saving index
-                    endLinesId.Add(i);
-                }
+            // for (int i = 0; i < scheme.lineController.getWireCount(); i++)
+            //     foreach (var gate in from Gate gate in scheme.gateController.gates
+            //                              //looking for for outputs
+            //                          where gate.type == Constants.GateEnum.OUT
+            //                          //comparing inputs coordinates with line coordinates
+            //                          //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
+            //                          select gate) {
+            //         //saving index
+            //         endLinesId.Add(i);
+            //     }
         }
     }
 }

@@ -4,9 +4,13 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data {
     public class DotController {
-        private double width, heigh;
-        public IList<Ellipse> dots = new List<Ellipse>();
+
+        double width, heigh;
+        IList<Ellipse> dots = new List<Ellipse>();
         public Ellipse lastTapped;
+
+        public Ellipse getDotByIndex(int index) => dots[index];
+        public int getDotCount() => dots.Count;
 
         public void InitNet(double actW, double actH) {
             width = actW;

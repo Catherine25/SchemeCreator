@@ -32,27 +32,36 @@ namespace SchemeCreator.Data {
         public Button DrawBody() {
 
             Button button = new Button() {
+
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+
                 Background = Constants.brushes[Constants.AccentEnum.dark1],
                 Foreground = Constants.brushes[Constants.AccentEnum.light1],
-                Margin = new Thickness(x, y, 0, 0 ),
+
+                Margin = new Thickness(x, y, 0, 0),
                 FontSize = 10,
                 Content = type.ToString()
             };
 
             if(isExternal) {
-                button.Height = Constants.dotSize * 2;
-                button.Width = Constants.dotSize * 2;
+                button.Height = Constants.externalGateSize;
+                button.Width = Constants.externalGateSize;
+                button.Margin = new Thickness(
+                    button.Margin.Left - Constants.externalGateSize / 2 - Constants.dotSize / 2,
+                    button.Margin.Top - Constants.externalGateSize / 2 - Constants.dotSize / 2,
+                    0,
+                    0 );
             }
             else {
-                if (Constants.singleInput.Contains(type)) {
-                    button.Width = Constants.gateWidth;
-                    button.Height = Constants.gateHeight;
-                }
-                else
-                    button.Content += " " + inputs.ToString() + " in " + outputs.ToString();
-                }
+                button.Width = Constants.gateWidth;
+                button.Height = Constants.gateHeight;
+
+                if (!Constants.singleOutput.Contains(type))
+                    button.Content += "\n" + inputs.ToString() + " in " + outputs.ToString();
+            }
 
                 button.Name = button.Margin.ToString();
                 return button;
