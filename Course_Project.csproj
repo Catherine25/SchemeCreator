@@ -124,7 +124,6 @@
     <Compile Include="Data\Gate.cs" />
     <Compile Include="Data\GateController.cs" />
     <Compile Include="Data\LineController.cs" />
-    <Compile Include="Data\NewGateData.cs" />
     <Compile Include="Data\Serializator.cs" />
     <Compile Include="Data\Tracing.cs" />
     <Compile Include="Data\Wire.cs" />
