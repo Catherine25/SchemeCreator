@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
@@ -10,35 +11,46 @@ namespace SchemeCreator.UI {
         public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
 
         public void Hide() {
+            
             grid.Children.Clear();
             isActive = false;
         }
 
         public void Update(double width, double height) {
+
             grid.Height = height;
             grid.Width = width;
         }
 
         public void ShowDots(ref Data.Scheme scheme) {
+
             scheme.dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
+
             foreach(Ellipse e in scheme.dotController.dots) {
                 grid.Children.Add(e);
                 e.Tapped += DotTapped;
             }
+
             isActive = true;
         }
 
         public void ShowGates(ref Data.Scheme scheme) {
 
-            foreach(Data.Gate gate in scheme.gateController.gates) {
+            var notExternalGates = from gate in scheme.gateController.gates
+                where !gate.isExternal
+                select gate;
+            
+            foreach(Data.Gate gate in notExternalGates) {
                 grid.Children.Add(gate.DrawBody());
 
-                foreach(Ellipse e in gate.DrawGateInputs())
+                foreach(Ellipse e in gate.DrawGateInOut(true))
                     grid.Children.Add(e);
 
-                foreach(Ellipse e in gate.DrawGateOutputs())
+                foreach(Ellipse e in gate.DrawGateInOut(false))
                     grid.Children.Add(e);
             }
+
+            //TODO: DRAW EXTERNAL
         }
 
         public void ShowLines(ref Data.Scheme scheme) {
@@ -46,20 +58,21 @@ namespace SchemeCreator.UI {
         }
 
         public void ShowAll(ref Data.Scheme scheme) {
+
             ShowDots(ref scheme);
             ShowGates(ref scheme);
             ShowLines(ref scheme);
         }
 
-        public void ReloadGates(SchemeCreator.Data.Scheme scheme) {
+        public void ReloadGates(Data.Scheme scheme) {
 
             foreach(Data.Gate gate in scheme.gateController.gates) {
                 grid.Children.Add(gate.DrawBody());
                 
-                foreach (Ellipse ellipse in gate.DrawGateInputs())
+                foreach (Ellipse ellipse in gate.DrawGateInOut(true))
                     grid.Children.Add(ellipse);
-                
-                foreach (Ellipse ellipse in gate.DrawGateOutputs())
+
+                foreach (Ellipse ellipse in gate.DrawGateInOut(false))
                     grid.Children.Add(ellipse);
             }
         }

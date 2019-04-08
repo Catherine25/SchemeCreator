@@ -6,30 +6,13 @@ using Windows.UI.Xaml.Shapes;
 namespace SchemeCreator.Data {
     public class LineController {
         //data
-        public List<Line> lines;
-        public IList<LineInfo> lineInfo;
+        public List<Wire> wires = new List<Wire>();
 
         //constructor
-        public LineController() {
-            lines = new List<Line>();
-            lineInfo = new List<LineInfo>();
-        }
+        public LineController() { }
 
-        public Line CreateLine(Point p1, Point p2) {
-            Line line = new Line {
-                X1 = p1.X,
-                Y1 = p1.Y,
-                X2 = p2.X,
-                Y2 = p2.Y,
-                StrokeThickness = SchemeCreator.Constants.lineStartOffset,
-                Stroke = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1],
-                StrokeEndLineCap = PenLineCap.Round,
-                StrokeStartLineCap = PenLineCap.Round
-            };
-
-            lines.Add(line);
-            return line;
-        }
+        public void CreateLine(Point p1, Point p2) =>
+            wires.Add(new Wire { start = p1, end = p2 });
 
         public void ColorLine(Line l, bool? value) {
             if (value == true)
@@ -40,8 +23,8 @@ namespace SchemeCreator.Data {
         }
 
         public void ReloadLines() {
-            foreach (LineInfo lInfo in lineInfo)
-                CreateLine(lInfo.point1, lInfo.point2);
+            foreach (Wire w in wires)
+                CreateLine(w.start, w.end);
         }
     }
 }
