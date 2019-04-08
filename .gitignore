@@ -262,3 +262,12 @@ __pycache__/
 Course_Project.csproj
 MainPage.xaml
 Package.appxmanifest
+Unit_Test/Properties/AssemblyInfo.cs
+Unit_Test/Assets/Square44x44Logo.targetsize-24_altform-unplated.png
+Unit_Test/Assets/LockScreenLogo.scale-200.png
+Unit_Test/Assets/SplashScreen.scale-200.png
+Unit_Test/Assets/Square150x150Logo.scale-200.png
+Unit_Test/Assets/Square44x44Logo.scale-200.png
+Unit_Test/Assets/StoreLogo.png
+Unit_Test/Assets/Wide310x150Logo.scale-200.png
+Unit_Test/UnitTestApp.xaml.cs
