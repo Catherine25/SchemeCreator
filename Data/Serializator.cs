@@ -19,8 +19,9 @@ namespace SchemeCreator.Data {
         }
 
         public static void SerializeAll(Scheme scheme) {
-            foreach (Gate gi in scheme.gateController.gates)
-                serializeGateData.Add(gi.SerializeGate());
+
+            for(int i = 0; i < scheme.gateController.getGateCount(); i++)
+                serializeGateData.Add(scheme.gateController.getGateByIndex(i).SerializeGate());
 
             for(int i = 0; i < scheme.lineController.getWireCount(); i++)
                 serializeGateData.Add(scheme.lineController.getWireByIndex(i).SerializeLine());
@@ -28,7 +29,7 @@ namespace SchemeCreator.Data {
 
         public static void DeserializeAll(Scheme scheme) {
             foreach (string s in serializeGateData)
-                scheme.gateController.gates.Add(s.DeserializeGate());
+                scheme.gateController.addGate(s.DeserializeGate());
 
             foreach (string s in serializeLineData)
                 scheme.lineController.addWire(s.DeserializeLine());
