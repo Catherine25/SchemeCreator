@@ -38,11 +38,9 @@ namespace SchemeCreator.UI {
 
         public void ShowGates(ref Data.Scheme scheme) {
 
-            var notExternalGates = from gate in scheme.gateController.gates
-                where !gate.isExternal
-                select gate;
+            var logicGates = scheme.gateController.getLogicGates();
             
-            foreach(Data.Gate gate in notExternalGates) {
+            foreach(Data.Gate gate in logicGates) {
                 grid.Children.Add(gate.DrawBody());
 
                 foreach(Ellipse e in gate.DrawGateInOut(true))
@@ -52,7 +50,11 @@ namespace SchemeCreator.UI {
                     grid.Children.Add(e);
             }
 
-            //TODO: DRAW EXTERNAL
+            var externalGates = scheme.gateController.getExternalGates();
+
+            foreach(Data.Gate gate in externalGates) {
+                grid.Children.Add(gate.DrawBody());
+            }
         }
 
         public void ShowLines(ref Data.Scheme scheme) { }
@@ -66,9 +68,11 @@ namespace SchemeCreator.UI {
 
         public void ReloadGates(Data.Scheme scheme) {
 
-            foreach(Data.Gate gate in scheme.gateController.gates) {
+            for(int i = 0; i < scheme.gateController.getGateCount(); i++) {
+
+                var gate = scheme.gateController.getGateByIndex(i);
                 grid.Children.Add(gate.DrawBody());
-                
+
                 foreach (Ellipse ellipse in gate.DrawGateInOut(true))
                     grid.Children.Add(ellipse);
 
