@@ -19,11 +19,11 @@ namespace SchemeCreator.Data {
         }
 
         public static void SerializeAll(Scheme scheme) {
-            foreach (GateInfo gi in scheme.gateController.gateInfo)
+            foreach (Gate gi in scheme.gateController.gates)
                 serializeGateData.Add(gi.SerializeGate());
 
-            foreach (LineInfo li in scheme.lineController.lineInfo)
-                serializeLineData.Add(li.SerializeLine());
+            foreach (Wire w in scheme.lineController.wires)
+                serializeLineData.Add(w.SerializeLine());
         }
 
         public static void DeserializeAll(Scheme scheme) {
@@ -31,18 +31,18 @@ namespace SchemeCreator.Data {
             //scheme.lineController.lineInfo.Clear();
 
             foreach (string s in serializeGateData)
-                scheme.gateController.gateInfo.Add(s.DeserializeGate());
+                scheme.gateController.gates.Add(s.DeserializeGate());
 
             foreach (string s in serializeLineData)
-                scheme.lineController.lineInfo.Add(s.DeserializeLine());
+                scheme.lineController.wires.Add(s.DeserializeLine());
         }
 
         //Gate and line serialization and deserialization
-        public static string SerializeGate(this GateInfo gi) {
+        public static string SerializeGate(this Gate gi) {
             var ms = new MemoryStream();
             // Write an object to the Stream and leave it opened
             using (var writer = XmlDictionaryWriter.CreateTextWriter(ms, Encoding.UTF8, ownsStream: false)) {
-                var ser = new DataContractSerializer(typeof(GateInfo));
+                var ser = new DataContractSerializer(typeof(Gate));
                 ser.WriteObject(writer, gi);
             }
             // Read serialized string from Stream and close it
@@ -51,12 +51,12 @@ namespace SchemeCreator.Data {
                 return reader.ReadToEnd();
             }
         }
-        public static string SerializeLine(this LineInfo li) {
+        public static string SerializeLine(this Wire w) {
             var ms = new MemoryStream();
             // Write an object to the Stream and leave it opened
             using (var writer = XmlDictionaryWriter.CreateTextWriter(ms, Encoding.UTF8, ownsStream: false)) {
-                var ser = new DataContractSerializer(typeof(LineInfo));
-                ser.WriteObject(writer, li);
+                var ser = new DataContractSerializer(typeof(Wire));
+                ser.WriteObject(writer, w);
             }
             // Read serialized string from Stream and close it
             using (var reader = new StreamReader(ms, Encoding.UTF8)) {
@@ -65,7 +65,7 @@ namespace SchemeCreator.Data {
             }
         }
 
-        public static GateInfo DeserializeGate(this string xml) {
+        public static Gate DeserializeGate(this string xml) {
             var ms = new MemoryStream();
             // Write xml content to the Stream and leave it opened
             using (var writer = new StreamWriter(ms, Encoding.UTF8, 512, leaveOpen: true)) {
@@ -76,12 +76,12 @@ namespace SchemeCreator.Data {
             // Read Stream to the Serializer and Deserialize and close it
             using (var reader = XmlDictionaryReader.CreateTextReader(ms, Encoding.UTF8,
             new XmlDictionaryReaderQuotas(), null)) {
-                var ser = new DataContractSerializer(typeof(GateInfo));
-                return (GateInfo)ser.ReadObject(reader);
+                var ser = new DataContractSerializer(typeof(Gate));
+                return (Gate)ser.ReadObject(reader);
             }
         }
 
-        public static LineInfo DeserializeLine(this string xml) {
+        public static Wire DeserializeLine(this string xml) {
             var ms = new MemoryStream();
             // Write xml content to the Stream and leave it opened
             using (var writer = new StreamWriter(ms, Encoding.UTF8, 512, leaveOpen: true)) {
@@ -92,8 +92,8 @@ namespace SchemeCreator.Data {
             // Read Stream to the Serializer and Deserialize and close it
             using (var reader = XmlDictionaryReader.CreateTextReader(ms, Encoding.UTF8,
             new XmlDictionaryReaderQuotas(), null)) {
-                var ser = new DataContractSerializer(typeof(LineInfo));
-                return (LineInfo)ser.ReadObject(reader);
+                var ser = new DataContractSerializer(typeof(Wire));
+                return (Wire)ser.ReadObject(reader);
             }
         }
 
