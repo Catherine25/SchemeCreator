@@ -20,7 +20,8 @@ namespace SchemeCreator.Data {
         }
 
         //methods
-        public static void ShowTracing(SchemeCreator.Data.Scheme scheme) {
+        public static void ShowTracing(Scheme scheme) {
+            
             NumerateInputLines(scheme);
             NumerateCenterLines(scheme);
             NumerateOutputLines(scheme);
@@ -33,11 +34,10 @@ namespace SchemeCreator.Data {
 
                 TextBlock tb = new TextBlock() {
                     Margin = new Thickness {
-                        Left = (scheme.lineController.lineInfo[startLinesId.ElementAt(i)].point1.X +
-                        scheme.lineController.lineInfo[startLinesId.ElementAt(i)].point2.X) / 2,
-
-                        Top = ((scheme.lineController.lineInfo[startLinesId.ElementAt(i)].point1.Y +
-                        scheme.lineController.lineInfo[startLinesId.ElementAt(i)].point2.Y) / 2) + SchemeCreator.Constants.offset
+                        Left = (scheme.lineController.wires[startLinesId.ElementAt(i)].start.X +
+                        scheme.lineController.wires[startLinesId.ElementAt(i)].end.X) / 2,
+                        Top = ((scheme.lineController.wires[startLinesId.ElementAt(i)].start.Y +
+                        scheme.lineController.wires[startLinesId.ElementAt(i)].end.Y) / 2) + SchemeCreator.Constants.offset
                     },
 
                     Text = counter.ToString(),
@@ -53,11 +53,11 @@ namespace SchemeCreator.Data {
 
                 TextBlock tb = new TextBlock() {
                     Margin = new Thickness {
-                        Left = (scheme.lineController.lineInfo[middleLinesId.ElementAt(i)].point1.X +
-                        scheme.lineController.lineInfo[middleLinesId.ElementAt(i)].point2.X) / 2,
+                        Left = (scheme.lineController.wires[middleLinesId.ElementAt(i)].start.X +
+                        scheme.lineController.wires[middleLinesId.ElementAt(i)].end.X) / 2,
 
-                        Top = ((scheme.lineController.lineInfo[middleLinesId.ElementAt(i)].point1.Y +
-                        scheme.lineController.lineInfo[middleLinesId.ElementAt(i)].point2.Y) / 2) +
+                        Top = ((scheme.lineController.wires[middleLinesId.ElementAt(i)].start.Y +
+                        scheme.lineController.wires[middleLinesId.ElementAt(i)].end.Y) / 2) +
                         SchemeCreator.Constants.offset
                     },
 
@@ -74,11 +74,10 @@ namespace SchemeCreator.Data {
 
                 TextBlock tb = new TextBlock() {
                     Margin = new Thickness {
-                        Left = (scheme.lineController.lineInfo[endLinesId.ElementAt(i)].point1.X +
-                        scheme.lineController.lineInfo[endLinesId.ElementAt(i)].point2.X) / 2,
-
-                        Top = ((scheme.lineController.lineInfo[endLinesId.ElementAt(i)].point1.Y +
-                        scheme.lineController.lineInfo[endLinesId.ElementAt(i)].point2.Y) / 2) + SchemeCreator.Constants.offset
+                        Left = (scheme.lineController.wires[endLinesId.ElementAt(i)].start.X +
+                        scheme.lineController.wires[endLinesId.ElementAt(i)].end.X) / 2,
+                        Top = ((scheme.lineController.wires[endLinesId.ElementAt(i)].start.Y +
+                        scheme.lineController.wires[endLinesId.ElementAt(i)].end.Y) / 2) + SchemeCreator.Constants.offset
                     },
 
                     Text = counter.ToString(),
@@ -94,7 +93,7 @@ namespace SchemeCreator.Data {
         private static void NumerateInputLines(Scheme scheme) {
             startLinesId.Clear();
 
-            for (int i = 0; i < scheme.lineController.lineInfo.Count; i++)
+            for (int i = 0; i < scheme.lineController.wires.Count; i++)
                 foreach (var gate in from Gate gate in scheme.gateController.gates
                                          //looking for inputs
                                      where gate.type == Constants.GateEnum.IN
@@ -110,7 +109,7 @@ namespace SchemeCreator.Data {
         private static void NumerateCenterLines(Scheme scheme) {
             middleLinesId.Clear();
 
-            for (int i = 0; i < scheme.lineController.lineInfo.Count; i++)
+            for (int i = 0; i < scheme.lineController.wires.Count; i++)
                 foreach (var gate in from Gate gate in scheme.gateController.gates
                                          //comparing inputs coordinates with line coordinates
                                      //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
@@ -129,7 +128,7 @@ namespace SchemeCreator.Data {
         private static void NumerateOutputLines(Scheme scheme) {
             endLinesId.Clear();
 
-            for (int i = 0; i < scheme.lineController.lineInfo.Count; i++)
+            for (int i = 0; i < scheme.lineController.wires.Count; i++)
                 foreach (var gate in from Gate gate in scheme.gateController.gates
                                          //looking for for outputs
                                      where gate.type == Constants.GateEnum.OUT
