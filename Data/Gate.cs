@@ -44,6 +44,11 @@ namespace SchemeCreator.Data {
             if(isExternal) {
                 button.Height = Constants.dotSize * 2;
                 button.Width = Constants.dotSize * 2;
+                button.Margin = new Thickness(
+                    button.Margin.Left - 1.5 * Constants.dotSize,
+                    button.Margin.Top - 1.5 * Constants.dotSize,
+                    0,
+                    0 );
             }
             else {
                 if (Constants.singleInput.Contains(type)) {
@@ -52,7 +57,7 @@ namespace SchemeCreator.Data {
                 }
                 else
                     button.Content += " " + inputs.ToString() + " in " + outputs.ToString();
-                }
+            }
 
                 button.Name = button.Margin.ToString();
                 return button;
