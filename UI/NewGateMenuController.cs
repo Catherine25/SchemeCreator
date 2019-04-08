@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 namespace SchemeCreator.UI {
     class NewGateMenuController : IFrameInterface {
@@ -42,6 +41,7 @@ namespace SchemeCreator.UI {
                 }
 
                 foreach (Button b in buttons.Keys) {
+
                     b.HorizontalAlignment = HorizontalAlignment.Left;
                     b.VerticalAlignment = VerticalAlignment.Top;
                     b.Background = Constants.brushes[Constants.AccentEnum.dark1];
@@ -63,14 +63,17 @@ namespace SchemeCreator.UI {
             (sender as RadioButton).Foreground = Constants.brushes[Constants.AccentEnum.light1];
             
             if((sender as RadioButton).Content.ToString() == "1 output")
+                foreach(Button b in buttons.Keys)
+                    if(Constants.external.Contains(buttons[b].type) ||
+                        Constants.singleOutput.Contains(buttons[b].type)) {
+                            b.IsEnabled = true;
+                            buttons[b].inputCount = 1;
+                        }
+                    else b.IsEnabled = false;
+
+            else
                 foreach(Button b in buttons.Keys) {
                     if(Constants.external.Contains(buttons[b].type) ||
-                        Constants.singleOutput.Contains(buttons[b].type))
-                            b.IsEnabled = true;
-                    else b.IsEnabled = false;
-            }
-            else foreach(Button b in buttons.Keys) {
-                if(Constants.external.Contains(buttons[b].type) ||
                         Constants.singleOutput.Contains(buttons[b].type) )
                             b.IsEnabled = false;
                     else b.IsEnabled = true;
@@ -94,10 +97,12 @@ namespace SchemeCreator.UI {
         /*      data        */
 
         Dictionary<Button, Data.NewGateBt> buttons = new Dictionary<Button, Data.NewGateBt>();
+
         Grid grid = new Grid {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top
         };
+        
         RadioButton[] inputCount = new RadioButton[6];
         public bool IsActive { get; private set; }
 
@@ -109,10 +114,7 @@ namespace SchemeCreator.UI {
         /*      methods     */
 
         public void Update(double width, double height) {
-            
-            System.Diagnostics.Debug.Assert(width != 0);
-            System.Diagnostics.Debug.Assert(height != 0);
-            
+
             grid.Width = width;
             grid.Height = height;
 
@@ -147,6 +149,7 @@ namespace SchemeCreator.UI {
                 buttons[sender as Button].isExternal));
 
         public void Show() {
+
             foreach(Button button in buttons.Keys)
                 grid.Children.Add(button);
             
@@ -154,6 +157,7 @@ namespace SchemeCreator.UI {
         }
 
         public void Hide() {
+            
             grid.Children.Clear();
             IsActive = false;
         }
