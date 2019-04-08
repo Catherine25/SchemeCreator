@@ -22,13 +22,13 @@ namespace SchemeCreator.UI {
             grid.Width = width;
         }
 
-        public void ShowDots(ref Data.Scheme scheme) {
+        public void ShowDots(ref Data.DotController dotController) {
 
-            scheme.dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
+            dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
 
-            for(int i = 0; i < scheme.dotController.getDotCount(); i++) {
+            for(int i = 0; i < dotController.getDotCount(); i++) {
                 
-                Ellipse e = scheme.dotController.getDotByIndex(i);
+                Ellipse e = dotController.getDotByIndex(i);
                 grid.Children.Add(e);
                 e.Tapped += DotTapped;
             }
@@ -36,9 +36,9 @@ namespace SchemeCreator.UI {
             isActive = true;
         }
 
-        public void ShowGates(ref Data.Scheme scheme) {
+        public void ShowGates(ref Data.GateController gateController) {
 
-            var logicGates = scheme.gateController.getLogicGates();
+            var logicGates = gateController.getLogicGates();
             
             foreach(Data.Gate gate in logicGates) {
                 grid.Children.Add(gate.DrawBody());
@@ -50,20 +50,20 @@ namespace SchemeCreator.UI {
                     grid.Children.Add(e);
             }
 
-            var externalGates = scheme.gateController.getExternalGates();
+            var externalGates = gateController.getExternalGates();
 
             foreach(Data.Gate gate in externalGates) {
                 grid.Children.Add(gate.DrawBody());
             }
         }
 
-        public void ShowLines(ref Data.Scheme scheme) { }
+        public void ShowLines(ref Data.LineController scheme) { }
 
         public void ShowAll(ref Data.Scheme scheme) {
 
-            ShowDots(ref scheme);
-            ShowGates(ref scheme);
-            ShowLines(ref scheme);
+            ShowDots(ref scheme.dotController);
+            ShowGates(ref scheme.gateController);
+            ShowLines(ref scheme.lineController);
         }
 
         public void ReloadGates(Data.Scheme scheme) {
