@@ -69,7 +69,7 @@ namespace SchemeCreator.UI {
         private void NewGateBtClickedEvent(object sender, NewGateBtClickedEventArgs e) {
 
             if(Constants.external.Contains(e.type))
-                scheme.gateController.gates.Add(new Data.Gate(
+                scheme.gateController.addGate(new Data.Gate(
                     e.type,
                     e.isExternal,
                     e.inputs,
@@ -77,7 +77,7 @@ namespace SchemeCreator.UI {
                     scheme.dotController.lastTapped.Margin.Left + Constants.dotSize,
                     scheme.dotController.lastTapped.Margin.Top + Constants.dotSize
                 ));
-            else scheme.gateController.gates.Add(new Data.Gate(
+            else scheme.gateController.addGate(new Data.Gate(
                 e.type,
                 e.isExternal,
                 e.inputs,
