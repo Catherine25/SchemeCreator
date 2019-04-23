@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Windows.Foundation;
 using System.Linq;
+using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data {
     public class GateController {
@@ -9,6 +10,13 @@ namespace SchemeCreator.Data {
         public int getGateCount() => gates.Count;
         public int getIndexOf(Gate gate) => gates.IndexOf(gate);
         public Gate getGateByIndex(int index) => gates[index];
+        
+        public Gate getGateByInOut(Ellipse e, bool isInput) {
+            foreach (Gate gate in gates)
+                if(gate.containsInOutByMargin(e, isInput))
+                    return gate;
+            throw new System.Exception();
+        }
         public IList<Gate> getLogicGates() {
 
             var logicGates = new List<Gate>(); 
@@ -20,6 +28,7 @@ namespace SchemeCreator.Data {
 
             return logicGates;
         }
+
         public IList<Gate> getExternalGates() {
 
             var externalGates = new List<Gate>(); 
