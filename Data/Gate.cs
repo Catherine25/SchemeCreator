@@ -1,8 +1,10 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
+using System;
 using System.Runtime.Serialization;
 using Windows.Foundation;
+using System.Collections.Generic;
 
 namespace SchemeCreator.Data {
     [DataContract] public class Gate {
@@ -11,7 +13,7 @@ namespace SchemeCreator.Data {
         [DataMember] public bool isExternal;
         [DataMember] public int inputs, outputs;
         [DataMember] public double x, y;
-        [DataMember] public bool[] values;
+        [DataMember] public List<bool> values;
 
         public Gate(Constants.GateEnum type,
             bool isExternal,
@@ -19,14 +21,17 @@ namespace SchemeCreator.Data {
             int outputs,
             double x,
             double y) {
-                
+
                 this.type = type;
                 this.isExternal = isExternal;
                 this.inputs = inputs;
                 this.outputs = outputs;
                 this.x = x;
                 this.y = y;
-                this.values = new bool[inputs];
+                this.values = new List<bool> (inputs);
+
+                for(int i = 0; i < inputs; i++)
+                    values.Add(false);
         }
 
         public Button DrawBody() {
@@ -67,7 +72,7 @@ namespace SchemeCreator.Data {
                 return button;
             }
 
-        public Ellipse[] DrawGateInOut(bool isInput) {
+        public List<Ellipse> DrawGateInOut(bool isInput) {
             
             Thickness t = new Thickness {
                 Left = x - Constants.lineStartOffset,
@@ -83,7 +88,7 @@ namespace SchemeCreator.Data {
                 t.Left += Constants.gateWidth;
             }
 
-            Ellipse[] ellipses = new Ellipse[newInOutCount];
+            List<Ellipse> ellipses = new List<Ellipse>();
 
             for (int i = 0; i < newInOutCount; i++) {
 
@@ -92,15 +97,22 @@ namespace SchemeCreator.Data {
                 if (i == 0)
                     t.Top -= Constants.lineStartOffset;
 
-                ellipses[i] = new Ellipse() {
+                ellipses.Add (new Ellipse() {
                     Height = SchemeCreator.Constants.dotSize,
                     Width = SchemeCreator.Constants.dotSize,
                     Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
                     Margin = t,
                     VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left };
+                    HorizontalAlignment = HorizontalAlignment.Left } );
             }
+
             return ellipses;
         }
+
+        public bool containsInOutByMargin(Ellipse e, bool isInput) =>
+            DrawGateInOut(isInput).Exists(x => x.Margin == e.Margin);
+
+        public int getIndexOfInOutByMargin(Ellipse e, bool isInput) =>
+            DrawGateInOut(isInput).FindIndex(x =>  x.Margin == e.Margin);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -24,7 +25,7 @@ namespace SchemeCreator.UI {
 
         public void ShowDots(ref Data.DotController dotController) {
 
-            dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
+            dotController.initNet(grid.ActualWidth, grid.ActualHeight);
 
             for(int i = 0; i < dotController.getDotCount(); i++) {
                 
@@ -43,21 +44,31 @@ namespace SchemeCreator.UI {
             foreach(Data.Gate gate in logicGates) {
                 grid.Children.Add(gate.DrawBody());
 
-                foreach(Ellipse e in gate.DrawGateInOut(true))
+                foreach(Ellipse e in gate.DrawGateInOut(true)) {
                     grid.Children.Add(e);
+                    e.Tapped += gateInTapped;
+                }
+                    
 
-                foreach(Ellipse e in gate.DrawGateInOut(false))
+                foreach(Ellipse e in gate.DrawGateInOut(false)) {
                     grid.Children.Add(e);
+                    e.Tapped += gateOutTapped;
+                }
             }
 
             var externalGates = gateController.getExternalGates();
 
-            foreach(Data.Gate gate in externalGates) {
+            foreach(Data.Gate gate in externalGates)
                 grid.Children.Add(gate.DrawBody());
-            }
+
         }
 
-        public void ShowLines(ref Data.LineController scheme) { }
+        public void ShowLines(ref Data.LineController lineController) {
+
+            for(int i = 0; i < lineController.getWireCount(); i++)
+                grid.Children.Add(lineController.getWireByIndex(i).
+                createLine(lineController.getWireByIndex(i).isActive));
+        }
 
         public void ShowAll(ref Data.Scheme scheme) {
 
@@ -66,29 +77,21 @@ namespace SchemeCreator.UI {
             ShowLines(ref scheme.lineController);
         }
 
-        public void ReloadGates(Data.Scheme scheme) {
-
-            for(int i = 0; i < scheme.gateController.getGateCount(); i++) {
-
-                var gate = scheme.gateController.getGateByIndex(i);
-                grid.Children.Add(gate.DrawBody());
-
-                foreach (Ellipse ellipse in gate.DrawGateInOut(true))
-                    grid.Children.Add(ellipse);
-
-                foreach (Ellipse ellipse in gate.DrawGateInOut(false))
-                    grid.Children.Add(ellipse);
-            }
-        }
-
         /*      events        */
 
         public delegate void DotTappedHandler(Ellipse sender, DotTappedEventArgs e);
-
+        public delegate void GateInTappedHandler(Ellipse sender, GateInTappedEventArgs e);
+        public delegate void GateOutTappedHandler(Ellipse sender, GateOutTappedEventArgs e);
         public event DotTappedHandler DotTappedEvent;
+        public event GateInTappedHandler gateInTappedEvent;
+        public event GateOutTappedHandler gateOutTappedEvent;
 
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
             DotTappedEvent(sender as Ellipse, new DotTappedEventArgs(sender as Ellipse));
+        private void gateOutTapped(object sender, TappedRoutedEventArgs e) =>
+            gateOutTappedEvent(sender as Ellipse, new GateOutTappedEventArgs(sender as Ellipse));
+        private void gateInTapped(object sender, TappedRoutedEventArgs e) =>
+            gateInTappedEvent(sender as Ellipse, new GateInTappedEventArgs(sender as Ellipse));
 
         /*      data        */
 
@@ -96,7 +99,7 @@ namespace SchemeCreator.UI {
 
         bool isActive;
         
-        Grid grid = new Grid() { 
+        Grid grid = new Grid() {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Windows.UI.Xaml.Thickness(0, 60, 0, 0) };
@@ -105,5 +108,13 @@ namespace SchemeCreator.UI {
     class DotTappedEventArgs {
         public DotTappedEventArgs(Ellipse e) => dot = e;
         public Ellipse dot;
+    }
+    class GateInTappedEventArgs {
+        public GateInTappedEventArgs(Ellipse e) => gateInput = e;
+        public Ellipse gateInput;
+    }
+    class GateOutTappedEventArgs {
+        public GateOutTappedEventArgs(Ellipse e) => gateOutput = e;
+        public Ellipse gateOutput;
     }
 }

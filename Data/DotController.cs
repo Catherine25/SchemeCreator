@@ -12,7 +12,7 @@ namespace SchemeCreator.Data {
         public Ellipse getDotByIndex(int index) => dots[index];
         public int getDotCount() => dots.Count;
 
-        public void InitNet(double actW, double actH) {
+        public void initNet(double actW, double actH) {
             width = actW;
             heigh = actH;
 

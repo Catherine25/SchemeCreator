@@ -1,8 +1,6 @@
 using Windows.UI.Xaml.Media;
 using Windows.UI.ViewManagement;
 using System.Collections.Generic;
-using System;
-using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator {
     static public class Constants {
@@ -39,15 +37,15 @@ namespace SchemeCreator {
             { GateEnum.XNOR, "XNOR" },
             { GateEnum.XOR, "XOR" }
         };
-        public static Dictionary<Constants.BtId, string> btText = new Dictionary<Constants.BtId, string> {
-            { Constants.BtId.newSchemeBt, "New Scheme" },
-            { Constants.BtId.loadSchemeBt, "Load Scheme" },
-            { Constants.BtId.saveSchemeBt, "Save Scheme" },
-            { Constants.BtId.traceSchemeBt, "Trace Scheme" },
-            { Constants.BtId.workSchemeBt, "Work" },
-            { Constants.BtId.addGateBt, "Add Gate" },
-            { Constants.BtId.addLineBt, "Add Line" },
-            { Constants.BtId.removeLineBt, "Remove Line" }
+        public static Dictionary<BtId, string> btText = new Dictionary<BtId, string> {
+            { BtId.newSchemeBt, "New Scheme" },
+            { BtId.loadSchemeBt, "Load Scheme" },
+            { BtId.saveSchemeBt, "Save Scheme" },
+            { BtId.traceSchemeBt, "Trace Scheme" },
+            { BtId.workSchemeBt, "Work" },
+            { BtId.addGateBt, "Add Gate" },
+            { BtId.addLineBt, "Add Line" },
+            { BtId.removeLineBt, "Remove Line" }
         };
         public static Dictionary <AccentEnum, SolidColorBrush> brushes = new Dictionary<AccentEnum, SolidColorBrush> {
             { AccentEnum.accent, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Accent)) },

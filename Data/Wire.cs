@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
 using Windows.Foundation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
@@ -8,17 +9,19 @@ namespace SchemeCreator.Data {
     [DataMember] public Point start, end;
     [DataMember] public bool isActive;
 
-    public Line createWire(bool isActive) {
+    public Line createLine(bool isActive) {
 
         Line l = new Line {
             X1 = start.X,
-            X2 = end.Y,
-            Y1 = start.X,
+            X2 = end.X,
+            Y1 = start.Y,
             Y2 = end.Y,
             StrokeThickness =
                 SchemeCreator.Constants.lineStartOffset,
             StrokeEndLineCap = PenLineCap.Round,
-            StrokeStartLineCap = PenLineCap.Round
+            StrokeStartLineCap = PenLineCap.Round,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top
         };
         
         if(isActive)
