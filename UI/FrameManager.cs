@@ -1,12 +1,15 @@
-﻿using Windows.Foundation;
+﻿using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI {
     class FrameManager {
 
         /*      constructor     */
         public FrameManager(Data.Scheme _scheme) {
+            
             scheme = _scheme;
 
             workspaceController = new WorkspaceController();
@@ -34,7 +37,11 @@ namespace SchemeCreator.UI {
             menuController.AddGateBtClickEvent += AddGateEvent;
             menuController.AddLineBtClickEvent += AddLineEvent;
             menuController.RemoveLineBtClickEvent += RemoveLineEvent;
+            
             workspaceController.DotTappedEvent += DotTappedEvent;
+            workspaceController.gateInTappedEvent += GateInTappedEvent;
+            workspaceController.gateOutTappedEvent += GateOutTappedEvent;
+            
             newGateMenuController.NewGateBtClickedEvent += NewGateBtClickedEvent;
         }
 
@@ -53,6 +60,8 @@ namespace SchemeCreator.UI {
 
         Constants.FrameEnum currentFrame;
 
+        Data.Wire newWire;
+
         public Grid Grid { get; } = new Grid {
 
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -64,6 +73,40 @@ namespace SchemeCreator.UI {
             if(modeManager.CurrentMode == Constants.ModeEnum.addGateMode)
                 SwitchToFrame(Constants.FrameEnum.newGate, Grid);
             scheme.dotController.lastTapped = e.dot;
+        }
+
+        private void GateInTappedEvent(Ellipse sender, GateInTappedEventArgs e) {
+            
+            if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
+                modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
+                
+                newWire.end = new Point(e.gateInput.Margin.Left
+                    + Constants.lineStartOffset,
+                    e.gateInput.Margin.Top + Constants.lineStartOffset);
+                
+                scheme.lineController.addWire(newWire);
+
+                workspaceController.ShowLines(ref scheme.lineController);
+            }
+        }
+
+        private void GateOutTappedEvent(Ellipse sender, GateOutTappedEventArgs e) {
+
+            if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
+                modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
+
+                newWire = new Data.Wire();
+                newWire.start = new Point(
+                    e.gateOutput.Margin.Left + Constants.lineStartOffset,
+                    e.gateOutput.Margin.Top + Constants.lineStartOffset);
+
+                Data.Gate gate = scheme.gateController.getGateByInOut(
+                    e.gateOutput, false);
+
+                newWire.isActive = gate.values[
+                    gate.getIndexOfInOutByMargin(e.gateOutput, false)];
+
+            }
         }
 
         private void NewGateBtClickedEvent(object sender, NewGateBtClickedEventArgs e) {
