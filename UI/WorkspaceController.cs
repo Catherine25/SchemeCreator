@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -42,7 +41,9 @@ namespace SchemeCreator.UI {
             var logicGates = gateController.getLogicGates();
             
             foreach(Data.Gate gate in logicGates) {
-                grid.Children.Add(gate.DrawBody());
+                var rect = gate.DrawBody();
+                rect.Tapped += logicGateBodyTapped;
+                grid.Children.Add(rect);
 
                 foreach(Ellipse e in gate.DrawGateInOut(true)) {
                     grid.Children.Add(e);
@@ -58,11 +59,23 @@ namespace SchemeCreator.UI {
 
             var externalGates = gateController.getExternalGates();
 
-            foreach(Data.Gate gate in externalGates)
-                grid.Children.Add(gate.DrawBody());
-
+            foreach(Data.Gate gate in externalGates) {
+                var gateBody = gate.DrawBody();
+                if(gate.type == Constants.GateEnum.IN)
+                    gateBody.Tapped += gateINBodyTapped;
+                grid.Children.Add(gateBody);
+            }
         }
 
+        private void externalGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
+            externalGateTapped(sender as Button);
+        private void logicGateBodyTapped(object sender, TappedRoutedEventArgs e) => 
+            logicGateTapped(sender as Button);
+        private void gateINBodyTapped(object sender, TappedRoutedEventArgs e) =>
+            gateINTapped(sender as Button);
+        private void gateOUTBodyTapped(object sender, TappedRoutedEventArgs e) =>
+            gateOUTTapped(sender as Button);
+        
         public void ShowLines(ref Data.LineController lineController) {
 
             for(int i = 0; i < lineController.getWireCount(); i++)
@@ -82,9 +95,11 @@ namespace SchemeCreator.UI {
         public delegate void DotTappedHandler(Ellipse sender, DotTappedEventArgs e);
         public delegate void GateInTappedHandler(Ellipse sender, GateInTappedEventArgs e);
         public delegate void GateOutTappedHandler(Ellipse sender, GateOutTappedEventArgs e);
+        
         public event DotTappedHandler DotTappedEvent;
         public event GateInTappedHandler gateInTappedEvent;
         public event GateOutTappedHandler gateOutTappedEvent;
+        public event Action<Button> logicGateTapped, externalGateTapped, gateINTapped, gateOUTTapped;
 
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
             DotTappedEvent(sender as Ellipse, new DotTappedEventArgs(sender as Ellipse));
