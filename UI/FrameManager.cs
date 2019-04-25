@@ -39,14 +39,56 @@ namespace SchemeCreator.UI {
             menuController.AddLineBtClickEvent += AddLineEvent;
             menuController.RemoveLineBtClickEvent += RemoveLineEvent;
             
-            workspaceController.DotTappedEvent += DotTappedEvent;
-            workspaceController.gateInTappedEvent += GateInTappedEvent;
-            workspaceController.gateOutTappedEvent += GateOutTappedEvent;
-            workspaceController.logicGateTapped += logicGateTappedEvent;
+            workspaceController.dotTappedEvent += dotTappedEvent;
+            workspaceController.logicGateInTapped += logicGateInTapped;
+            workspaceController.logicGateOutTapped += logicGateOutTapped;
+            workspaceController.logicGateTappedEvent += logicGateTappedEvent;
             workspaceController.gateINTapped += gateINTappedEvent;
             workspaceController.gateOUTTapped += gateOUTTappedEvent;
             
             newGateMenuController.NewGateBtClickedEvent += NewGateBtClickedEvent;
+        }
+
+        private void logicGateOutTapped(Ellipse e) {
+
+            if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
+
+                modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
+
+                newWire = new Data.Wire();
+                newWire.start = new Point(
+                    e.Margin.Left + Constants.lineStartOffset,
+                    e.Margin.Top + Constants.lineStartOffset);
+
+                Data.Gate gate = scheme.gateController.getGateByInOut(e, false);
+
+                newWire.isActive = gate.values[gate.getIndexOfInOutByMargin(e.Margin, false)];
+
+            }
+        }
+
+        private void logicGateInTapped(Ellipse e) {
+
+            if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
+
+                modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
+
+                newWire.end = new Point(e.Margin.Left
+                    + Constants.lineStartOffset,
+                    e.Margin.Top + Constants.lineStartOffset);
+
+                scheme.lineController.addWire(newWire);
+
+                workspaceController.ShowLines(ref scheme.lineController);
+            }
+        }
+
+        private void dotTappedEvent(Ellipse e) {
+
+            if(modeManager.CurrentMode == Constants.ModeEnum.addGateMode)
+                SwitchToFrame(Constants.FrameEnum.newGate, Grid);
+
+            scheme.dotController.lastTapped = e;
         }
 
         private void logicGateTappedEvent(Button b) {
@@ -54,18 +96,19 @@ namespace SchemeCreator.UI {
         }
         private void gateINTappedEvent(Button b) {
             if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
+                modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
 
                 newWire = new Data.Wire {
                     start = new Point( b.Margin.Left + Constants.externalGateSize / 2,
                     b.Margin.Top + Constants.externalGateSize / 2),
 
                     isActive = scheme.gateController.getGateByBody(b).values[0] };
-                
-                modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
+
             }
         }
         private void gateOUTTappedEvent(Button b) {
             if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
+                modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
                 
                 newWire.end = new Point(b.Margin.Left + Constants.externalGateSize/2,
                     b.Margin.Top + Constants.externalGateSize/2);
@@ -73,8 +116,6 @@ namespace SchemeCreator.UI {
                 scheme.lineController.addWire(newWire);
 
                 workspaceController.ShowLines(ref scheme.lineController);
-
-                modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
             }
         }
 
@@ -101,46 +142,6 @@ namespace SchemeCreator.UI {
         };
 
         /*      events      */
-        private void DotTappedEvent(object sender, DotTappedEventArgs e) {
-            if(modeManager.CurrentMode == Constants.ModeEnum.addGateMode)
-                SwitchToFrame(Constants.FrameEnum.newGate, Grid);
-            scheme.dotController.lastTapped = e.dot;
-        }
-
-        private void GateInTappedEvent(Ellipse sender, GateInTappedEventArgs e) {
-            
-            if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
-                
-                modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
-                
-                newWire.end = new Point(e.gateInput.Margin.Left
-                    + Constants.lineStartOffset,
-                    e.gateInput.Margin.Top + Constants.lineStartOffset);
-                
-                scheme.lineController.addWire(newWire);
-
-                workspaceController.ShowLines(ref scheme.lineController);
-            }
-        }
-
-        private void GateOutTappedEvent(Ellipse sender, GateOutTappedEventArgs e) {
-
-            if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
-
-                modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
-
-                newWire = new Data.Wire();
-                newWire.start = new Point(
-                    e.gateOutput.Margin.Left + Constants.lineStartOffset,
-                    e.gateOutput.Margin.Top + Constants.lineStartOffset);
-
-                Data.Gate gate = scheme.gateController.getGateByInOut(e.gateOutput, false);
-
-                newWire.isActive = gate.values[gate.getIndexOfInOutByMargin(e.gateOutput.Margin, false)];
-
-            }
-        }
-
         private void NewGateBtClickedEvent(object sender, NewGateBtClickedEventArgs e) {
 
             if(Constants.external.Contains(e.type))
@@ -164,13 +165,17 @@ namespace SchemeCreator.UI {
             workspaceController.ShowAll(ref scheme);
         }
 
-        private void NewSchemeEvent(object sender, LastClickedBtEventArgs e) => workspaceController.ShowAll(ref scheme);
+        private void NewSchemeEvent(object sender, LastClickedBtEventArgs e) =>
+            workspaceController.ShowAll(ref scheme);
 
-        private void LoadSchemeEvent(object sender, LastClickedBtEventArgs e) => Data.Serializer.DeserializeAll(scheme);
+        private void LoadSchemeEvent(object sender, LastClickedBtEventArgs e) =>
+            Data.Serializer.DeserializeAll(scheme);
 
-        private void SaveSchemeEvent(object sender, LastClickedBtEventArgs e) => Data.Serializer.SerializeAll(scheme);
+        private void SaveSchemeEvent(object sender, LastClickedBtEventArgs e) =>
+            Data.Serializer.SerializeAll(scheme);
 
-        private void TraceSchemeEvent(object sender, LastClickedBtEventArgs e) => Data.Tracing.ShowTracing(scheme);
+        private void TraceSchemeEvent(object sender, LastClickedBtEventArgs e) =>
+            Data.Tracing.ShowTracing(scheme);
 
         private void WorkSchemeEvent(object sender, LastClickedBtEventArgs e) {
             // // Clearing the elements data
@@ -184,18 +189,21 @@ namespace SchemeCreator.UI {
         }
         
         private void AddGateEvent(object sender, LastClickedBtEventArgs e) {
+            
             menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.addGateMode;
         }
         
         private void AddLineEvent(object sender, LastClickedBtEventArgs e) {
+            
             menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
-        }        
+        }
 
         private void RemoveLineEvent(object sender, LastClickedBtEventArgs e) {
+            
             menuController.InActivateModeButtons();
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.removeLineMode;
@@ -204,7 +212,7 @@ namespace SchemeCreator.UI {
         public void SwitchToFrame(Constants.FrameEnum frame, Grid grid) {
 
             currentFrame = frame;
-            
+
             if(frame == Constants.FrameEnum.newGate) {
                 menuController.Hide();
                 workspaceController.Hide();
@@ -232,10 +240,11 @@ namespace SchemeCreator.UI {
         }
 
         public void SizeChanged(double width, double height) {
+            
             Grid.Width = width;
             Grid.Height = height;   
 
-            UpdateView();         
+            UpdateView();
         } 
     }
 }
