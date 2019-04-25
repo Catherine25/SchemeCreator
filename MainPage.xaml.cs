@@ -9,7 +9,7 @@ namespace SchemeCreator {
 
             InitializeComponent();
 
-            var test = new SchemeCreator.Test.Test();
+            var test = new Test.Test();
 
             Content = scheme.frameManager.Grid;
             SizeChanged += MainPageSizeChanged;
