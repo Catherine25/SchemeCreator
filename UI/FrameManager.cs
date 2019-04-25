@@ -2,6 +2,7 @@
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI {
@@ -41,8 +42,40 @@ namespace SchemeCreator.UI {
             workspaceController.DotTappedEvent += DotTappedEvent;
             workspaceController.gateInTappedEvent += GateInTappedEvent;
             workspaceController.gateOutTappedEvent += GateOutTappedEvent;
+            workspaceController.logicGateTapped += logicGateTappedEvent;
+            workspaceController.gateINTapped += gateINTappedEvent;
+            workspaceController.gateOUTTapped += gateOUTTappedEvent;
             
             newGateMenuController.NewGateBtClickedEvent += NewGateBtClickedEvent;
+        }
+
+        private void logicGateTappedEvent(Button b) {
+            throw new NotImplementedException();
+        }
+        private void gateINTappedEvent(Button b) {
+            if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
+
+                newWire = new Data.Wire {
+                    start = new Point( b.Margin.Left + Constants.externalGateSize / 2,
+                    b.Margin.Top + Constants.externalGateSize / 2),
+
+                    isActive = scheme.gateController.getGateByBody(b).values[0] };
+                
+                modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
+            }
+        }
+        private void gateOUTTappedEvent(Button b) {
+            if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
+                
+                newWire.end = new Point(b.Margin.Left + Constants.externalGateSize/2,
+                    b.Margin.Top + Constants.externalGateSize/2);
+                
+                scheme.lineController.addWire(newWire);
+
+                workspaceController.ShowLines(ref scheme.lineController);
+
+                modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
+            }
         }
 
         public Constants.FrameEnum GetActiveFrame() => currentFrame;
@@ -63,7 +96,6 @@ namespace SchemeCreator.UI {
         Data.Wire newWire;
 
         public Grid Grid { get; } = new Grid {
-
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top
         };
@@ -78,6 +110,7 @@ namespace SchemeCreator.UI {
         private void GateInTappedEvent(Ellipse sender, GateInTappedEventArgs e) {
             
             if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
+                
                 modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
                 
                 newWire.end = new Point(e.gateInput.Margin.Left
@@ -93,6 +126,7 @@ namespace SchemeCreator.UI {
         private void GateOutTappedEvent(Ellipse sender, GateOutTappedEventArgs e) {
 
             if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
+
                 modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
 
                 newWire = new Data.Wire();
@@ -100,11 +134,9 @@ namespace SchemeCreator.UI {
                     e.gateOutput.Margin.Left + Constants.lineStartOffset,
                     e.gateOutput.Margin.Top + Constants.lineStartOffset);
 
-                Data.Gate gate = scheme.gateController.getGateByInOut(
-                    e.gateOutput, false);
+                Data.Gate gate = scheme.gateController.getGateByInOut(e.gateOutput, false);
 
-                newWire.isActive = gate.values[
-                    gate.getIndexOfInOutByMargin(e.gateOutput, false)];
+                newWire.isActive = gate.values[gate.getIndexOfInOutByMargin(e.gateOutput.Margin, false)];
 
             }
         }
@@ -132,8 +164,7 @@ namespace SchemeCreator.UI {
             workspaceController.ShowAll(ref scheme);
         }
 
-        private void NewSchemeEvent(object sender, LastClickedBtEventArgs e) =>
-            workspaceController.ShowAll(ref scheme);
+        private void NewSchemeEvent(object sender, LastClickedBtEventArgs e) => workspaceController.ShowAll(ref scheme);
 
         private void LoadSchemeEvent(object sender, LastClickedBtEventArgs e) => Data.Serializer.DeserializeAll(scheme);
 

@@ -111,8 +111,9 @@ namespace SchemeCreator.Data {
 
         public bool containsInOutByMargin(Ellipse e, bool isInput) =>
             DrawGateInOut(isInput).Exists(x => x.Margin == e.Margin);
+        public bool containsBodyByMargin(Thickness t) => DrawBody().Margin == t;
 
-        public int getIndexOfInOutByMargin(Ellipse e, bool isInput) =>
-            DrawGateInOut(isInput).FindIndex(x =>  x.Margin == e.Margin);
+        public int getIndexOfInOutByMargin(Thickness t, bool isInput) =>
+            DrawGateInOut(isInput).FindIndex(x =>  x.Margin == t);
     }
 }

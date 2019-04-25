@@ -2,6 +2,7 @@
 using Windows.Foundation;
 using System.Linq;
 using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.Data {
     public class GateController {
@@ -10,7 +11,12 @@ namespace SchemeCreator.Data {
         public int getGateCount() => gates.Count;
         public int getIndexOf(Gate gate) => gates.IndexOf(gate);
         public Gate getGateByIndex(int index) => gates[index];
-        
+        public Gate getGateByBody(Button b) {
+            foreach (Gate gate in gates)
+                if(gate.containsBodyByMargin(b.Margin))
+                    return gate;
+            throw new System.Exception();
+        }
         public Gate getGateByInOut(Ellipse e, bool isInput) {
             foreach (Gate gate in gates)
                 if(gate.containsInOutByMargin(e, isInput))

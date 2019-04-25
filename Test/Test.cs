@@ -62,12 +62,12 @@ namespace SchemeCreator.Test {
         bool gate_getIndexOfInOut_input() =>
             new Data.Gate(Constants.GateEnum.Buffer,
                 false, 1, 1, 0.0, 0.0).getIndexOfInOutByMargin(
-                    new Ellipse() { Margin = new Thickness(0,0,0,0) },
+                    new Thickness(0,0,0,0),
                     true) == 0;
         bool gate_getIndexOfInOut_output() =>
             new Data.Gate(Constants.GateEnum.Buffer,
                 false, 1, 1, 0.0, 0.0).getIndexOfInOutByMargin(
-                    new Ellipse() { Margin = new Thickness(0,0,0,0) },
+                    new Thickness(0,0,0,0),
                     false) == 0;
         //TODO MORE TESTS
         bool gate_init_input_count() =>
