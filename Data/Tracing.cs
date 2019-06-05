@@ -4,141 +4,170 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.Data {
-    static class Tracing {
+
+    class Tracer {
+
         //data
-        public static SortedSet<int> startLinesId, middleLinesId, endLinesId;
-        public static List<TextBlock> textBlocks;
-        public static int counter;
+        bool[] isGateTraced, isWireTraced;
+        int[] tracedGateIndexes, tracedWireIndexes;
+        int gateCount, wireCount;
+        int traceGateCounter = 1, traceWireCounter = 1;
 
         //constructor
-        static Tracing() {
-            startLinesId = new SortedSet<int>();
-            middleLinesId = new SortedSet<int>();
-            endLinesId = new SortedSet<int>();
+        public Tracer(int gateCount, int wireCount) {
 
-            textBlocks = new List<TextBlock>();
+                //get gate and wire count
+                this.gateCount = gateCount;
+                this.wireCount = wireCount;
+
+                //set arrays size
+                tracedGateIndexes = new int[gateCount];
+                tracedWireIndexes = new int[wireCount];
         }
 
         //methods
-        public static void ShowTracing(Scheme scheme) {
-            
-            NumerateInputLines(scheme);
-            NumerateCenterLines(scheme);
-            NumerateOutputLines(scheme);
 
-            counter = 0;
-            textBlocks.Clear();
+        ///<summary> Traces gates and wires </summary>
+        public void trace(GateController gc, LineController lc) {
 
-            for (int i = 0; i < startLinesId.Count; i++) {
-                counter++;
+            zeroWaveGateIndexes(gc);
 
-                TextBlock tb = new TextBlock() {
-                    Margin = new Thickness {
-                        Left = (scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.X +
-                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.X) / 2,
-                        Top = ((scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.Y +
-                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.Y) / 2) + SchemeCreator.Constants.offset
-                    },
+                int curStepToTrace = 0;
 
-                    Text = counter.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
+                while(curStepToTrace != componentsToTrace()) {
 
-                textBlocks.Add(tb);
-            }
+                    curStepToTrace = componentsToTrace();
 
-            for (int i = 0; i < middleLinesId.Count; i++) {
-                counter++;
+                    wireIndexesWave(gc, lc);
 
-                TextBlock tb = new TextBlock() {
-                    Margin = new Thickness {
-                        Left = (scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.X +
-                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.X) / 2,
+                    //  now we have traced wires, that connect to exINs
+                    //  now we need to get first Wave Gate Indexes: 
+                    //      1) find the 'first wave' gates
+                    //      2) check that all their inputs have wires,
+                    //          that have been traced (they aren't 0)
+                    gateIndexesWave(gc, lc);
+                }
+        }
 
-                        Top = ((scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.Y +
-                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.Y) / 2) +
-                        SchemeCreator.Constants.offset
-                    },
+        ///<summary> Returns the traced indexes </summary>
+        public int[] getWireIndexes() => tracedWireIndexes;
 
-                    Text = counter.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
+        ///<summary> Returns not traced components count </summary>
+        private int componentsToTrace() {
 
-                textBlocks.Add(tb);
-            }
+            int counter = 0;
 
-            for (int i = 0; i < endLinesId.Count; i++) {
-                counter++;
+            for (int g = 0; g < gateCount; g++)
+                if(tracedGateIndexes[g] == 0)
+                    counter++;
+            for (int w = 0; w < wireCount; w++)
+                if(tracedWireIndexes[w] == 0)
+                    counter++;
 
-                TextBlock tb = new TextBlock() {
-                    Margin = new Thickness {
-                        Left = (scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.X +
-                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.X) / 2,
-                        Top = ((scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).start.Y +
-                        scheme.lineController.getWireByIndex(startLinesId.ElementAt(i)).end.Y) / 2) + SchemeCreator.Constants.offset
-                    },
+            return counter;
+        }
 
-                    Text = counter.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
+        ///<summary> Sets traceCounter values in tracedGateIndexes
+        ///by the exINs' index </summary>
+        private void zeroWaveGateIndexes(GateController gc) {
 
-                textBlocks.Add(tb);
+            for (int i = 0; i < gateCount; i++) {
+
+                    //get type
+                    var type = gc.getGateByIndex(i).type;
+
+                    //if type is IN
+                    if(type == Constants.GateEnum.IN) {
+                        
+                        //save traceCounter' value in found gate' index
+                        tracedGateIndexes[i] = traceGateCounter;
+
+                        //increase traceCounter
+                        traceGateCounter++;
+                    }
             }
         }
 
-        //firstly numerating the input lines
-        private static void NumerateInputLines(Scheme scheme) {
-            // startLinesId.Clear();
+        ///<summary> Finds and traces the wires,
+        ///that connect to gates found before </summary>
+        private void wireIndexesWave(GateController gc, LineController lc) {
 
-            // for (int i = 0; i < scheme.lineController.getWireCount(); i++)
-            
-            //     foreach (var gate in from Gate gate in scheme.gateController.gates
-            //                              //looking for inputs
-            //                          where gate.type == Constants.GateEnum.IN
-            //                          //comparing inputs coordinates with line coordinates
-            //                          //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-            //                          select gate) {
-            //         //saving index
-            //         startLinesId.Add(i);
-            //     }
+            for (int i = 0; i < gateCount; i++) {
+
+                    //get only already traced gates
+                    if(tracedGateIndexes[i] == 0)
+                        continue;
+
+                    for (int j = 0; j < wireCount; j++) {
+
+                        //get the connected wire
+                        if(gc.getGateByIndex(i).WireStartConnects(
+                        lc.getWireByIndex(j))) {
+
+                            //save the wire's indexes in tracedWireIndexes
+                            tracedWireIndexes[j] = traceWireCounter;
+
+                            //increase counter
+                            traceWireCounter++;
+                        }
+                    }
+                }
         }
 
-        //numerating lines without inputs and outputs
-        private static void NumerateCenterLines(Scheme scheme) {
-            // middleLinesId.Clear();
+        ///<summary> Finds the next 'wave' of gates,
+        ///and checks that all their inputs have wires,
+        ///that have been traced (they aren't 0) </summary>
+        private void gateIndexesWave(GateController gc, LineController lc) {
 
-            // for (int i = 0; i < scheme.lineController.getWireCount(); i++)
-            //     foreach (var gate in from Gate gate in scheme.gateController.gates
-            //                              //comparing inputs coordinates with line coordinates
-            //                          //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-            //                          select gate)
-            //     {
-            //         //looking for regular gates
-            //         if (Constants.external.Contains(gate.type))
-            //             break;
+            for (int i = 0; i < wireCount; i++) {
 
-            //         //saving index
-            //         middleLinesId.Add(i);
-            //         break;
-            //     }
-        }
-        //numerating the output lines
-        private static void NumerateOutputLines(Scheme scheme) {
-            // endLinesId.Clear();
+                    //take only already traced wires
+                    if(tracedWireIndexes[i] == 0)
+                        continue;
 
-            // for (int i = 0; i < scheme.lineController.getWireCount(); i++)
-            //     foreach (var gate in from Gate gate in scheme.gateController.gates
-            //                              //looking for for outputs
-            //                          where gate.type == Constants.GateEnum.OUT
-            //                          //comparing inputs coordinates with line coordinates
-            //                          //where scheme.LineConnects(scheme.lineController.lineInfo[i], gate, false, 0)
-            //                          select gate) {
-            //         //saving index
-            //         endLinesId.Add(i);
-            //     }
+                    //take the wire
+                    Wire curWire = lc.getWireByIndex(i);
+
+                    for (int j = 0; j < gateCount; j++) {
+
+                        // take the gate
+                        Gate currentGate = gc.getGateByIndex(j);
+
+                        //check if the wire' end connects to the current gate
+                        if(currentGate.WireEndConnects(curWire)) {
+
+                            //check is the gate' inputs have wires
+                            //that have been traced
+
+                            //get inputs count
+                            int inputsCount = currentGate.inputs;
+
+                            for (int w2 = 0; w2 < wireCount; w2++) {
+                                
+                                //get w2Wire
+                                var w2Wire = lc.getWireByIndex(w2);
+
+                                //check if connects
+                                if(currentGate.WireEndConnects(w2Wire))
+
+                                    //check if traced
+                                    if(tracedWireIndexes[w2] != 0)
+                                        inputsCount--;
+                            }
+
+                            //if inputsCount = 0
+                            //then all the input wires have been traced
+                            if(inputsCount == 0) {
+
+                                //now we can trace the gate
+                                tracedGateIndexes[j] = traceGateCounter;
+
+                                //and increase the counter
+                                traceGateCounter++;
+                            }
+                        }
+                    }
+            }
         }
     }
 }
