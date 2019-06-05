@@ -55,15 +55,14 @@ namespace SchemeCreator.UI {
 
                 modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
 
-                newWire = new Data.Wire();
-                newWire.start = new Point(
+                newWire = new Data.Wire {
+                    start = new Point(
                     e.Margin.Left + Constants.lineStartOffset,
-                    e.Margin.Top + Constants.lineStartOffset);
+                    e.Margin.Top + Constants.lineStartOffset) };
 
                 Data.Gate gate = scheme.gateController.getGateByInOut(e, false);
 
                 newWire.isActive = gate.values[gate.getIndexOfInOutByMargin(e.Margin, false)];
-
             }
         }
 
@@ -91,9 +90,9 @@ namespace SchemeCreator.UI {
             scheme.dotController.lastTapped = e;
         }
 
-        private void logicGateTappedEvent(Button b) {
+        private void logicGateTappedEvent(Button b) => 
             throw new NotImplementedException();
-        }
+
         private void gateINTappedEvent(Button b) {
             if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
                 modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
@@ -106,7 +105,9 @@ namespace SchemeCreator.UI {
 
             }
         }
+
         private void gateOUTTappedEvent(Button b) {
+
             if(modeManager.CurrentMode == Constants.ModeEnum.addLineEndMode) {
                 modeManager.CurrentMode = Constants.ModeEnum.addLineStartMode;
                 
@@ -174,8 +175,20 @@ namespace SchemeCreator.UI {
         private void SaveSchemeEvent(object sender, LastClickedBtEventArgs e) =>
             Data.Serializer.SerializeAll(scheme);
 
-        private void TraceSchemeEvent(object sender, LastClickedBtEventArgs e) =>
-            Data.Tracing.ShowTracing(scheme);
+        private void TraceSchemeEvent(object sender, LastClickedBtEventArgs e) {
+            
+            int gateCount = scheme.gateController.getGateCount();
+            int wireCount = scheme.lineController.getWireCount();
+
+            Data.Tracer tracer = new Data.Tracer(gateCount, wireCount);
+
+            tracer.trace(scheme.gateController, scheme.lineController);
+
+            int[] tracedWireIndexes = tracer.getWireIndexes();
+
+            workspaceController.ShowWireTraceIndexes(tracedWireIndexes,
+            scheme.lineController);
+        }
 
         private void WorkSchemeEvent(object sender, LastClickedBtEventArgs e) {
             // // Clearing the elements data
