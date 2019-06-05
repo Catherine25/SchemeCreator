@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -8,16 +9,15 @@ namespace SchemeCreator.UI {
     class WorkspaceController : IFrameInterface {
 
         /*      methods      */
-        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
+        public void SetParentGrid(Grid parentGrid) =>
+            parentGrid.Children.Add(grid);
 
         public void Hide() {
-            
             grid.Children.Clear();
             isActive = false;
         }
 
         public void Update(double width, double height) {
-
             grid.Height = height;
             grid.Width = width;
         }
@@ -41,17 +41,17 @@ namespace SchemeCreator.UI {
             var logicGates = gateController.getLogicGates();
             
             foreach(Data.Gate gate in logicGates) {
-                var rect = gate.DrawBody();
+                var rect = gate.drawBody();
                 rect.Tapped += logicGateBodyTapped;
                 grid.Children.Add(rect);
 
-                foreach(Ellipse e in gate.DrawGateInOut(true)) {
+                foreach(Ellipse e in gate.drawGateInOut(true)) {
                     grid.Children.Add(e);
                     e.Tapped += gateInTapped;
                 }
                     
 
-                foreach(Ellipse e in gate.DrawGateInOut(false)) {
+                foreach(Ellipse e in gate.drawGateInOut(false)) {
                     grid.Children.Add(e);
                     e.Tapped += gateOutTapped;
                 }
@@ -61,7 +61,7 @@ namespace SchemeCreator.UI {
 
             foreach(Data.Gate gate in externalGates) {
 
-                var gateBody = gate.DrawBody();
+                var gateBody = gate.drawBody();
 
                 if(gate.type == Constants.GateEnum.IN)
                     gateBody.Tapped += gateINBodyTapped;
@@ -71,7 +71,50 @@ namespace SchemeCreator.UI {
             }
         }
 
-        /* Button event handlers */
+        public void ShowLines(ref Data.LineController lineController) {
+
+            for(int i = 0; i < lineController.getWireCount(); i++)
+                grid.Children.Add(lineController.getWireByIndex(i).
+                createLine(lineController.getWireByIndex(i).isActive));
+        }
+
+        public void ShowWireTraceIndexes(int[] tracedWireIndexes,
+        SchemeCreator.Data.LineController lc) {
+
+            int wireCount = lc.getWireCount();
+
+            for (int i = 0; i < wireCount; i++) {
+
+                if(tracedWireIndexes[i] == 0)
+                    continue;
+
+                Data.Wire wire = lc.getWireByIndex(i);
+
+                Point start = wire.start;
+                Point end = wire.end;
+
+                double centerX = (start.X + end.X) / 2;
+                double centerY = (start.Y + end.Y) / 2;
+
+                TextBlock tb = new TextBlock() {
+                    Text = tracedWireIndexes[i].ToString()
+                };
+
+                tb.Margin = new Thickness(
+                    centerX - tb.Width/2,
+                    centerY - tb.Height, 0, 0);
+
+                grid.Children.Add(tb);
+            };
+        }
+
+        public void ShowAll(ref Data.Scheme scheme) {
+            ShowDots(ref scheme.dotController);
+            ShowGates(ref scheme.gateController);
+            ShowLines(ref scheme.lineController);
+        }
+
+        /*  -----   Button event handlers   -----   */
         private void externalGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
             externalGateTapped(sender as Button);
         private void logicGateBodyTapped(object sender, TappedRoutedEventArgs e) => 
@@ -80,42 +123,29 @@ namespace SchemeCreator.UI {
             gateINTapped(sender as Button);
         private void gateOUTBodyTapped(object sender, TappedRoutedEventArgs e) =>
             gateOUTTapped(sender as Button);
+        /*  -----   Button event handlers   -----   */
+        
 
-        /* Ellipse event handlers */
+        /*   -----   Ellipse event handlers   -----   */
         public void dotTapped(object sender, TappedRoutedEventArgs e) =>
             dotTappedEvent(sender as Ellipse);
         private void gateOutTapped(object sender, TappedRoutedEventArgs e) =>
             logicGateOutTapped(sender as Ellipse);
         private void gateInTapped(object sender, TappedRoutedEventArgs e) =>
             logicGateInTapped(sender as Ellipse);
+        /*   -----   Ellipse event handlers   -----   */
 
-        public void ShowLines(ref Data.LineController lineController) {
+        /*   -----   events   -----   */
 
-            for(int i = 0; i < lineController.getWireCount(); i++)
-                grid.Children.Add(lineController.getWireByIndex(i).
-                createLine(lineController.getWireByIndex(i).isActive));
-        }
+        public event Action<Button> logicGateTappedEvent, externalGateTapped,
+            gateINTapped, gateOUTTapped;
 
-        public void ShowAll(ref Data.Scheme scheme) {
-
-            ShowDots(ref scheme.dotController);
-            ShowGates(ref scheme.gateController);
-            ShowLines(ref scheme.lineController);
-        }
-
-        /*      events        */
-
-        public event Action<Button> logicGateTappedEvent,
-            externalGateTapped,
-            gateINTapped,
-            gateOUTTapped;
-        public event Action<Ellipse> dotTappedEvent,
-            logicGateInTapped,
+        public event Action<Ellipse> dotTappedEvent, logicGateInTapped,
             logicGateOutTapped;
 
-        
-        /*      data        */
+        /*   -----   events   -----   */
 
+        /*      data        */
         public bool IsActive { get => isActive; }
 
         bool isActive;
