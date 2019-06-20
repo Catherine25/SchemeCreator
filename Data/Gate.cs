@@ -28,13 +28,13 @@ namespace SchemeCreator.Data {
                 this.outputs = outputs;
                 this.x = x;
                 this.y = y;
-                this.values = new List<bool> (inputs);
+                values = new List<bool> (inputs);
 
                 for(int i = 0; i < inputs; i++)
                     values.Add(false);
         }
 
-        public Button drawBody() {
+        public Button DrawBody() {
 
             Button button = new Button() {
 
@@ -52,11 +52,11 @@ namespace SchemeCreator.Data {
             };
 
             if(isExternal) {
-                button.Height = Constants.externalGateSize;
-                button.Width = Constants.externalGateSize;
+                button.Height = Constants.externalGateHeight;
+                button.Width = Constants.externalGateWidth;
                 button.Margin = new Thickness(
-                    button.Margin.Left - Constants.externalGateSize / 2 - Constants.dotSize / 2,
-                    button.Margin.Top - Constants.externalGateSize / 2 - Constants.dotSize / 2,
+                    button.Margin.Left - Constants.externalGateWidth / 2 - Constants.dotSize / 2,
+                    button.Margin.Top - Constants.externalGateHeight / 2 - Constants.dotSize / 2,
                     0,
                     0 );
             }
@@ -72,7 +72,7 @@ namespace SchemeCreator.Data {
                 return button;
             }
 
-        public List<Ellipse> drawGateInOut(bool isInput) {
+        public List<Ellipse> DrawGateInOut(bool isInput) {
             
             Thickness t = new Thickness {
                 Left = x - Constants.lineStartOffset,
@@ -108,15 +108,15 @@ namespace SchemeCreator.Data {
             return ellipses;
         }
 
-        public bool containsInOutByMargin(Ellipse e, bool isInput) =>
-            drawGateInOut(isInput).Exists(x => x.Margin == e.Margin);
-        public bool containsBodyByMargin(Thickness t) =>
-            drawBody().Margin == t;
+        public bool ContainsInOutByMargin(Ellipse e, bool isInput) =>
+            DrawGateInOut(isInput).Exists(x => x.Margin == e.Margin);
+        public bool ContainsBodyByMargin(Thickness t) =>
+            DrawBody().Margin == t;
 
-        public int getIndexOfInOutByMargin(Thickness t, bool isInput) =>
-            drawGateInOut(isInput).FindIndex(x =>  x.Margin == t);
+        public int GetIndexOfInOutByMargin(Thickness t, bool isInput) =>
+            DrawGateInOut(isInput).FindIndex(x =>  x.Margin == t);
 
-        public Button getBodyByWire(Wire w) {
+        public Button GetBodyByWire(Wire w) {
 
             if(type == Constants.GateEnum.IN) {
 
@@ -124,24 +124,24 @@ namespace SchemeCreator.Data {
                     y - Constants.lineStartOffset);
 
                 if (w.start == point)
-                    return drawBody();
+                    return DrawBody();
             }
             else if(type == Constants.GateEnum.OUT) {
 
-                Point point = new Point(x + Constants.externalGateSize / 2,
-                    + y + Constants.externalGateSize / 2);
+                Point point = new Point(x + Constants.externalGateWidth / 2,
+                    + y + Constants.externalGateHeight / 2);
                 
                 if(w.end == point)
-                    return drawBody();
+                    return DrawBody();
             }
 
             return null;
         }
 
-        public Ellipse getInOutByWire(Wire w) {
+        public Ellipse GetInOutByWire(Wire w) {
 
-            var inputs = drawGateInOut(true);
-            var outputs = drawGateInOut(false);
+            var inputs = DrawGateInOut(true);
+            var outputs = DrawGateInOut(false);
 
             for(int i = 0; i < inputs.Count; i++)
                 if(new Point(inputs[i].Margin.Left
@@ -160,42 +160,65 @@ namespace SchemeCreator.Data {
             return null;
         }
 
-        public bool WireEndConnects(Wire w) {
-            
-            if(type == Constants.GateEnum.OUT)
-                return false;
-            
-            if(type == Constants.GateEnum.IN) {
-                
-                var inputs = drawGateInOut(true);
+        public bool WireConnects(Point point) {
 
-                for(int i = 0; i < inputs.Count; i++)
-                if(new Point(inputs[i].Margin.Left
-                    + Constants.lineStartOffset,
-                    inputs[i].Margin.Top
-                    + Constants.lineStartOffset) == w.end)
+            System.Diagnostics.Debug.Write("\nRunning WireConnects()... ");
+
+            if (Constants.external.Contains(type)) {
+
+                Button body = DrawBody();
+
+                double left = body.Margin.Left;
+                double top = body.Margin.Top;
+
+                Point gateCenter;
+
+                gateCenter.X = left + (Constants.externalGateWidth / 2);
+                gateCenter.Y = top + (Constants.externalGateHeight / 2);
+
+                if (gateCenter == point) {
+                    System.Diagnostics.Debug.Write("Result: true");
                     return true;
+                }
+                else {
+                    System.Diagnostics.Debug.Write("Result: false");
+                    return false;
+                }
+            }
+            else {
+
+                Point p = new Point();
+
+                var inputs = DrawGateInOut(true);
+
+                for (int i = 0; i < inputs.Count; i++) {
+
+                    p.X = inputs[i].Margin.Left + (Constants.gateInOutSize / 2);
+                    p.Y = inputs[i].Margin.Top + (Constants.gateInOutSize / 2);
+
+                    if (p == point) {
+
+                        System.Diagnostics.Debug.Write("Result: true");
+                        return true;
+                    }
+                }
+                    
+                var outputs = DrawGateInOut(false);
+
+                for (int i = 0; i < outputs.Count; i++) {
+
+                    p.X = outputs[i].Margin.Left + (Constants.gateInOutSize / 2);
+                    p.Y = outputs[i].Margin.Top + (Constants.gateInOutSize / 2);
+
+                    if (p == point) {
+
+                        System.Diagnostics.Debug.Write("Result: true");
+                        return true;
+                    }
+                }
             }
 
-            return false;
-        }
-
-        public bool WireStartConnects(Wire w) {
-
-            if (type == Constants.GateEnum.IN)
-                return false;
-
-            if(type == Constants.GateEnum.OUT) {
-
-                var outputs = drawGateInOut(false);
-
-                for(int i = 0; i < outputs.Count; i++)
-                if(new Point(outputs[i].Margin.Left
-                    + Constants.lineStartOffset,
-                    outputs[i].Margin.Top
-                    + Constants.lineStartOffset) == w.start)
-                    return true;
-            }
+            System.Diagnostics.Debug.Write("Result: false");
 
             return false;
         }

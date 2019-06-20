@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,8 +21,8 @@ namespace SchemeCreator.UI {
             };
 
             foreach(RadioButton rb in inputCount) {
-                rb.Checked += rbChecked;
-                rb.Unchecked += rbUnchecked;
+                rb.Checked += RbChecked;
+                rb.Unchecked += RbUnchecked;
             }
                 
             //The cast to (GateId[]) is not strictly necessary, but does make the code faster
@@ -46,20 +47,20 @@ namespace SchemeCreator.UI {
                     b.VerticalAlignment = VerticalAlignment.Top;
                     b.Background = Constants.brushes[Constants.AccentEnum.dark1];
                     b.Foreground = Constants.brushes[Constants.AccentEnum.light1];
-                    b.Click += btClick;
+                    b.Click += BtClick;
                 }
             }
             inputCount[0].IsChecked = true;
         }
 
-        private void btClick(object sender, RoutedEventArgs e) =>
+        private void BtClick(object sender, RoutedEventArgs e) =>
             new NewGateBtClickedEventArgs(
                 buttons[sender as Button].inputCount,
                 buttons[sender as Button].outputCount,
                 buttons[sender as Button].type,
                 buttons[sender as Button].isExternal);
 
-        private void rbChecked(object sender, RoutedEventArgs e) {
+        private void RbChecked(object sender, RoutedEventArgs e) {
             (sender as RadioButton).Foreground = Constants.brushes[Constants.AccentEnum.light1];
             
             if((sender as RadioButton).Content.ToString() == "1 output")
@@ -91,7 +92,7 @@ namespace SchemeCreator.UI {
             }
         }
             
-        private void rbUnchecked(object sender, RoutedEventArgs e) =>
+        private void RbUnchecked(object sender, RoutedEventArgs e) =>
             (sender as RadioButton).Foreground = Constants.brushes[Constants.AccentEnum.dark1];
 
         /*      data        */
@@ -103,29 +104,30 @@ namespace SchemeCreator.UI {
             VerticalAlignment = VerticalAlignment.Top
         };
         
-        RadioButton[] inputCount = new RadioButton[6];
+        private readonly RadioButton[] inputCount = new RadioButton[6];
         public bool IsActive { get; private set; }
 
         /*      events      */
 
-        public delegate void NewGateBtClickedEventHandler(object sender, NewGateBtClickedEventArgs e);
+        public delegate void NewGateBtClickedEventHandler(
+            object sender, NewGateBtClickedEventArgs e);
         public event NewGateBtClickedEventHandler NewGateBtClickedEvent;
         
         /*      methods     */
 
-        public void Update(double width, double height) {
+        public void Update(Size size) {
 
-            grid.Width = width;
-            grid.Height = height;
+            grid.Width = size.Width;
+            grid.Height = size.Height;
 
             for(int j = 0; j < 6; j++) {
-                inputCount[j].Margin = new Thickness(j * (width / 6), 0, 0, 0);
+                inputCount[j].Margin = new Thickness(j * (size.Width / 6), 0, 0, 0);
                 grid.Children.Add(inputCount[j]);
             }
                 
             int i = 1;
             foreach(Button button in buttons.Keys) {
-                button.Width = width;
+                button.Width = size.Width;
                 button.Height = 50;
                 button.Margin = new Thickness(0, 50 * i, 0, 0);
                 i++;
@@ -137,11 +139,11 @@ namespace SchemeCreator.UI {
 
             foreach (Button button in buttons.Keys) {
                 grid.Children.Add(button);
-                button.Click += btClicked;
+                button.Click += BtClicked;
             }
         }
 
-        private void btClicked(object sender, RoutedEventArgs e) =>
+        private void BtClicked(object sender, RoutedEventArgs e) =>
             NewGateBtClickedEvent(sender, new NewGateBtClickedEventArgs(
                 buttons[sender as Button].inputCount,
                 buttons[sender as Button].outputCount,

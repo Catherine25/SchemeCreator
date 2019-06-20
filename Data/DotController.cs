@@ -5,19 +5,24 @@ using Windows.UI.Xaml.Shapes;
 namespace SchemeCreator.Data {
     public class DotController {
 
-        double width, heigh;
-        IList<Ellipse> dots = new List<Ellipse>();
+        IList<Ellipse> dots;
         public Ellipse lastTapped;
 
-        public Ellipse getDotByIndex(int index) => dots[index];
-        public int getDotCount() => dots.Count;
+        public IList<Ellipse> Dots {
+            get => dots;
+            set => dots = value;
+        }
 
-        public void initNet(double actW, double actH) {
-            width = actW;
-            heigh = actH;
+        public DotController() => dots = new List<Ellipse>();
+
+        public void InitNet(double actW, double actH) {
+            
+            double width = actW;
+            double heigh = actH;
 
             double stepW = width / (Constants.netSize+1),
                 stepH = heigh / (Constants.netSize+1);
+
             Thickness margin;
 
             for (int i = 1; i <= Constants.netSize; i++)
@@ -34,7 +39,7 @@ namespace SchemeCreator.Data {
                         Fill = Constants.brushes[Constants.AccentEnum.dark1]
                     };
 
-                    dots.Add(ellipse);
+                    Dots.Add(ellipse);
             }
         }
     }
