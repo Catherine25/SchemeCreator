@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -75,11 +76,11 @@ namespace SchemeCreator.UI {
         }
 
         /*      methods     */        
-        public void Update(double width, double height) {
+        public void Update(Size size) {
             int i = 0;
             foreach (Button button in buttons.Values) {
-                button.Height = height / 20;
-                button.Width = width / (buttons.Count);
+                button.Height = size.Height / 20;
+                button.Width = size.Width / (buttons.Count);
                 button.Margin = new Thickness((i*button.Width), 0, 0, 0); 
                 i++;
             }
