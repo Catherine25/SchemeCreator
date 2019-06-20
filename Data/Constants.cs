@@ -4,9 +4,23 @@ using System.Collections.Generic;
 
 namespace SchemeCreator {
     static public class Constants {
+
         static Constants() { }
-        public const int netSize = 8, dotSize = 10, gateWidth = 50, gateHeight = 70, externalGateSize = 50;
-        public const double offset = 10.0, lineStartOffset = 5.0;
+
+        public const int netSize = 8,
+            dotSize = 10,
+            traceNumbersWidth = 50,
+            traceNumbersHeight = 30,
+            gateWidth = 50,
+            gateHeight = 70,
+            externalGateHeight = 50,
+            externalGateWidth = 50;
+
+        public const double offset = 10.0,
+            lineStartOffset = 5.0,
+            wireThickness = 5.0,
+            gateInOutSize = 10.0;
+
         public static SortedSet<GateEnum> singleInput = new SortedSet<GateEnum> {
             GateEnum.AND,
             GateEnum.Buffer,
@@ -17,14 +31,17 @@ namespace SchemeCreator {
             GateEnum.XNOR,
             GateEnum.XOR
         };
+
         public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
             GateEnum.Buffer,
             GateEnum.NOT
         };
+
         public static SortedSet<GateEnum> external = new SortedSet<GateEnum> {
             GateEnum.IN,
             GateEnum.OUT
         };
+
         public static Dictionary<GateEnum, string> gateNames = new Dictionary<GateEnum, string> {
             { GateEnum.AND, "AND" },
             { GateEnum.Buffer, "Buffer" },
@@ -37,6 +54,7 @@ namespace SchemeCreator {
             { GateEnum.XNOR, "XNOR" },
             { GateEnum.XOR, "XOR" }
         };
+
         public static Dictionary<BtId, string> btText = new Dictionary<BtId, string> {
             { BtId.newSchemeBt, "New Scheme" },
             { BtId.loadSchemeBt, "Load Scheme" },
@@ -47,6 +65,7 @@ namespace SchemeCreator {
             { BtId.addLineBt, "Add Line" },
             { BtId.removeLineBt, "Remove Line" }
         };
+
         public static Dictionary <AccentEnum, SolidColorBrush> brushes = new Dictionary<AccentEnum, SolidColorBrush> {
             { AccentEnum.accent, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Accent)) },
             { AccentEnum.background, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Background)) },
@@ -60,6 +79,7 @@ namespace SchemeCreator {
             { AccentEnum.light2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight2)) },
             { AccentEnum.light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) }
         };
+
         public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addGateBt, addLineBt, removeLineBt }
         public enum GateEnum { IN, OUT, Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
         public enum ModeEnum { addGateMode, addLineEndMode, addLineStartMode, removeLineMode, changeValueMode }
