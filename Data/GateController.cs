@@ -7,42 +7,45 @@ using Windows.UI.Xaml.Controls;
 namespace SchemeCreator.Data {
     public class GateController {
 
-        IList<Gate> gates = new List<Gate>();
-        public void addGate(Gate gate) => gates.Add(gate);
-        public int getGateCount() => gates.Count;
-        public int getIndexOf(Gate gate) => gates.IndexOf(gate);
-        public Gate getGateByIndex(int index) => gates[index];
+        public GateController() => Gates = new List<Gate>();
 
-        public Gate getGateByBody(Button b) {
-            foreach (Gate gate in gates)
-                if(gate.containsBodyByMargin(b.Margin))
+        IList<Gate> gates;
+
+        public IList<Gate> Gates {
+            get => gates;
+            set => gates = value;
+        }
+
+        public Gate GetGateByBody(Button b) {
+            foreach (Gate gate in Gates)
+                if(gate.ContainsBodyByMargin(b.Margin))
                     return gate;
             throw new System.Exception();
         }
 
-        public Gate getGateByWire(Wire w) {
-            foreach (Gate gate in gates)
-                if(gate.getBodyByWire(w) != null)
+        public Gate GetGateByWire(Wire w) {
+            foreach (Gate gate in Gates)
+                if(gate.GetBodyByWire(w) != null)
                     return gate;
-                else if(gate.getInOutByWire(w) != null)
+                else if(gate.GetInOutByWire(w) != null)
                     return gate;
                 return null;
         }
 
-        public Gate getGateByInOut(Ellipse e, bool isInput) {
+        public Gate GetGateByInOut(Ellipse e, bool isInput) {
 
-            foreach (Gate gate in gates)
-                if(gate.containsInOutByMargin(e, isInput))
+            foreach (Gate gate in Gates)
+                if(gate.ContainsInOutByMargin(e, isInput))
                     return gate;
 
             throw new System.Exception();
         }
 
-        public IList<Gate> getLogicGates() {
+        public IList<Gate> GetLogicGates() {
 
             var logicGates = new List<Gate>(); 
 
-            foreach (var gate in from Gate g in gates
+            foreach (var gate in from Gate g in Gates
                 where (!Constants.external.Contains(g.type))
                 select g) {
                     logicGates.Add(gate); }
@@ -50,11 +53,11 @@ namespace SchemeCreator.Data {
             return logicGates;
         }
 
-        public IList<Gate> getExternalGates() {
+        public IList<Gate> GetExternalGates() {
 
             var externalGates = new List<Gate>(); 
 
-            foreach (var gate in from Gate g in gates
+            foreach (var gate in from Gate g in Gates
                 where (Constants.external.Contains(g.type))
                 select g) {
                     externalGates.Add(gate); }
@@ -62,11 +65,11 @@ namespace SchemeCreator.Data {
             return externalGates;
         }
 
-        public IList<Gate> getExternalInputs() {
+        public IList<Gate> GetExternalInputs() {
             
             var externalInputs = new List<Gate>();
 
-            foreach(var gate in from Gate g in gates
+            foreach(var gate in from Gate g in Gates
                 where(Constants.GateEnum.IN == g.type)
                 select g) {
                     externalInputs.Add(gate); }
