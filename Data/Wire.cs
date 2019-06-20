@@ -9,7 +9,7 @@ namespace SchemeCreator.Data {
     [DataMember] public Point start, end;
     [DataMember] public bool isActive;
 
-    public Line createLine(bool isActive) {
+    public Line CreateLine(bool isActive) {
 
         Line l = new Line {
             X1 = start.X,
@@ -17,7 +17,7 @@ namespace SchemeCreator.Data {
             Y1 = start.Y,
             Y2 = end.Y,
             StrokeThickness =
-                SchemeCreator.Constants.lineStartOffset,
+                Constants.wireThickness,
             StrokeEndLineCap = PenLineCap.Round,
             StrokeStartLineCap = PenLineCap.Round,
             HorizontalAlignment = HorizontalAlignment.Left,
