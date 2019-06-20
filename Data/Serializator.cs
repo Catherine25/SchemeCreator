@@ -20,19 +20,23 @@ namespace SchemeCreator.Data {
 
         public static void SerializeAll(Scheme scheme) {
 
-            for(int i = 0; i < scheme.gateController.getGateCount(); i++)
-                serializeGateData.Add(scheme.gateController.getGateByIndex(i).SerializeGate());
+            int gateCount = scheme.gateController.Gates.Count;
 
-            for(int i = 0; i < scheme.lineController.getWireCount(); i++)
-                serializeGateData.Add(scheme.lineController.getWireByIndex(i).SerializeLine());
+            for(int i = 0; i < gateCount; i++)
+                serializeGateData.Add(scheme.gateController.Gates[i].SerializeGate());
+
+            int wireCount = scheme.lineController.Wires.Count;
+
+            for(int i = 0; i < wireCount; i++)
+                serializeGateData.Add(scheme.lineController.Wires[i].SerializeLine());
         }
 
         public static void DeserializeAll(Scheme scheme) {
             foreach (string s in serializeGateData)
-                scheme.gateController.addGate(s.DeserializeGate());
+                scheme.gateController.Gates.Add(s.DeserializeGate());
 
             foreach (string s in serializeLineData)
-                scheme.lineController.addWire(s.DeserializeLine());
+                scheme.lineController.Wires.Add(s.DeserializeLine());
         }
 
         //Gate and line serialization and deserialization
