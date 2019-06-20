@@ -1,20 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿namespace SchemeCreator.Data {
 
-namespace SchemeCreator.Data {
+    public class Tracer {
 
-    class Tracer {
-
-        //data
-        bool[] isGateTraced, isWireTraced;
-        int[] tracedGateIndexes, tracedWireIndexes;
-        int gateCount, wireCount;
-        int traceGateCounter = 1, traceWireCounter = 1;
+        private readonly int[] tracedGateIndexes;
+        private readonly int[] tracedWireIndexes;
+        private readonly int gateCount;
+        private readonly int wireCount;
+        private int traceGateCounter = 1, traceWireCounter = 1;
 
         //constructor
         public Tracer(int gateCount, int wireCount) {
+
+            System.Diagnostics.Debug.WriteLine("Tracer init");
 
                 //get gate and wire count
                 this.gateCount = gateCount;
@@ -28,32 +25,36 @@ namespace SchemeCreator.Data {
         //methods
 
         ///<summary> Traces gates and wires </summary>
-        public void trace(GateController gc, LineController lc) {
+        public void Trace(GateController gc, LineController lc) {
 
-            zeroWaveGateIndexes(gc);
+            System.Diagnostics.Debug.Write("Trace() running...");
+
+            ZeroWaveGateIndexes(gc);
 
                 int curStepToTrace = 0;
 
-                while(curStepToTrace != componentsToTrace()) {
+                while(curStepToTrace != ComponentsToTrace()) {
 
-                    curStepToTrace = componentsToTrace();
+                    curStepToTrace = ComponentsToTrace();
 
-                    wireIndexesWave(gc, lc);
+                    WireIndexesWave(gc, lc);
 
                     //  now we have traced wires, that connect to exINs
                     //  now we need to get first Wave Gate Indexes: 
                     //      1) find the 'first wave' gates
                     //      2) check that all their inputs have wires,
                     //          that have been traced (they aren't 0)
-                    gateIndexesWave(gc, lc);
+                    GateIndexesWave(gc, lc);
                 }
         }
 
         ///<summary> Returns the traced indexes </summary>
-        public int[] getWireIndexes() => tracedWireIndexes;
+        public int[] GetWireIndexes() => tracedWireIndexes;
 
         ///<summary> Returns not traced components count </summary>
-        private int componentsToTrace() {
+        private int ComponentsToTrace() {
+
+            System.Diagnostics.Debug.Write("\nRunning ComponentsToTrace()... ");
 
             int counter = 0;
 
@@ -64,17 +65,21 @@ namespace SchemeCreator.Data {
                 if(tracedWireIndexes[w] == 0)
                     counter++;
 
+            System.Diagnostics.Debug.Write("Result " + counter);
+
             return counter;
         }
 
         ///<summary> Sets traceCounter values in tracedGateIndexes
         ///by the exINs' index </summary>
-        private void zeroWaveGateIndexes(GateController gc) {
+        private void ZeroWaveGateIndexes(GateController gc) {
+
+            System.Diagnostics.Debug.Write("\nRunning ZeroWaveGateIndexes()... ");
 
             for (int i = 0; i < gateCount; i++) {
 
                     //get type
-                    var type = gc.getGateByIndex(i).type;
+                    var type = gc.Gates[i].type;
 
                     //if type is IN
                     if(type == Constants.GateEnum.IN) {
@@ -86,11 +91,18 @@ namespace SchemeCreator.Data {
                         traceGateCounter++;
                     }
             }
+
+            System.Diagnostics.Debug.Write("Result:");
+
+            for (int i = 0; i < gateCount; i++)
+                System.Diagnostics.Debug.Write(" " + tracedGateIndexes[i]);
         }
 
         ///<summary> Finds and traces the wires,
         ///that connect to gates found before </summary>
-        private void wireIndexesWave(GateController gc, LineController lc) {
+        private void WireIndexesWave(GateController gc, LineController lc) {
+
+            System.Diagnostics.Debug.Write("\nRunning wireIndexesWave()...");
 
             for (int i = 0; i < gateCount; i++) {
 
@@ -99,11 +111,15 @@ namespace SchemeCreator.Data {
                         continue;
 
                     for (int j = 0; j < wireCount; j++) {
+                        
+                        //do not rewrite indexes
+                        if (tracedWireIndexes[j] != 0)
+                            continue;
 
                         //get the connected wire
-                        if(gc.getGateByIndex(i).WireStartConnects(
-                        lc.getWireByIndex(j))) {
-
+                        if(gc.Gates[i].WireConnects(
+                        lc.Wires[j].start)) {
+                            
                             //save the wire's indexes in tracedWireIndexes
                             tracedWireIndexes[j] = traceWireCounter;
 
@@ -111,14 +127,20 @@ namespace SchemeCreator.Data {
                             traceWireCounter++;
                         }
                     }
-                }
+            }
+
+            System.Diagnostics.Debug.Write("\nResult:");
+            for (int i = 0; i < gateCount; i++)
+                System.Diagnostics.Debug.Write(" " + tracedGateIndexes[i]);
         }
 
         ///<summary> Finds the next 'wave' of gates,
         ///and checks that all their inputs have wires,
         ///that have been traced (they aren't 0) </summary>
-        private void gateIndexesWave(GateController gc, LineController lc) {
+        private void GateIndexesWave(GateController gc, LineController lc) {
 
+            System.Diagnostics.Debug.Write("\nRunnung GateIndexesWave()...");
+               
             for (int i = 0; i < wireCount; i++) {
 
                     //take only already traced wires
@@ -126,15 +148,19 @@ namespace SchemeCreator.Data {
                         continue;
 
                     //take the wire
-                    Wire curWire = lc.getWireByIndex(i);
+                    Wire curWire = lc.Wires[i];
 
                     for (int j = 0; j < gateCount; j++) {
 
                         // take the gate
-                        Gate currentGate = gc.getGateByIndex(j);
+                        Gate currentGate = gc.Gates[j];
+
+                        //do not trace already traced gates
+                        if (tracedGateIndexes[j] != 0)
+                            continue;
 
                         //check if the wire' end connects to the current gate
-                        if(currentGate.WireEndConnects(curWire)) {
+                        if(currentGate.WireConnects(curWire.end)) {
 
                             //check is the gate' inputs have wires
                             //that have been traced
@@ -145,10 +171,10 @@ namespace SchemeCreator.Data {
                             for (int w2 = 0; w2 < wireCount; w2++) {
                                 
                                 //get w2Wire
-                                var w2Wire = lc.getWireByIndex(w2);
+                                var w2Wire = lc.Wires[w2];
 
                                 //check if connects
-                                if(currentGate.WireEndConnects(w2Wire))
+                                if(currentGate.WireConnects(w2Wire.end))
 
                                     //check if traced
                                     if(tracedWireIndexes[w2] != 0)
@@ -168,6 +194,10 @@ namespace SchemeCreator.Data {
                         }
                     }
             }
+
+            System.Diagnostics.Debug.Write("\nResult:");
+            for (int i = 0; i < tracedGateIndexes.Length; i++)
+                System.Diagnostics.Debug.Write(" " + tracedGateIndexes[i]);
         }
     }
 }
