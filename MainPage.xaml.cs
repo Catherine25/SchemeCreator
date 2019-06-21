@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.Foundation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator {
@@ -17,8 +18,13 @@ namespace SchemeCreator {
             
             scheme.frameManager.Grid.Height = ActualHeight;
             scheme.frameManager.Grid.Width = ActualWidth;
+
+            Size size = new Size {
+                Width = ActualWidth,
+                Height = ActualHeight
+            };
             
-            scheme.frameManager.SizeChanged(ActualWidth, ActualHeight);
+            scheme.frameManager.SizeChanged(size);
         }
     }
 }
