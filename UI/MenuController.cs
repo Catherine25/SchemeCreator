@@ -16,7 +16,8 @@ namespace SchemeCreator.UI {
             WorkSchemeBtClickEvent,
             AddGateBtClickEvent,
             AddLineBtClickEvent,
-            RemoveLineBtClickEvent;
+            RemoveLineBtClickEvent,
+            ChangeValueBtClickEvent;
 
         /*      data        */
         Dictionary<Constants.BtId, Button> buttons = new Dictionary<Constants.BtId, Button>();
@@ -51,7 +52,9 @@ namespace SchemeCreator.UI {
             buttons[Constants.BtId.addGateBt].Click += AddGateBtClick;
             buttons[Constants.BtId.addLineBt].Click += AddLineBtClick;
             buttons[Constants.BtId.removeLineBt].Click += RemoveLineBtClick;
+            buttons[Constants.BtId.changeValueBt].Click += ChangeValueBtClick;
         }
+
         private void NewSchemeBtClick(object sender, RoutedEventArgs e) =>
             NewSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.newSchemeBt));
         private void LoadSchemeBtClick(object sender, RoutedEventArgs e) =>
@@ -74,8 +77,12 @@ namespace SchemeCreator.UI {
             RemoveLineBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.removeLineBt));
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }
+        private void ChangeValueBtClick (object sender, RoutedEventArgs e) {
+            ChangeValueBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.changeValueBt));
+            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
+        }
 
-        /*      methods     */        
+        /*      methods     */
         public void Update(Size size) {
             int i = 0;
             foreach (Button button in buttons.Values) {
