@@ -13,6 +13,7 @@ namespace SchemeCreator.Data {
         [DataMember] public bool isExternal;
         [DataMember] public int inputs, outputs;
         [DataMember] public double x, y;
+
         [DataMember] public List<bool> values;
 
         public Gate(Constants.GateEnum type,
@@ -52,6 +53,7 @@ namespace SchemeCreator.Data {
             };
 
             if(isExternal) {
+
                 button.Height = Constants.externalGateHeight;
                 button.Width = Constants.externalGateWidth;
                 button.Margin = new Thickness(
@@ -59,6 +61,15 @@ namespace SchemeCreator.Data {
                     button.Margin.Top - Constants.externalGateHeight / 2 - Constants.dotSize / 2,
                     0,
                     0 );
+                
+                if(values[0]) {
+                    button.Foreground = Constants.brushes[Constants.AccentEnum.dark1];
+                    button.Background = Constants.brushes[Constants.AccentEnum.light1];
+                }
+                else {
+                    button.Foreground = Constants.brushes[Constants.AccentEnum.light1];
+                    button.Background = Constants.brushes[Constants.AccentEnum.dark1];
+                }
             }
             else {
                 button.Width = Constants.gateWidth;
@@ -69,6 +80,7 @@ namespace SchemeCreator.Data {
             }
 
                 button.Name = button.Margin.ToString();
+                
                 return button;
             }
 
@@ -97,9 +109,9 @@ namespace SchemeCreator.Data {
                     t.Top -= Constants.lineStartOffset;
 
                 ellipses.Add (new Ellipse() {
-                    Height = SchemeCreator.Constants.dotSize,
-                    Width = SchemeCreator.Constants.dotSize,
-                    Fill = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1],
+                    Height = Constants.dotSize,
+                    Width = Constants.dotSize,
+                    Fill = Constants.brushes[Constants.AccentEnum.light1],
                     Margin = t,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left } );
