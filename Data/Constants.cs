@@ -63,7 +63,8 @@ namespace SchemeCreator {
             { BtId.workSchemeBt, "Work" },
             { BtId.addGateBt, "Add Gate" },
             { BtId.addLineBt, "Add Line" },
-            { BtId.removeLineBt, "Remove Line" }
+            { BtId.removeLineBt, "Remove Line" },
+            { BtId.changeValueBt, "Change Value" }
         };
 
         public static Dictionary <AccentEnum, SolidColorBrush> brushes = new Dictionary<AccentEnum, SolidColorBrush> {
@@ -80,7 +81,7 @@ namespace SchemeCreator {
             { AccentEnum.light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) }
         };
 
-        public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addGateBt, addLineBt, removeLineBt }
+        public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addGateBt, addLineBt, removeLineBt, changeValueBt }
         public enum GateEnum { IN, OUT, Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
         public enum ModeEnum { addGateMode, addLineEndMode, addLineStartMode, removeLineMode, changeValueMode }
         public enum FrameEnum { workspace, newGate }
