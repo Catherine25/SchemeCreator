@@ -24,11 +24,16 @@ namespace SchemeCreator.Data {
             VerticalAlignment = VerticalAlignment.Top
         };
         
-        if(isActive)
+        if(isActive) {
             l.Stroke =
                 Constants.brushes[Constants.AccentEnum.light1];
-        else l.Stroke =
+            l.Fill = Constants.brushes[Constants.AccentEnum.dark1];
+        }
+        else {
+            l.Stroke =
             Constants.brushes[Constants.AccentEnum.dark1];
+            l.Fill = Constants.brushes[Constants.AccentEnum.light1];
+        }
         
         return l;
         }
