@@ -38,6 +38,7 @@ namespace SchemeCreator.UI {
             menuController.AddGateBtClickEvent += AddGateEvent;
             menuController.AddLineBtClickEvent += AddLineEvent;
             menuController.RemoveLineBtClickEvent += RemoveLineEvent;
+            menuController.ChangeValueBtClickEvent += ChangeValueEvent;
             
             workspaceController.DotTappedEvent += DotTappedEvent;
             workspaceController.LogicGateInTapped += LogicGateInTapped;
@@ -98,7 +99,9 @@ namespace SchemeCreator.UI {
 
         private void GateINTappedEvent(Button b) {
 
-            if(modeManager.CurrentMode == Constants.ModeEnum.addLineStartMode) {
+            Constants.ModeEnum? curMode = modeManager.CurrentMode;
+
+            if (curMode == Constants.ModeEnum.addLineStartMode) {
 
                 modeManager.CurrentMode = Constants.ModeEnum.addLineEndMode;
 
@@ -111,7 +114,20 @@ namespace SchemeCreator.UI {
                     start = point,
                     isActive = scheme.gateController.GetGateByBody(b).values[0]
                 };
+            }
+            else if (curMode == Constants.ModeEnum.changeValueMode) {
 
+                Gate gate = scheme.gateController.GetGateByBody(b);
+                gate.values[0] = !gate.values[0];
+
+                if(gate.values[0]) {
+                    b.Background = Constants.brushes[Constants.AccentEnum.light1];
+                    b.Foreground = Constants.brushes[Constants.AccentEnum.dark1];
+                }
+                else {
+                    b.Background = Constants.brushes[Constants.AccentEnum.dark1];
+                    b.Foreground = Constants.brushes[Constants.AccentEnum.light1];
+                }
             }
         }
 
@@ -265,7 +281,14 @@ namespace SchemeCreator.UI {
             e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
             scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.removeLineMode;
         }
-        
+
+        private void ChangeValueEvent(object sender, LastClickedBtEventArgs e) {
+
+            menuController.InActivateModeButtons();
+            e.button.BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
+            scheme.frameManager.modeManager.CurrentMode = Constants.ModeEnum.changeValueMode;
+        }
+
         public void SwitchToFrame(Constants.FrameEnum frame, Grid grid) {
 
             currentFrame = frame;
