@@ -17,14 +17,13 @@ namespace SchemeCreator.Data {
         [DataMember] public List<bool> values;
 
         public Gate(Constants.GateEnum type,
-            bool isExternal,
             int inputs,
             int outputs,
             double x,
             double y) {
 
                 this.type = type;
-                this.isExternal = isExternal;
+                isExternal = Constants.external.Contains(type);
                 this.inputs = inputs;
                 this.outputs = outputs;
                 this.x = x;

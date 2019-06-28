@@ -188,7 +188,6 @@ namespace SchemeCreator.UI {
 
                 Gate gate = new Gate(
                     e.type,
-                    e.isExternal,
                     e.inputs,
                     e.outputs,
                     point.X,
@@ -210,7 +209,6 @@ namespace SchemeCreator.UI {
                 };
 
                 Gate gate = new Gate(e.type,
-                e.isExternal,
                 e.inputs,
                 e.outputs,
                 point.X,
