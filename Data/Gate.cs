@@ -132,16 +132,20 @@ namespace SchemeCreator.Data {
 
             if(type == Constants.GateEnum.IN) {
 
-                Point point = new Point(x - Constants.lineStartOffset,
-                    y - Constants.lineStartOffset);
+                Point point = new Point {
+                    X = x - Constants.lineStartOffset,
+                    Y = y - Constants.lineStartOffset
+                };
 
                 if (w.start == point)
                     return DrawBody();
             }
             else if(type == Constants.GateEnum.OUT) {
 
-                Point point = new Point(x + Constants.externalGateWidth / 2,
-                    + y + Constants.externalGateHeight / 2);
+                Point point = new Point {
+                    X = x + Constants.externalGateWidth / 2,
+                    Y = y + Constants.externalGateHeight / 2
+                };
                 
                 if(w.end == point)
                     return DrawBody();
