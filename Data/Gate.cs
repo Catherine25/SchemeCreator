@@ -152,8 +152,8 @@ namespace SchemeCreator.Data {
 
         public Ellipse GetInOutByWire(Wire w) {
 
-            var inputs = DrawGateInOut(true);
-            var outputs = DrawGateInOut(false);
+            List<Ellipse> inputs = DrawGateInOut(true);
+            List<Ellipse> outputs = DrawGateInOut(false);
 
             for(int i = 0; i < inputs.Count; i++)
                 if(new Point(inputs[i].Margin.Left
