@@ -25,8 +25,7 @@ namespace SchemeCreator.UI {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top
         };
-        public bool IsActive { get => isActive; }
-        bool isActive;
+        
 
         /*      constructor     */
         public MenuController() {
