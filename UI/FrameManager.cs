@@ -37,7 +37,7 @@ namespace SchemeCreator.UI
 
         private void EventSubscribe()
         {
-            menuController.NewSchemeBtClickEvent += NewSchemeEvent;
+            menuController.NewSchemeBtClickEvent += NewSchemeEventAsync;
             menuController.LoadSchemeBtClickEvent += LoadSchemeEvent;
             menuController.SaveSchemeBtClickEvent += SaveSchemeEvent;
             menuController.TraceSchemeBtClickEvent += TraceSchemeEvent;
@@ -233,8 +233,24 @@ namespace SchemeCreator.UI
             workspaceController.ShowAll(ref scheme);
         }
 
-        private void NewSchemeEvent(object sender, LastClickedBtEventArgs e) =>
-            workspaceController.ShowAll(ref scheme);
+        private async void NewSchemeEventAsync(object sender, LastClickedBtEventArgs e)
+        {
+            if (scheme.gateController.Gates.Count == 0)
+                workspaceController.ShowAll(ref scheme);
+            else
+            {
+                ContentDialogResult result = await new Message(MessageTypes.newSchemeButtonClicked).ShowAsync();
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    scheme.gateController.Gates.Clear();
+                    scheme.lineController.Wires.Clear();
+
+                    workspaceController.Hide();
+                    workspaceController.ShowAll(ref scheme);
+                }
+            }
+        }
 
         private void LoadSchemeEvent(object sender, LastClickedBtEventArgs e) =>
             Serializer.DeserializeAll(scheme);
