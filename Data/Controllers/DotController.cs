@@ -1,36 +1,41 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Shapes;
+using SchemeCreator.Data.ConstantsNamespace;
 
-namespace SchemeCreator.Data {
-    public class DotController {
-
-        IList<Ellipse> dots;
+namespace SchemeCreator.Data
+{
+    public class DotController
+    {
+        private IList<Ellipse> dots;
         public Ellipse lastTapped;
 
-        public IList<Ellipse> Dots {
+        public IList<Ellipse> Dots
+        {
             get => dots;
             set => dots = value;
         }
 
         public DotController() => dots = new List<Ellipse>();
 
-        public void InitNet(double actW, double actH) {
-            
+        public void InitNet(double actW, double actH)
+        {
             double width = actW;
             double heigh = actH;
 
-            double stepW = width / (Constants.netSize+1),
-                stepH = heigh / (Constants.netSize+1);
+            double stepW = width / (Constants.netSize + 1),
+                stepH = heigh / (Constants.netSize + 1);
 
             Thickness margin;
 
             for (int i = 1; i <= Constants.netSize; i++)
-                for (int j = 1; j <= Constants.netSize; j++) {
+                for (int j = 1; j <= Constants.netSize; j++)
+                {
                     margin.Left = stepW * i;
                     margin.Top = stepH * j;
 
-                    Ellipse ellipse = new Ellipse {
+                    Ellipse ellipse = new Ellipse
+                    {
                         Margin = margin,
                         VerticalAlignment = VerticalAlignment.Top,
                         HorizontalAlignment = HorizontalAlignment.Left,
@@ -40,7 +45,7 @@ namespace SchemeCreator.Data {
                     };
 
                     Dots.Add(ellipse);
-            }
+                }
         }
     }
 }

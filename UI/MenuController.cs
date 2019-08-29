@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.ConstantsNamespace;
 
 namespace SchemeCreator.UI {
     class MenuController : IFrameInterface {
@@ -105,6 +106,7 @@ namespace SchemeCreator.UI {
             buttons[Constants.BtId.addGateBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.removeLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
+            buttons[Constants.BtId.changeValueBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
         }
     }
 

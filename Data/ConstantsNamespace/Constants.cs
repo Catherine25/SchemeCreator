@@ -2,9 +2,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.ViewManagement;
 using System.Collections.Generic;
 
-namespace SchemeCreator {
-    static public class Constants {
-
+namespace SchemeCreator.Data.ConstantsNamespace {
+    static public class Constants
+    {
         static Constants() { }
 
         public const int netSize = 8,
@@ -78,13 +78,19 @@ namespace SchemeCreator {
 
             { AccentEnum.light1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight1)) },
             { AccentEnum.light2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight2)) },
-            { AccentEnum.light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) }
+            { AccentEnum.light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) },
+
+            { AccentEnum.accent2, new SolidColorBrush(Windows.UI.Colors.Maroon) }
         };
 
         public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addGateBt, addLineBt, removeLineBt, changeValueBt }
         public enum GateEnum { IN, OUT, Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
         public enum ModeEnum { addGateMode, addLineEndMode, addLineStartMode, removeLineMode, changeValueMode }
         public enum FrameEnum { workspace, newGate }
-        public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground }
+        public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
+        public enum ComponentTypeEnum { gate, wire }
+        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged }
+        public enum MessageAttribute { title, text, button1, button2 }
+        public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected }
     }
 }

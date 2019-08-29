@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
+using SchemeCreator.Data.ConstantsNamespace;
 
 namespace SchemeCreator.UI {
     class WorkspaceController : IFrameInterface {

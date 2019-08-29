@@ -1,43 +1,106 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
-using System;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Windows.Foundation;
-using System.Collections.Generic;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Shapes;
+using SchemeCreator.Data.ConstantsNamespace;
 
-namespace SchemeCreator.Data {
-    [DataContract] public class Gate {
+namespace SchemeCreator.Data
+{
+    [DataContract]
+    public class Gate
+    {
         /*      data        */
         [DataMember] public Constants.GateEnum type;
         [DataMember] public bool isExternal;
         [DataMember] public int inputs, outputs;
         [DataMember] public double x, y;
 
-        [DataMember] public List<bool> values;
+        [DataMember] public List<bool?> values;
 
         public Gate(Constants.GateEnum type,
             int inputs,
             int outputs,
             double x,
-            double y) {
+            double y)
+        {
+            this.type = type;
+            isExternal = Constants.external.Contains(type);
+            this.inputs = inputs;
+            this.outputs = outputs;
+            this.x = x;
+            this.y = y;
+            values = new List<bool?>(inputs);
 
-                this.type = type;
-                isExternal = Constants.external.Contains(type);
-                this.inputs = inputs;
-                this.outputs = outputs;
-                this.x = x;
-                this.y = y;
-                values = new List<bool> (inputs);
-
-                for(int i = 0; i < inputs; i++)
-                    values.Add(false);
+            for (int i = 0; i < inputs; i++)
+                values.Add(null);
         }
 
-        public Button DrawBody() {
+        public void Work()
+        {
+            int length = values.Count;
 
-            Button button = new Button() {
+            switch (type)
+            {
+                case Constants.GateEnum.NOT:
+                    values[0] = !values[0];
+                    break;
 
+                case Constants.GateEnum.AND:
+                    for (int i = 0; i < length; i++)
+                        values[0] &= values[i];
+                    break;
+
+                case Constants.GateEnum.NAND:
+                    {
+                        for (int i = 0; i < length; i++)
+                            values[0] &= values[i];
+
+                        values[0] = !values[0];
+                    }
+                    break;
+
+                case Constants.GateEnum.OR:
+                    {
+                        for (int i = 0; i < length; i++)
+                            values[0] |= values[i];
+                    }
+                    break;
+
+                case Constants.GateEnum.NOR:
+                    {
+                        for (int i = 0; i < length; i++)
+                            values[0] |= values[i];
+
+                        values[0] = !values[0];
+                    }
+                    break;
+
+                case Constants.GateEnum.XOR:
+                    {
+                        for (int i = 0; i < length; i++)
+                            values[0] ^= values[i];
+                    }
+                    break;
+
+                case Constants.GateEnum.XNOR:
+                    {
+                        for (int i = 0; i < length; i++)
+                            values[0] ^= values[i];
+
+                        values[0] = !values[0];
+                    }
+                    break;
+
+                default: return;
+            }
+        }
+
+        public Button DrawBody()
+        {
+            Button button = new Button()
+            {
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalContentAlignment = VerticalAlignment.Center,
@@ -51,26 +114,34 @@ namespace SchemeCreator.Data {
                 Content = type.ToString()
             };
 
-            if(isExternal) {
-
+            if (isExternal)
+            {
                 button.Height = Constants.externalGateHeight;
                 button.Width = Constants.externalGateWidth;
                 button.Margin = new Thickness(
                     button.Margin.Left - Constants.externalGateWidth / 2 - Constants.dotSize / 2,
                     button.Margin.Top - Constants.externalGateHeight / 2 - Constants.dotSize / 2,
                     0,
-                    0 );
-                
-                if(values[0]) {
+                    0);
+
+                if (values[0] == true)
+                {
                     button.Foreground = Constants.brushes[Constants.AccentEnum.dark1];
                     button.Background = Constants.brushes[Constants.AccentEnum.light1];
                 }
-                else {
+                else if (values[0] == false)
+                {
                     button.Foreground = Constants.brushes[Constants.AccentEnum.light1];
                     button.Background = Constants.brushes[Constants.AccentEnum.dark1];
                 }
+                else
+                {
+                    button.Foreground = Constants.brushes[Constants.AccentEnum.background];
+                    button.Background = Constants.brushes[Constants.AccentEnum.accent2];
+                }
             }
-            else {
+            else
+            {
                 button.Width = Constants.gateWidth;
                 button.Height = Constants.gateHeight;
 
@@ -78,42 +149,47 @@ namespace SchemeCreator.Data {
                     button.Content += "\n" + inputs.ToString() + " in " + outputs.ToString();
             }
 
-                button.Name = button.Margin.ToString();
-                
-                return button;
-            }
+            button.Name = button.Margin.ToString();
 
-        public List<Ellipse> DrawGateInOut(bool isInput) {
-            
-            Thickness t = new Thickness {
+            return button;
+        }
+
+        public List<Ellipse> DrawGateInOut(bool isInput)
+        {
+            Thickness t = new Thickness
+            {
                 Left = x - Constants.lineStartOffset,
-                Top = y };
+                Top = y
+            };
 
             int newInOutCount;
 
-            if(isInput)
+            if (isInput)
                 newInOutCount = inputs;
-            else {
+            else
+            {
                 newInOutCount = outputs;
                 t.Left += Constants.gateWidth;
             }
 
             List<Ellipse> ellipses = new List<Ellipse>();
 
-            for (int i = 0; i < newInOutCount; i++) {
-
+            for (int i = 0; i < newInOutCount; i++)
+            {
                 t.Top += Constants.gateHeight / (newInOutCount + 1);
 
                 if (i == 0)
                     t.Top -= Constants.lineStartOffset;
 
-                ellipses.Add (new Ellipse() {
+                ellipses.Add(new Ellipse()
+                {
                     Height = Constants.dotSize,
                     Width = Constants.dotSize,
                     Fill = Constants.brushes[Constants.AccentEnum.light1],
                     Margin = t,
                     VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left } );
+                    HorizontalAlignment = HorizontalAlignment.Left
+                });
             }
 
             return ellipses;
@@ -121,66 +197,79 @@ namespace SchemeCreator.Data {
 
         public bool ContainsInOutByMargin(Ellipse e, bool isInput) =>
             DrawGateInOut(isInput).Exists(x => x.Margin == e.Margin);
+
         public bool ContainsBodyByMargin(Thickness t) =>
             DrawBody().Margin == t;
 
         public int GetIndexOfInOutByMargin(Thickness t, bool isInput) =>
-            DrawGateInOut(isInput).FindIndex(x =>  x.Margin == t);
+            DrawGateInOut(isInput).FindIndex(x => x.Margin == t);
 
-        public Button GetBodyByWire(Wire w) {
-
-            if(type == Constants.GateEnum.IN) {
-
-                Point point = new Point {
+        public Button GetBodyByWirePart(Point p)
+        {
+            if (type == Constants.GateEnum.IN)
+            {
+                Point point = new Point
+                {
                     X = x - Constants.lineStartOffset,
                     Y = y - Constants.lineStartOffset
                 };
 
-                if (w.start == point)
+                if (p == point)
                     return DrawBody();
             }
-            else if(type == Constants.GateEnum.OUT) {
-
-                Point point = new Point {
-                    X = x + Constants.externalGateWidth / 2,
-                    Y = y + Constants.externalGateHeight / 2
+            else if (type == Constants.GateEnum.OUT)
+            {
+                Point point = new Point
+                {
+                    X = x - Constants.lineStartOffset,
+                    Y = y - Constants.lineStartOffset
                 };
-                
-                if(w.end == point)
+
+                if (p == point)
                     return DrawBody();
             }
 
             return null;
         }
 
-        public Ellipse GetInOutByWire(Wire w) {
-
+        public Ellipse GetInOutByWirePart(Point p)
+        {
             List<Ellipse> inputs = DrawGateInOut(true);
             List<Ellipse> outputs = DrawGateInOut(false);
 
-            for(int i = 0; i < inputs.Count; i++)
-                if(new Point(inputs[i].Margin.Left
-                    + Constants.lineStartOffset,
-                    inputs[i].Margin.Top
-                    + Constants.lineStartOffset) == w.end)
-                    return inputs[i];
-            
-            for(int i = 0; i < outputs.Count; i++)
-                if(new Point(outputs[i].Margin.Left
-                    + Constants.lineStartOffset,
-                    outputs[i].Margin.Top
-                    + Constants.lineStartOffset) == w.start)
-                    return inputs[i];
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                Point point = new Point
+                {
+                    X = inputs[i].Margin.Left + Constants.lineStartOffset,
+                    Y = inputs[i].Margin.Top + Constants.lineStartOffset
+                };
 
+                if (point == p)
+                    return inputs[i];
+            }
+
+            for (int i = 0; i < outputs.Count; i++)
+            {
+                Point point = new Point
+                {
+                   X = outputs[i].Margin.Left + Constants.lineStartOffset,
+                   Y = outputs[i].Margin.Top + Constants.lineStartOffset
+                };
+
+                if (point == p)
+                    return outputs[i];
+            }
+               
             return null;
         }
 
-        public bool WireConnects(Point point) {
-
+        public bool WireConnects(Point point)
+        {
             System.Diagnostics.Debug.Write("\nRunning WireConnects()... ");
 
-            if (Constants.external.Contains(type)) {
-
+            if (Constants.external.Contains(type))
+            {
                 Button body = DrawBody();
 
                 double left = body.Margin.Left;
@@ -191,42 +280,44 @@ namespace SchemeCreator.Data {
                 gateCenter.X = left + (Constants.externalGateWidth / 2);
                 gateCenter.Y = top + (Constants.externalGateHeight / 2);
 
-                if (gateCenter == point) {
+                if (gateCenter == point)
+                {
                     System.Diagnostics.Debug.Write("Result: true");
                     return true;
                 }
-                else {
+                else
+                {
                     System.Diagnostics.Debug.Write("Result: false");
                     return false;
                 }
             }
-            else {
-
+            else
+            {
                 Point p = new Point();
 
                 var inputs = DrawGateInOut(true);
 
-                for (int i = 0; i < inputs.Count; i++) {
-
+                for (int i = 0; i < inputs.Count; i++)
+                {
                     p.X = inputs[i].Margin.Left + (Constants.gateInOutSize / 2);
                     p.Y = inputs[i].Margin.Top + (Constants.gateInOutSize / 2);
 
-                    if (p == point) {
-
+                    if (p == point)
+                    {
                         System.Diagnostics.Debug.Write("Result: true");
                         return true;
                     }
                 }
-                    
+
                 var outputs = DrawGateInOut(false);
 
-                for (int i = 0; i < outputs.Count; i++) {
-
+                for (int i = 0; i < outputs.Count; i++)
+                {
                     p.X = outputs[i].Margin.Left + (Constants.gateInOutSize / 2);
                     p.Y = outputs[i].Margin.Top + (Constants.gateInOutSize / 2);
 
-                    if (p == point) {
-
+                    if (p == point)
+                    {
                         System.Diagnostics.Debug.Write("Result: true");
                         return true;
                     }
@@ -236,6 +327,15 @@ namespace SchemeCreator.Data {
             System.Diagnostics.Debug.Write("Result: false");
 
             return false;
+        }
+
+        public int firstFreeValueBoxIndex()
+        {
+            for (int i = 0; i < inputs; i++)
+                if (values[i] == null)
+                    return i;
+
+            return -1;
         }
     }
 }

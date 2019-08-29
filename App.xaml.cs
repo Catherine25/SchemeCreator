@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace Course_Project {
+namespace SchemeCreator {
     sealed partial class App : Application {
         //System.Collections.Generic.Dictionary <string, SchemeCreator.Data.Scheme> schemes =
         //new System.Collections.Generic.Dictionary <string, SchemeCreator.Data.Scheme>();
