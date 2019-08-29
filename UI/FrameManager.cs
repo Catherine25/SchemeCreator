@@ -235,8 +235,12 @@ namespace SchemeCreator.UI
 
         private async void NewSchemeEventAsync(object sender, LastClickedBtEventArgs e)
         {
-            if (scheme.gateController.Gates.Count == 0)
+            if (scheme.gateController.Gates.Count == 0
+                && scheme.lineController.Wires.Count == 0)
+            {
+                workspaceController.Hide();
                 workspaceController.ShowAll(ref scheme);
+            }
             else
             {
                 ContentDialogResult result = await new Message(MessageTypes.newSchemeButtonClicked).ShowAsync();
