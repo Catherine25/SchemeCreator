@@ -11,27 +11,25 @@
     <Frame Name="MainFrame">
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
                 <!-- for buttons-->
-                <RowDefinition Height="15*"/>
+                <RowDefinition Height="15*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Background="DarkCyan" x:Name="NewBt" Content="New" Height="50" Width="50" Margin="10,0"/>
-            <Button Background="DarkCyan" x:Name="LoadBt" Content="Load" Height="50" Width="60" Margin="70,0"/>
-            <Button Background="DarkCyan" x:Name="SaveBt" Content="Save" Height="50" Width="50" Margin="140,0"/>
-            <Button Background="DarkCyan" x:Name="NewElementBt" Content="New Element" Height="50" Width="110" Margin="200,0"/>
-            <Button Background="DarkCyan" x:Name="NewLineBt" Content="New Line" Height="50" Width="80" Margin="320,0"/>
-            <Button Background="DarkCyan" x:Name="DeleteLineBt" Content="Delete Line" Height="50" Width="100" Margin="410,0"/>
-            <Button Background="DarkCyan" x:Name="ChangeValueBt" Content="Change Value" Height="50" Width="110" Margin="520,0"/>
-            <Button Background="DarkCyan" x:Name="WorkBt" Content="Work" Height="50" Width="60" Margin="640,0"/>
-            <Button Background="DarkCyan" x:Name="TraceBt" Content="Trace" Height="50" Width="60" Margin="710,0"/>
+            <Button Background="DarkCyan" x:Name="NewBt" Content="New" Height="50" Width="50" Margin="10,0" />
+            <Button Background="DarkCyan" x:Name="LoadBt" Content="Load" Height="50" Width="60" Margin="70,0" />
+            <Button Background="DarkCyan" x:Name="SaveBt" Content="Save" Height="50" Width="50" Margin="140,0" />
+            <Button Background="DarkCyan" x:Name="NewElementBt" Content="New Element" Height="50" Width="110" Margin="200,0" />
+            <Button Background="DarkCyan" x:Name="NewLineBt" Content="New Line" Height="50" Width="80" Margin="320,0" />
+            <Button Background="DarkCyan" x:Name="DeleteLineBt" Content="Delete Line" Height="50" Width="100" Margin="410,0" />
+            <Button Background="DarkCyan" x:Name="ChangeValueBt" Content="Change Value" Height="50" Width="110" Margin="520,0" />
+            <Button Background="DarkCyan" x:Name="WorkBt" Content="Work" Height="50" Width="60" Margin="640,0" />
+            <Button Background="DarkCyan" x:Name="TraceBt" Content="Trace" Height="50" Width="60" Margin="710,0" />
 
-
-
-            <Grid x:Name="WorkSpace" Grid.Row="1" HorizontalAlignment="Stretch" Margin="2,0.333,-2,0" VerticalAlignment="Stretch"/>
+            <Grid x:Name="WorkSpace" Grid.Row="1" HorizontalAlignment="Stretch" Margin="2,0.333,-2,0" VerticalAlignment="Stretch" />
         </Grid>
     </Frame>
 </Page>

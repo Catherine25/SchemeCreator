@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.ConstantsNamespace;
 
 namespace SchemeCreator.UI {
     class NewGateMenuController : IFrameInterface {

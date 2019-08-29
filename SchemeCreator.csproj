@@ -119,14 +119,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\Constants.cs" />
-    <Compile Include="Data\DotController.cs" />
+    <Compile Include="Data\ConstantsNamespace\Constants.cs" />
+    <Compile Include="Data\ConstantsNamespace\Text.cs" />
+    <Compile Include="Data\Controllers\DotController.cs" />
     <Compile Include="Data\Gate.cs" />
-    <Compile Include="Data\GateController.cs" />
-    <Compile Include="Data\LineController.cs" />
+    <Compile Include="Data\Controllers\GateController.cs" />
+    <Compile Include="Data\Controllers\LineController.cs" />
     <Compile Include="Data\Serializator.cs" />
     <Compile Include="Data\Tracing.cs" />
     <Compile Include="Data\Wire.cs" />
+    <Compile Include="Data\WorkAlgorithm.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -135,6 +137,9 @@
     <Compile Include="UI\FrameManager.cs" />
     <Compile Include="UI\IFrameInterface.cs" />
     <Compile Include="UI\MenuController.cs" />
+    <Compile Include="UI\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ModeManager.cs" />
     <Compile Include="UI\NewGateBt.cs" />
     <Compile Include="UI\NewGateMenuController.cs" />
@@ -165,15 +170,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Message.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Test\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

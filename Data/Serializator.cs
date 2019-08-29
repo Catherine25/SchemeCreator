@@ -1,37 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using Windows.Storage;
-using System;
-using System.Threading.Tasks;
 
-namespace SchemeCreator.Data {
-    static class Serializer {
+namespace SchemeCreator.Data
+{
+    internal static class Serializer
+    {
         //data
         public const string gatePath = "gateData.txt", linePath = "lineData.txt";
+
         public static List<string> serializeGateData, serializeLineData;
 
-        static Serializer() {
+        static Serializer()
+        {
             serializeGateData = new List<string>();
             serializeLineData = new List<string>();
         }
 
-        public static void SerializeAll(Scheme scheme) {
-
+        public static void SerializeAll(Scheme scheme)
+        {
             int gateCount = scheme.gateController.Gates.Count;
 
-            for(int i = 0; i < gateCount; i++)
+            for (int i = 0; i < gateCount; i++)
                 serializeGateData.Add(scheme.gateController.Gates[i].SerializeGate());
 
             int wireCount = scheme.lineController.Wires.Count;
 
-            for(int i = 0; i < wireCount; i++)
+            for (int i = 0; i < wireCount; i++)
                 serializeGateData.Add(scheme.lineController.Wires[i].SerializeLine());
         }
 
-        public static void DeserializeAll(Scheme scheme) {
+        public static void DeserializeAll(Scheme scheme)
+        {
             foreach (string s in serializeGateData)
                 scheme.gateController.Gates.Add(s.DeserializeGate());
 
@@ -39,81 +44,96 @@ namespace SchemeCreator.Data {
                 scheme.lineController.Wires.Add(s.DeserializeLine());
         }
 
-        //Gate and line serialization and deserialization
-        public static string SerializeGate(this Gate gi) {
+        //Gate and line serialization and serialization
+        public static string SerializeGate(this Gate gi)
+        {
             var ms = new MemoryStream();
             // Write an object to the Stream and leave it opened
-            using (var writer = XmlDictionaryWriter.CreateTextWriter(ms, Encoding.UTF8, ownsStream: false)) {
+            using (var writer = XmlDictionaryWriter.CreateTextWriter(ms, Encoding.UTF8, ownsStream: false))
+            {
                 var ser = new DataContractSerializer(typeof(Gate));
                 ser.WriteObject(writer, gi);
             }
             // Read serialized string from Stream and close it
-            using (var reader = new StreamReader(ms, Encoding.UTF8)) {
-                ms.Position = 0;
-                return reader.ReadToEnd();
-            }
-        }
-        public static string SerializeLine(this Wire w) {
-            var ms = new MemoryStream();
-            // Write an object to the Stream and leave it opened
-            using (var writer = XmlDictionaryWriter.CreateTextWriter(ms, Encoding.UTF8, ownsStream: false)) {
-                var ser = new DataContractSerializer(typeof(Wire));
-                ser.WriteObject(writer, w);
-            }
-            // Read serialized string from Stream and close it
-            using (var reader = new StreamReader(ms, Encoding.UTF8)) {
+            using (var reader = new StreamReader(ms, Encoding.UTF8))
+            {
                 ms.Position = 0;
                 return reader.ReadToEnd();
             }
         }
 
-        public static Gate DeserializeGate(this string xml) {
+        public static string SerializeLine(this Wire w)
+        {
+            var ms = new MemoryStream();
+            // Write an object to the Stream and leave it opened
+            using (var writer = XmlDictionaryWriter.CreateTextWriter(ms, Encoding.UTF8, ownsStream: false))
+            {
+                var ser = new DataContractSerializer(typeof(Wire));
+                ser.WriteObject(writer, w);
+            }
+            // Read serialized string from Stream and close it
+            using (var reader = new StreamReader(ms, Encoding.UTF8))
+            {
+                ms.Position = 0;
+                return reader.ReadToEnd();
+            }
+        }
+
+        public static Gate DeserializeGate(this string xml)
+        {
             var ms = new MemoryStream();
             // Write xml content to the Stream and leave it opened
-            using (var writer = new StreamWriter(ms, Encoding.UTF8, 512, leaveOpen: true)) {
+            using (var writer = new StreamWriter(ms, Encoding.UTF8, 512, leaveOpen: true))
+            {
                 writer.Write(xml);
                 writer.Flush();
                 ms.Position = 0;
             }
             // Read Stream to the Serializer and Deserialize and close it
             using (var reader = XmlDictionaryReader.CreateTextReader(ms, Encoding.UTF8,
-            new XmlDictionaryReaderQuotas(), null)) {
+            new XmlDictionaryReaderQuotas(), null))
+            {
                 var ser = new DataContractSerializer(typeof(Gate));
                 return (Gate)ser.ReadObject(reader);
             }
         }
 
-        public static Wire DeserializeLine(this string xml) {
+        public static Wire DeserializeLine(this string xml)
+        {
             var ms = new MemoryStream();
             // Write xml content to the Stream and leave it opened
-            using (var writer = new StreamWriter(ms, Encoding.UTF8, 512, leaveOpen: true)) {
+            using (var writer = new StreamWriter(ms, Encoding.UTF8, 512, leaveOpen: true))
+            {
                 writer.Write(xml);
                 writer.Flush();
                 ms.Position = 0;
             }
             // Read Stream to the Serializer and Deserialize and close it
             using (var reader = XmlDictionaryReader.CreateTextReader(ms, Encoding.UTF8,
-            new XmlDictionaryReaderQuotas(), null)) {
+            new XmlDictionaryReaderQuotas(), null))
+            {
                 var ser = new DataContractSerializer(typeof(Wire));
                 return (Wire)ser.ReadObject(reader);
             }
         }
 
-        public static async Task Load(Scheme scheme) {
+        public static async Task Load(Scheme scheme)
+        {
             StorageFolder folder = KnownFolders.PicturesLibrary;
 
-            //deserialization of gates
+            //serialization of gates
             StorageFile gateFile = await folder.GetFileAsync(gatePath);
             serializeGateData.AddRange(await FileIO.ReadLinesAsync(gateFile));
 
-            //deserialization of lines
+            //serialization of lines
             StorageFile lineFile = await folder.GetFileAsync(linePath);
             serializeLineData.AddRange(await FileIO.ReadLinesAsync(lineFile));
 
             DeserializeAll(scheme);
         }
 
-        public static async Task Save() {
+        public static async Task Save()
+        {
             StorageFolder folder = KnownFolders.PicturesLibrary;
 
             //serialization of gates

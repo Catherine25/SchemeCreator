@@ -1,6 +1,7 @@
-﻿namespace SchemeCreator.Data {
-    public class Scheme {
-
+﻿namespace SchemeCreator.Data
+{
+    public class Scheme
+    {
         public UI.FrameManager frameManager;
         public LineController lineController = new LineController();
         public GateController gateController = new GateController();

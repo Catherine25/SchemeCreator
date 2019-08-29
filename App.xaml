@@ -1,5 +1,5 @@
 ﻿<Application
-    x:Class="Course_Project.App"
+    x:Class="SchemeCreator.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 </Application>
