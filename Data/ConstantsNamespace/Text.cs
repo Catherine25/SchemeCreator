@@ -47,6 +47,16 @@ namespace SchemeCreator.Data.ConstantsNamespace
             };
 
             SetText(MessageTypes.modeChanged, modeChanged);
+
+            string[] newSchemeButtonClicked = new string[4]
+            {
+                "Do you want to create new scheme?",
+                "Current scheme will be lost",
+                "Yes",
+                "No"
+            };
+
+            SetText(MessageTypes.newSchemeButtonClicked, newSchemeButtonClicked);
         }
 
         public static string GetText(MessageTypes mt, MessageAttribute ma)
