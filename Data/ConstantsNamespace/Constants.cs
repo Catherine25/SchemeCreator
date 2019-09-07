@@ -5,8 +5,6 @@ using System.Collections.Generic;
 namespace SchemeCreator.Data.ConstantsNamespace {
     static public class Constants
     {
-        static Constants() { }
-
         public const int netSize = 8,
             dotSize = 10,
             traceNumbersWidth = 50,
@@ -89,8 +87,9 @@ namespace SchemeCreator.Data.ConstantsNamespace {
         public enum FrameEnum { workspace, newGate }
         public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
         public enum ComponentTypeEnum { gate, wire }
-        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked }
+        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView }
         public enum MessageAttribute { title, text, button1, button2 }
         public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected }
+        public enum ConnectionType { input, output }
     }
 }
