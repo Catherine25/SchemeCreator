@@ -22,9 +22,6 @@ namespace SchemeCreator.UI
 {
     public sealed partial class Message : ContentDialog
     {
-        private Button button;
-        private IList<Ellipse> ports;
-        public static int choosedPortIndex;
         public Message(Constants.MessageTypes mt)
         {
             InitializeComponent();
@@ -36,18 +33,6 @@ namespace SchemeCreator.UI
             PrimaryButtonText = messageInfo[2];
             SecondaryButtonText = messageInfo[3];
         }
-
-        //public Message(Constants.ModeEnum newMode)
-        //{
-        //    InitializeComponent();
-
-        //    string[] messageInfo = Text.GetText(Constants.MessageTypes.modeChanged);
-
-        //    Title = messageInfo[0];
-        //    TextBlock.Text = messageInfo[1] + " to " + newMode.ToString();
-        //    PrimaryButtonText = messageInfo[2];
-        //    SecondaryButtonText = messageInfo[3];
-        //}
 
         public Message(Constants.GateEnum type)
         {
@@ -101,79 +86,6 @@ namespace SchemeCreator.UI
             }
 
             PrimaryButtonText = "Close";
-        }
-
-        public Message(Constants.ModeEnum mode, Data.Gate gate)
-        {
-            InitializeComponent();
-
-            //mainGrid.Children.Clear();
-
-            button = gate.DrawBody();
-            
-            if (mode == Constants.ModeEnum.addLineStartMode)
-            {
-                Title = "Choose an output";
-                ports = gate.DrawGateInOut(Constants.ConnectionType.output);
-            }
-            else if (mode == Constants.ModeEnum.addLineEndMode)
-            {
-                Title = "Choose an input";
-                ports = gate.DrawGateInOut(Constants.ConnectionType.input);
-            }
-            else throw new Exception();
-
-            button.Width *= 2;
-            button.Height *= 2;
-            button.Margin = new Thickness
-            {
-                Left = 25,
-                Top = 25
-            };
-            button.Click += Button_Click;
-            mainGrid.Children.Add(button);
-
-            int portCount = ports.Count;
-            for (int i = 0; i < portCount; i++)
-            {
-                ports[i].Width *= 2;
-                ports[i].Height *= 2;
-
-                if (mode == Constants.ModeEnum.addLineStartMode)
-                {
-                    ports[i].Margin = new Thickness
-                    {
-                        Left = button.Margin.Left + button.Width,
-                        Top = button.Margin.Top + i * ports[i].Height
-                    };
-                }
-                else if (mode == Constants.ModeEnum.addLineEndMode)
-                {
-                    ports[i].Margin = new Thickness
-                    {
-                        Left = button.Margin.Left - (ports[i].Width),
-                        Top = button.Margin.Top + i * ports[i].Height
-                    };
-                }
-
-                ports[i].Tapped += Port_Tapped;
-
-                mainGrid.Children.Add(ports[i]);
-
-                PrimaryButtonText = "Cancel";
-            }
-        }
-
-        private void Port_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            choosedPortIndex = ports.IndexOf(sender as Ellipse);
-            //throw new NotImplementedException();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //TODO: SHOW THE CARNO TABLE
-            new Message(Constants.MessageTypes.functionIsNotSupported).ShowAsync();
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) { }
