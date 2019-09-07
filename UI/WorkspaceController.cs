@@ -21,11 +21,7 @@ namespace SchemeCreator.UI
             isActive = false;
         }
 
-        public void Update(Size size)
-        {
-            grid.Height = size.Height;
-            grid.Width = size.Width;
-        }
+        public void Update(Size size) => grid.SetSize(size);
 
         public void ShowDots(ref Data.DotController dotController)
         {

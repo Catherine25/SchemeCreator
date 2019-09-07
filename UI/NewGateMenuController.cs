@@ -4,6 +4,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.UI {
     class NewGateMenuController : IFrameInterface {
@@ -118,9 +119,8 @@ namespace SchemeCreator.UI {
 
         public void Update(Size size) {
 
-            grid.Width = size.Width;
-            grid.Height = size.Height;
-
+            grid.SetSize(size);
+            
             for(int j = 0; j < 6; j++) {
                 inputCount[j].Margin = new Thickness(j * (size.Width / 6), 0, 0, 0);
                 grid.Children.Add(inputCount[j]);

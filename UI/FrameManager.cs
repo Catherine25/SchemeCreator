@@ -199,8 +199,7 @@ namespace SchemeCreator.UI
                     e.type,
                     e.inputs,
                     e.outputs,
-                    point.X,
-                    point.Y);
+                    point);
 
                 scheme.gateController.Gates.Add(gate);
             }
@@ -215,8 +214,7 @@ namespace SchemeCreator.UI
                 Gate gate = new Gate(e.type,
                 e.inputs,
                 e.outputs,
-                point.X,
-                point.Y);
+                point);
 
                 scheme.gateController.Gates.Add(gate);
             }
@@ -353,7 +351,7 @@ namespace SchemeCreator.UI
         {
             currentFrame = frame;
 
-            Size size = new Size(Grid.Width, Grid.Height);
+            Size size = grid.GetSize();
 
             if (frame == FrameEnum.newGate)
             {
@@ -375,7 +373,7 @@ namespace SchemeCreator.UI
             Debug.Assert(Grid.Width != 0);
             Debug.Assert(Grid.Height != 0);
 
-            Size size = new Size(Grid.Width, Grid.Height);
+            Size size = Grid.GetSize();
 
             if (currentFrame == FrameEnum.newGate)
                 newGateMenuController.Update(size);
@@ -388,9 +386,7 @@ namespace SchemeCreator.UI
 
         public void SizeChanged(Size size)
         {
-            Grid.Width = size.Width;
-            Grid.Height = size.Height;
-
+            Grid.SetSize(size);
             UpdateView();
         }
     }

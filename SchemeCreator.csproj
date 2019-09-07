@@ -124,6 +124,7 @@
     <Compile Include="Data\Controllers\DotController.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
+    <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Controllers\LineController.cs" />

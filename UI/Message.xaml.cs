@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
+﻿using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
-using Windows.UI.Xaml.Shapes;
+using Windows.Foundation;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,7 +24,7 @@ namespace SchemeCreator.UI
         {
             InitializeComponent();
 
-            Data.Gate gate = new Data.Gate(type, 2, 1, 0.0, 0.0);
+            Data.Gate gate = new Data.Gate(type, 2, 1, new Point(0.0, 0.0));
 
             if(type == Constants.GateEnum.IN) {
                 TextBlock.Text =
