@@ -14,24 +14,20 @@ namespace SchemeCreator.Data
     {
         /*      data        */
         [DataMember] public Constants.GateEnum type;
-        [DataMember] public bool isExternal;
         [DataMember] public int inputs, outputs;
-        [DataMember] public double x, y;
-
+        [DataMember] public Point leftTop;
         [DataMember] public List<bool?> values;
 
         public Gate(Constants.GateEnum type,
             int inputs,
             int outputs,
-            double x,
-            double y)
+            Point leftTop)
         {
             this.type = type;
-            isExternal = Constants.external.Contains(type);
             this.inputs = inputs;
             this.outputs = outputs;
-            this.x = x;
-            this.y = y;
+            this.leftTop = leftTop;
+
             values = new List<bool?>(inputs);
 
             for (int i = 0; i < inputs; i++)
@@ -110,12 +106,12 @@ namespace SchemeCreator.Data
                 Background = Constants.brushes[Constants.AccentEnum.dark1],
                 Foreground = Constants.brushes[Constants.AccentEnum.light1],
 
-                Margin = new Thickness(x, y, 0, 0),
+                Margin = new Thickness(leftTop.X, leftTop.Y, 0, 0),
                 FontSize = 10,
                 Content = type.ToString()
             };
 
-            if (isExternal)
+            if (Constants.external.Contains(type))
             {
                 button.Height = Constants.externalGateHeight;
                 button.Width = Constants.externalGateWidth;
@@ -159,8 +155,8 @@ namespace SchemeCreator.Data
         {
             Thickness t = new Thickness
             {
-                Left = x - Constants.lineStartOffset,
-                Top = y
+                Left = leftTop.X - Constants.lineStartOffset,
+                Top = leftTop.Y
             };
 
             int newInOutCount;
@@ -211,8 +207,8 @@ namespace SchemeCreator.Data
             {
                 Point point = new Point
                 {
-                    X = x - Constants.lineStartOffset,
-                    Y = y - Constants.lineStartOffset
+                    X = leftTop.X - Constants.lineStartOffset,
+                    Y = leftTop.Y - Constants.lineStartOffset
                 };
 
                 if (p == point)
@@ -222,8 +218,8 @@ namespace SchemeCreator.Data
             {
                 Point point = new Point
                 {
-                    X = x - Constants.lineStartOffset,
-                    Y = y - Constants.lineStartOffset
+                    X = leftTop.X - Constants.lineStartOffset,
+                    Y = leftTop.Y - Constants.lineStartOffset
                 };
 
                 if (p == point)
