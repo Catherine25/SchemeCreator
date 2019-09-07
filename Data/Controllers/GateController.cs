@@ -41,10 +41,10 @@ namespace SchemeCreator.Data
             return null;
         }
 
-        public Gate GetGateByInOut(Ellipse e, bool isInput)
+        public Gate GetGateByInOut(Ellipse e, Constants.ConnectionType type)
         {
             foreach (Gate gate in Gates)
-                if (gate.ContainsInOutByMargin(e, isInput))
+                if (gate.ContainsInOutByCenter(e, type))
                     return gate;
 
             throw new System.Exception();

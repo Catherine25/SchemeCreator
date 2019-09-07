@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.Data
 {
@@ -154,7 +155,7 @@ namespace SchemeCreator.Data
             return button;
         }
 
-        public List<Ellipse> DrawGateInOut(bool isInput)
+        public List<Ellipse> DrawGateInOut(Constants.ConnectionType type)
         {
             Thickness t = new Thickness
             {
@@ -164,7 +165,7 @@ namespace SchemeCreator.Data
 
             int newInOutCount;
 
-            if (isInput)
+            if (type == Constants.ConnectionType.input)
                 newInOutCount = inputs;
             else
             {
@@ -195,14 +196,14 @@ namespace SchemeCreator.Data
             return ellipses;
         }
 
-        public bool ContainsInOutByMargin(Ellipse e, bool isInput) =>
-            DrawGateInOut(isInput).Exists(x => x.Margin == e.Margin);
+        public bool ContainsInOutByCenter(Ellipse e, Constants.ConnectionType type) =>
+            DrawGateInOut(type).Exists(x => x.CenterPoint() == e.CenterPoint());
 
         public bool ContainsBodyByMargin(Thickness t) =>
             DrawBody().Margin == t;
 
-        public int GetIndexOfInOutByMargin(Thickness t, bool isInput) =>
-            DrawGateInOut(isInput).FindIndex(x => x.Margin == t);
+        public int GetIndexOfInOutByCenter(Point center, Constants.ConnectionType type) =>
+            DrawGateInOut(type).FindIndex(x => x.CenterPoint() == center);
 
         public Button GetBodyByWirePart(Point p)
         {
@@ -234,8 +235,8 @@ namespace SchemeCreator.Data
 
         public Ellipse GetInOutByWirePart(Point p)
         {
-            List<Ellipse> inputs = DrawGateInOut(true);
-            List<Ellipse> outputs = DrawGateInOut(false);
+            List<Ellipse> inputs = DrawGateInOut(Constants.ConnectionType.input);
+            List<Ellipse> outputs = DrawGateInOut(Constants.ConnectionType.output);
 
             for (int i = 0; i < inputs.Count; i++)
             {
@@ -295,7 +296,7 @@ namespace SchemeCreator.Data
             {
                 Point p = new Point();
 
-                var inputs = DrawGateInOut(true);
+                var inputs = DrawGateInOut(Constants.ConnectionType.input);
 
                 for (int i = 0; i < inputs.Count; i++)
                 {
@@ -309,7 +310,7 @@ namespace SchemeCreator.Data
                     }
                 }
 
-                var outputs = DrawGateInOut(false);
+                var outputs = DrawGateInOut(Constants.ConnectionType.output);
 
                 for (int i = 0; i < outputs.Count; i++)
                 {
@@ -329,7 +330,7 @@ namespace SchemeCreator.Data
             return false;
         }
 
-        public int firstFreeValueBoxIndex()
+        public int FirstFreeValueBoxIndex()
         {
             for (int i = 0; i < inputs; i++)
                 if (values[i] == null)
