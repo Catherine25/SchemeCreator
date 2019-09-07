@@ -90,8 +90,7 @@ namespace SchemeCreator.Data.ConstantsNamespace
             SetText(mt, MessageAttribute.button2, messageInfo[3]);
         }
 
-
-        private static IDictionary<Tuple<MessageTypes, MessageAttribute>, string> messagesText =
+        private static readonly IDictionary<Tuple<MessageTypes, MessageAttribute>, string> messagesText =
             new Dictionary<Tuple<MessageTypes, MessageAttribute>, string>();
     }
 }
