@@ -5,32 +5,36 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Extensions;
 
-namespace SchemeCreator.UI {
-    class WorkspaceController : IFrameInterface {
-
+namespace SchemeCreator.UI
+{
+    class WorkspaceController : IFrameInterface
+    {
         /*      methods      */
         public void SetParentGrid(Grid parentGrid) =>
             parentGrid.Children.Add(grid);
 
-        public void Hide() {
+        public void Hide()
+        {
             grid.Children.Clear();
             isActive = false;
         }
 
-        public void Update(Size size) {
+        public void Update(Size size)
+        {
             grid.Height = size.Height;
             grid.Width = size.Width;
         }
 
-        public void ShowDots(ref Data.DotController dotController) {
-
+        public void ShowDots(ref Data.DotController dotController)
+        {
             dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
 
             int dotCount = dotController.Dots.Count;
 
-            for(int i = 0; i < dotCount; i++) {
-                
+            for (int i = 0; i < dotCount; i++)
+            {
                 Ellipse e = dotController.Dots[i];
                 grid.Children.Add(e);
                 e.Tapped += DotTapped;
@@ -39,55 +43,65 @@ namespace SchemeCreator.UI {
             isActive = true;
         }
 
-        public void ShowGates(ref Data.GateController gateController) {
-
+        public void ShowGates(ref Data.GateController gateController)
+        {
             var logicGates = gateController.GetLogicGates();
-            
-            foreach(Data.Gate gate in logicGates) {
+
+            foreach (Data.Gate gate in logicGates)
+            {
                 var rect = gate.DrawBody();
                 rect.Tapped += LogicGateBodyTapped;
                 grid.Children.Add(rect);
 
-                foreach(Ellipse e in gate.DrawGateInOut(true)) {
+                foreach (Ellipse e in gate.DrawGateInOut(Constants.ConnectionType.input))
+                {
                     grid.Children.Add(e);
                     e.Tapped += GateInTapped;
+                    e.PointerEntered += E_PointerEntered;
+                    e.PointerExited += E_PointerExited;
                 }
-                    
 
-                foreach(Ellipse e in gate.DrawGateInOut(false)) {
+
+                foreach (Ellipse e in gate.DrawGateInOut(Constants.ConnectionType.output))
+                {
                     grid.Children.Add(e);
                     e.Tapped += GateOutTapped;
+                    e.PointerEntered += E_PointerEntered;
+                    e.PointerExited += E_PointerExited;
                 }
             }
 
             var externalGates = gateController.GetExternalGates();
 
-            foreach(Data.Gate gate in externalGates) {
-
+            foreach (Data.Gate gate in externalGates)
+            {
                 var gateBody = gate.DrawBody();
 
-                if(gate.type == Constants.GateEnum.IN)
+                if (gate.type == Constants.GateEnum.IN)
                     gateBody.Tapped += GateINBodyTapped;
                 else gateBody.Tapped += GateOUTBodyTapped;
-                
+
                 grid.Children.Add(gateBody);
             }
         }
 
-        public void ShowLines(ref Data.LineController lineController) {
+        private void E_PointerExited(object sender, PointerRoutedEventArgs e) => (sender as Ellipse).DecreaseSize();
 
-            for(int i = 0; i < lineController.Wires.Count; i++)
+        private void E_PointerEntered(object sender, PointerRoutedEventArgs e) => (sender as Ellipse).IncreaseSize();
+
+        public void ShowLines(ref Data.LineController lineController)
+        {
+            for (int i = 0; i < lineController.Wires.Count; i++)
                 grid.Children.Add(lineController.Wires[i].
                 CreateLine(lineController.Wires[i].isActive));
         }
 
-        public void ShowWireTraceIndexes(int[] tracedWireIndexes,
-        Data.LineController lc) {
-
+        public void ShowWireTraceIndexes(int[] tracedWireIndexes, Data.LineController lc)
+        {
             int wireCount = lc.Wires.Count;
 
-            for (int i = 0; i < wireCount; i++) {
-
+            for (int i = 0; i < wireCount; i++)
+            {
                 //if(tracedWireIndexes[i] == 0)
                 //    continue;
 
@@ -99,7 +113,8 @@ namespace SchemeCreator.UI {
                 double centerX = (start.X + end.X) / 2;
                 double centerY = (start.Y + end.Y) / 2;
 
-                Button tb = new Button() {
+                Button tb = new Button()
+                {
                     Width = Constants.traceNumbersWidth,
                     Height = Constants.traceNumbersHeight,
                     HorizontalAlignment = HorizontalAlignment.Left,
@@ -117,23 +132,24 @@ namespace SchemeCreator.UI {
             };
         }
 
-        public void ShowAll(ref Data.Scheme scheme) {
+        public void ShowAll(ref Data.Scheme scheme)
+        {
             ShowDots(ref scheme.dotController);
             ShowGates(ref scheme.gateController);
             ShowLines(ref scheme.lineController);
         }
 
         /*  -----   Button event handlers   -----   */
-        private void ExternalGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
-            ExternalGateTapped(sender as Button);
-        private void LogicGateBodyTapped(object sender, TappedRoutedEventArgs e) => 
+        //private void ExternalGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
+        //    ExternalGateTapped(sender as Button);
+        private void LogicGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
             LogicGateTappedEvent(sender as Button);
         private void GateINBodyTapped(object sender, TappedRoutedEventArgs e) =>
             GateINTapped(sender as Button);
         private void GateOUTBodyTapped(object sender, TappedRoutedEventArgs e) =>
             GateOUTTapped(sender as Button);
         /*  -----   Button event handlers   -----   */
-        
+
 
         /*   -----   Ellipse event handlers   -----   */
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
@@ -158,10 +174,11 @@ namespace SchemeCreator.UI {
         public bool IsActive { get => isActive; }
 
         bool isActive;
-        
-        Grid grid = new Grid() {
+        readonly Grid grid = new Grid()
+        {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 60, 0, 0) };
+            Margin = new Thickness(0, 60, 0, 0)
+        };
     }
 }
