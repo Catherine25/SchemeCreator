@@ -15,23 +15,41 @@ namespace SchemeCreator.Data
         /*      data        */
         [DataMember] public Constants.GateEnum type;
         [DataMember] public int inputs, outputs;
-        [DataMember] public Point leftTop;
+        [DataMember] public Point center;
         [DataMember] public List<bool?> values;
 
-        public Gate(Constants.GateEnum type,
-            int inputs,
-            int outputs,
-            Point leftTop)
+        public Gate(Constants.GateEnum type, int inputs, int outputs, Point point)
         {
             this.type = type;
             this.inputs = inputs;
             this.outputs = outputs;
-            this.leftTop = leftTop;
+            center = point;
 
             values = new List<bool?>(inputs);
 
             for (int i = 0; i < inputs; i++)
                 values.Add(null);
+        }
+
+        public Point GetLeftTop()
+        {
+            if(Constants.external.Contains(type))
+            {
+                return new Point
+                {
+                    X = center.X - Constants.externalGateSize.Width / 2,
+                    Y = center.Y - Constants.externalGateSize.Height / 2
+                };
+            }
+            else
+            {
+                return new Point
+                {
+                    X = center.X - Constants.logicGateSize.Width / 2,
+                    Y = center.Y - Constants.logicGateSize.Height / 2
+                };
+            }
+            
         }
 
         public void Work()
@@ -98,149 +116,113 @@ namespace SchemeCreator.Data
         {
             Button button = new Button()
             {
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-
-                Background = Constants.brushes[Constants.AccentEnum.dark1],
-                Foreground = Constants.brushes[Constants.AccentEnum.light1],
-
-                Margin = new Thickness(leftTop.X, leftTop.Y, 0, 0),
                 FontSize = 10,
                 Content = type.ToString()
             };
 
+            button.SetStandartAlignment();
+
             if (Constants.external.Contains(type))
             {
-                button.Height = Constants.externalGateHeight;
-                button.Width = Constants.externalGateWidth;
-                button.Margin = new Thickness(
-                    button.Margin.Left - Constants.externalGateWidth / 2 - Constants.dotSize / 2,
-                    button.Margin.Top - Constants.externalGateHeight / 2 - Constants.dotSize / 2,
-                    0,
-                    0);
+                button.SetSizeAndCenter(Constants.externalGateSize, center);
 
-                if (values[0] == true)
-                {
-                    button.Foreground = Constants.brushes[Constants.AccentEnum.dark1];
-                    button.Background = Constants.brushes[Constants.AccentEnum.light1];
-                }
-                else if (values[0] == false)
-                {
-                    button.Foreground = Constants.brushes[Constants.AccentEnum.light1];
-                    button.Background = Constants.brushes[Constants.AccentEnum.dark1];
-                }
-                else
-                {
-                    button.Foreground = Constants.brushes[Constants.AccentEnum.background];
-                    button.Background = Constants.brushes[Constants.AccentEnum.accent2];
-                }
+                button.SetFillByValue(values[0]);
             }
             else
             {
-                button.Width = Constants.gateWidth;
-                button.Height = Constants.gateHeight;
+                button.SetSizeAndCenter(Constants.logicGateSize, center);
+                button.Background = Constants.brushes[Constants.AccentEnum.dark1];
+                button.Foreground = Constants.brushes[Constants.AccentEnum.light1];
 
                 if (!Constants.singleOutput.Contains(type))
                     button.Content += "\n" + inputs.ToString() + " in " + outputs.ToString();
             }
 
-            button.Name = button.Margin.ToString();
-
             return button;
         }
 
-        public List<Ellipse> DrawGateInOut(Constants.ConnectionType type)
+        public List<Ellipse> DrawGateInPorts()
         {
-            Thickness t = new Thickness
-            {
-                Left = leftTop.X - Constants.lineStartOffset,
-                Top = leftTop.Y
-            };
-
-            int newInOutCount;
-
-            if (type == Constants.ConnectionType.input)
-                newInOutCount = inputs;
-            else
-            {
-                newInOutCount = outputs;
-                t.Left += Constants.gateWidth;
-            }
-
             List<Ellipse> ellipses = new List<Ellipse>();
+            int length = inputs;
 
-            for (int i = 0; i < newInOutCount; i++)
+            for (int i = 0; i < length; i++)
             {
-                t.Top += Constants.gateHeight / (newInOutCount + 1);
+                Ellipse ellipse = new Ellipse();
+                ellipse.SetStandartAlingment();
 
-                if (i == 0)
-                    t.Top -= Constants.lineStartOffset;
-
-                ellipses.Add(new Ellipse()
+                ellipse.SetSizeAndCenterPoint(Constants.gatePortSize, new Point
                 {
-                    Height = Constants.dotSize,
-                    Width = Constants.dotSize,
-                    Fill = Constants.brushes[Constants.AccentEnum.light1],
-                    Margin = t,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left
+                    X = GetLeftTop().X,
+                    Y = GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1)) 
                 });
+
+                ellipse.SetFillByValue(values[i]);
+
+                ellipses.Add(ellipse);
             }
 
             return ellipses;
         }
 
-        public bool ContainsInOutByCenter(Ellipse e, Constants.ConnectionType type) =>
-            DrawGateInOut(type).Exists(x => x.CenterPoint() == e.CenterPoint());
+        public List<Ellipse> DrawGateOutPorts()
+        {
+            List<Ellipse> ellipses = new List<Ellipse>();
+            int length = outputs;
+
+            for (int i = 0; i < length; i++)
+            {
+                Ellipse ellipse = new Ellipse();
+                ellipse.SetStandartAlingment();
+
+                ellipse.SetSizeAndCenterPoint(Constants.gatePortSize, new Point
+                {
+                    X = GetLeftTop().X + Constants.logicGateSize.Width,
+                    Y = GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1))
+                });
+
+                ellipse.SetFillByValue(values[i]);
+                ellipses.Add(ellipse);
+            }
+
+            return ellipses;
+        }
+
+        public bool ContainsInOutByCenter(Ellipse e, Constants.ConnectionType type)
+        {
+            if(type == Constants.ConnectionType.input)
+                return DrawGateInPorts().Exists(x => x.GetCenterPoint() == e.GetCenterPoint());
+            else
+                return DrawGateOutPorts().Exists(x => x.GetCenterPoint() == e.GetCenterPoint());
+        }
 
         public bool ContainsBodyByMargin(Thickness t) =>
             DrawBody().Margin == t;
 
-        public int GetIndexOfInOutByCenter(Point center, Constants.ConnectionType type) =>
-            DrawGateInOut(type).FindIndex(x => x.CenterPoint() == center);
-
+        public int GetIndexOfInOutByCenter(Point center, Constants.ConnectionType type) {
+            if (type == Constants.ConnectionType.input)
+                return DrawGateInPorts().FindIndex(x => x.GetCenterPoint() == center);
+            else
+                return DrawGateOutPorts().FindIndex(x => x.GetCenterPoint() == center);
+        }
+        
         public Button GetBodyByWirePart(Point p)
         {
-            if (type == Constants.GateEnum.IN)
-            {
-                Point point = new Point
-                {
-                    X = leftTop.X - Constants.lineStartOffset,
-                    Y = leftTop.Y - Constants.lineStartOffset
-                };
-
-                if (p == point)
+            if (type == Constants.GateEnum.IN || type == Constants.GateEnum.OUT)
+                if (p == center)
                     return DrawBody();
-            }
-            else if (type == Constants.GateEnum.OUT)
-            {
-                Point point = new Point
-                {
-                    X = leftTop.X - Constants.lineStartOffset,
-                    Y = leftTop.Y - Constants.lineStartOffset
-                };
-
-                if (p == point)
-                    return DrawBody();
-            }
 
             return null;
         }
 
         public Ellipse GetInOutByWirePart(Point p)
         {
-            List<Ellipse> inputs = DrawGateInOut(Constants.ConnectionType.input);
-            List<Ellipse> outputs = DrawGateInOut(Constants.ConnectionType.output);
+            List<Ellipse> inputs = DrawGateInPorts();
+            List<Ellipse> outputs = DrawGateOutPorts();
 
             for (int i = 0; i < inputs.Count; i++)
             {
-                Point point = new Point
-                {
-                    X = inputs[i].Margin.Left + Constants.lineStartOffset,
-                    Y = inputs[i].Margin.Top + Constants.lineStartOffset
-                };
+                Point point = inputs[i].GetCenterPoint();
 
                 if (point == p)
                     return inputs[i];
@@ -248,11 +230,7 @@ namespace SchemeCreator.Data
 
             for (int i = 0; i < outputs.Count; i++)
             {
-                Point point = new Point
-                {
-                   X = outputs[i].Margin.Left + Constants.lineStartOffset,
-                   Y = outputs[i].Margin.Top + Constants.lineStartOffset
-                };
+                Point point = outputs[i].GetCenterPoint();
 
                 if (point == p)
                     return outputs[i];
@@ -267,17 +245,7 @@ namespace SchemeCreator.Data
 
             if (Constants.external.Contains(type))
             {
-                Button body = DrawBody();
-
-                double left = body.Margin.Left;
-                double top = body.Margin.Top;
-
-                Point gateCenter;
-
-                gateCenter.X = left + (Constants.externalGateWidth / 2);
-                gateCenter.Y = top + (Constants.externalGateHeight / 2);
-
-                if (gateCenter == point)
+                if (center == point)
                 {
                     System.Diagnostics.Debug.Write("Result: true");
                     return true;
@@ -290,30 +258,22 @@ namespace SchemeCreator.Data
             }
             else
             {
-                Point p = new Point();
-
-                var inputs = DrawGateInOut(Constants.ConnectionType.input);
+                var inputs = DrawGateInPorts();
 
                 for (int i = 0; i < inputs.Count; i++)
                 {
-                    p.X = inputs[i].Margin.Left + (Constants.gateInOutSize / 2);
-                    p.Y = inputs[i].Margin.Top + (Constants.gateInOutSize / 2);
-
-                    if (p == point)
+                    if (point == inputs[i].GetCenterPoint())
                     {
                         System.Diagnostics.Debug.Write("Result: true");
                         return true;
                     }
                 }
 
-                var outputs = DrawGateInOut(Constants.ConnectionType.output);
+                var outputs = DrawGateOutPorts();
 
                 for (int i = 0; i < outputs.Count; i++)
                 {
-                    p.X = outputs[i].Margin.Left + (Constants.gateInOutSize / 2);
-                    p.Y = outputs[i].Margin.Top + (Constants.gateInOutSize / 2);
-
-                    if (p == point)
+                    if (point == outputs[i].GetCenterPoint())
                     {
                         System.Diagnostics.Debug.Write("Result: true");
                         return true;
