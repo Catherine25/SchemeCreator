@@ -2,6 +2,8 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Extensions;
+using Windows.Foundation;
 
 namespace SchemeCreator.Data
 {
@@ -18,13 +20,10 @@ namespace SchemeCreator.Data
 
         public DotController() => dots = new List<Ellipse>();
 
-        public void InitNet(double actW, double actH)
+        public void InitNet(Size actSize)
         {
-            double width = actW;
-            double heigh = actH;
-
-            double stepW = width / (Constants.netSize + 1),
-                stepH = heigh / (Constants.netSize + 1);
+            double stepW = actSize.Width / (Constants.netSize + 1),
+                stepH = actSize.Height / (Constants.netSize + 1);
 
             Thickness margin;
 
@@ -37,12 +36,11 @@ namespace SchemeCreator.Data
                     Ellipse ellipse = new Ellipse
                     {
                         Margin = margin,
-                        VerticalAlignment = VerticalAlignment.Top,
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        Height = Constants.dotSize,
-                        Width = Constants.dotSize,
                         Fill = Constants.brushes[Constants.AccentEnum.dark1]
                     };
+
+                    ellipse.SetStandartAlingment();
+                    ellipse.SetSize(Constants.dotSize);
 
                     Dots.Add(ellipse);
                 }
