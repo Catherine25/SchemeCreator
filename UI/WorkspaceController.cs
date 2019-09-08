@@ -25,7 +25,7 @@ namespace SchemeCreator.UI
 
         public void ShowDots(ref Data.DotController dotController)
         {
-            dotController.InitNet(grid.ActualWidth, grid.ActualHeight);
+            dotController.InitNet(grid.GetActualSize());
 
             int dotCount = dotController.Dots.Count;
 
@@ -33,7 +33,10 @@ namespace SchemeCreator.UI
             {
                 Ellipse e = dotController.Dots[i];
                 grid.Children.Add(e);
+
                 e.Tapped += DotTapped;
+                e.PointerEntered += E_PointerEntered;
+                e.PointerExited += E_PointerExited;
             }
 
             isActive = true;
@@ -49,7 +52,7 @@ namespace SchemeCreator.UI
                 rect.Tapped += LogicGateBodyTapped;
                 grid.Children.Add(rect);
 
-                foreach (Ellipse e in gate.DrawGateInOut(Constants.ConnectionType.input))
+                foreach (Ellipse e in gate.DrawGateInPorts())
                 {
                     grid.Children.Add(e);
                     e.Tapped += GateInTapped;
@@ -58,7 +61,7 @@ namespace SchemeCreator.UI
                 }
 
 
-                foreach (Ellipse e in gate.DrawGateInOut(Constants.ConnectionType.output))
+                foreach (Ellipse e in gate.DrawGateOutPorts())
                 {
                     grid.Children.Add(e);
                     e.Tapped += GateOutTapped;
@@ -98,31 +101,15 @@ namespace SchemeCreator.UI
 
             for (int i = 0; i < wireCount; i++)
             {
-                //if(tracedWireIndexes[i] == 0)
-                //    continue;
-
                 Data.Wire wire = lc.Wires[i];
-
-                Point start = wire.start;
-                Point end = wire.end;
-
-                double centerX = (start.X + end.X) / 2;
-                double centerY = (start.Y + end.Y) / 2;
 
                 Button tb = new Button()
                 {
-                    Width = Constants.traceNumbersWidth,
-                    Height = Constants.traceNumbersHeight,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
                     Content = tracedWireIndexes[i].ToString()
                 };
 
-                tb.Margin = new Thickness(
-                    centerX - tb.Width / 2,
-                    centerY - tb.Height / 2,
-                    0,
-                    0);
+                tb.SetStandartAlignment();
+                tb.SetSizeAndCenter(Constants.traceTextSize, wire.Center);
 
                 grid.Children.Add(tb);
             };
