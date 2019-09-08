@@ -1,4 +1,5 @@
 ﻿using SchemeCreator.Data;
+using SchemeCreator.Data.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +7,6 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
-using SchemeCreator.Data.Extensions;
 using static SchemeCreator.Data.ConstantsNamespace.Constants;
 
 namespace SchemeCreator.UI
@@ -64,12 +64,12 @@ namespace SchemeCreator.UI
 
                 newWire = new Wire
                 {
-                    start = e.CenterPoint()
+                    start = e.GetCenterPoint()
                 };
 
                 Gate gate = scheme.gateController.GetGateByInOut(e, ConnectionType.output);
 
-                newWire.isActive = gate.values[gate.GetIndexOfInOutByCenter(e.CenterPoint(), ConnectionType.output)];
+                newWire.isActive = gate.values[gate.GetIndexOfInOutByCenter(e.GetCenterPoint(), ConnectionType.output)];
             }
         }
 
@@ -79,7 +79,7 @@ namespace SchemeCreator.UI
             {
                 modeManager.CurrentMode = ModeEnum.addLineStartMode;
 
-                newWire.end = e.CenterPoint();
+                newWire.end = e.GetCenterPoint();
 
                 scheme.lineController.Wires.Add(newWire);
 
@@ -110,7 +110,7 @@ namespace SchemeCreator.UI
             {
                 modeManager.CurrentMode = ModeEnum.addLineEndMode;
 
-                Point point = b.CenterPoint();
+                Point point = b.GetCenter();
 
                 newWire = new Wire
                 {
@@ -148,7 +148,7 @@ namespace SchemeCreator.UI
             {
                 modeManager.CurrentMode = ModeEnum.addLineStartMode;
 
-                Point point = b.CenterPoint();
+                Point point = b.GetCenter();
 
                 newWire.end = point;
 
@@ -187,37 +187,11 @@ namespace SchemeCreator.UI
 
         private void NewGateBtClickedEvent(object sender, NewGateBtClickedEventArgs e)
         {
-            if (external.Contains(e.type))
-            {
-                Point point = new Point
-                {
-                    X = scheme.dotController.lastTapped.Margin.Left + dotSize,
-                    Y = scheme.dotController.lastTapped.Margin.Top + dotSize
-                };
+            Point point = scheme.dotController.lastTapped.GetCenterPoint();
 
-                Gate gate = new Gate(
-                    e.type,
-                    e.inputs,
-                    e.outputs,
-                    point);
+            Gate gate = new Gate(e.type, e.inputs, e.outputs, point);
 
-                scheme.gateController.Gates.Add(gate);
-            }
-            else
-            {
-                Point point = new Point
-                {
-                    X = scheme.dotController.lastTapped.Margin.Left + (dotSize / 2) - (gateWidth / 2),
-                    Y = scheme.dotController.lastTapped.Margin.Top + (dotSize / 2) - (gateHeight / 2)
-                };
-
-                Gate gate = new Gate(e.type,
-                e.inputs,
-                e.outputs,
-                point);
-
-                scheme.gateController.Gates.Add(gate);
-            }
+            scheme.gateController.Gates.Add(gate);
 
             SwitchToFrame(FrameEnum.workspace, Grid);
             workspaceController.ShowAll(ref scheme);
