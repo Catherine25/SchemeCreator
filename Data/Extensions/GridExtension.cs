@@ -11,5 +11,6 @@ namespace SchemeCreator.Data.Extensions
             grid.Height = size.Height;
         }
         public static Size GetSize(this Grid grid) => new Size(grid.Width, grid.Height);
+        public static Size GetActualSize(this Grid grid) => new Size(grid.ActualWidth, grid.ActualHeight);
     }
 }
