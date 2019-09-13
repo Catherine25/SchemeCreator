@@ -10,7 +10,6 @@ namespace SchemeCreator.Data
     public class DotController
     {
         private IList<Ellipse> dots;
-        public Ellipse lastTapped;
 
         public IList<Ellipse> Dots
         {
