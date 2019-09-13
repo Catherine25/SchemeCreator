@@ -13,6 +13,6 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid x:Name="mainGrid">
-        <TextBlock x:Name="TextBlock"/>
+        <TextBlock x:Name="textBlock"/>
     </Grid>
 </ContentDialog>
