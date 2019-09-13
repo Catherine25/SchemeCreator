@@ -19,6 +19,13 @@ namespace SchemeCreator.Data.ConstantsNamespace {
             wireThickness = 5.0;
 
         public static SortedSet<GateEnum> singleInput = new SortedSet<GateEnum> {
+            GateEnum.Buffer,
+            GateEnum.NOT,
+            GateEnum.IN,
+            GateEnum.OUT
+        };
+
+        public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
             GateEnum.AND,
             GateEnum.Buffer,
             GateEnum.NAND,
@@ -26,12 +33,9 @@ namespace SchemeCreator.Data.ConstantsNamespace {
             GateEnum.NOT,
             GateEnum.OR,
             GateEnum.XNOR,
-            GateEnum.XOR
-        };
-
-        public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
-            GateEnum.Buffer,
-            GateEnum.NOT
+            GateEnum.XOR,
+            GateEnum.IN,
+            GateEnum.OUT
         };
 
         public static SortedSet<GateEnum> external = new SortedSet<GateEnum> {
@@ -86,7 +90,7 @@ namespace SchemeCreator.Data.ConstantsNamespace {
         public enum FrameEnum { workspace, newGate }
         public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
         public enum ComponentTypeEnum { gate, wire }
-        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView }
+        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView, createGate }
         public enum MessageAttribute { title, text, button1, button2 }
         public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected }
         public enum ConnectionType { input, output }
