@@ -4,6 +4,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.UI {
     class MenuController {
@@ -22,14 +23,12 @@ namespace SchemeCreator.UI {
 
         /*      data        */
         Dictionary<Constants.BtId, Button> buttons = new Dictionary<Constants.BtId, Button>();
-        Grid grid = new Grid {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top
-        };
+        Grid grid = new Grid;
         
 
         /*      constructor     */
         public MenuController() {
+            grid.SetStandartAlighnment();
             //The cast to (BtId[]) is not strictly necessary, but does make the code faster
             foreach (Constants.BtId id in (Constants.BtId[])Enum.GetValues(typeof(Constants.BtId))) {
                 Button button = new Button {
