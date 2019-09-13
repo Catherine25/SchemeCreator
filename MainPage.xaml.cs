@@ -16,18 +16,7 @@ namespace SchemeCreator
             SizeChanged += MainPageSizeChanged;
         }
 
-        private void MainPageSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            scheme.frameManager.Grid.Height = ActualHeight;
-            scheme.frameManager.Grid.Width = ActualWidth;
-
-            Size size = new Size
-            {
-                Width = ActualWidth,
-                Height = ActualHeight
-            };
-
-            scheme.frameManager.SizeChanged(size);
-        }
+        private void MainPageSizeChanged(object sender, SizeChangedEventArgs e) =>
+            scheme.frameManager.SizeChanged(new Rect(new Point(0,0), e.NewSize));
     }
 }

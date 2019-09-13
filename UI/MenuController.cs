@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
 
 namespace SchemeCreator.UI {
-    class MenuController : IFrameInterface {
+    class MenuController {
 
         /*      events      */
         public delegate void LastClickedBtEventHandler(object sender, LastClickedBtEventArgs e);
@@ -83,11 +83,11 @@ namespace SchemeCreator.UI {
         }
 
         /*      methods     */
-        public void Update(Size size) {
+        public void Update(Rect rect) {
             int i = 0;
             foreach (Button button in buttons.Values) {
-                button.Height = size.Height / 20;
-                button.Width = size.Width / (buttons.Count);
+                button.Height = rect.Height;
+                button.Width = rect.Width / (buttons.Count);
                 button.Margin = new Thickness((i*button.Width), 0, 0, 0); 
                 i++;
             }

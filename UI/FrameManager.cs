@@ -314,24 +314,28 @@ namespace SchemeCreator.UI
         {
             currentFrame = frame;
 
-            Size size = grid.GetSize();
+            Rect rect = grid.GetRect();
 
             menuController.Show();
-            menuController.Update(size);
+            menuController.Update(rect);
         }
 
-        public void UpdateView()
+        public void SizeChanged(Rect rect)
         {
-            Size size = Grid.GetSize();
+            Grid.SetRect(rect);
 
-            menuController.Update(size);
-            workspaceController.Update(size);
-        }
+            Point menuPoint = Grid.GetLeftTop();
+            Size menuSize = new Size(rect.Width, rect.Height / 20);
+            Rect menuRect = new Rect(menuPoint, menuSize);
 
-        public void SizeChanged(Size size)
-        {
-            Grid.SetSize(size);
-            UpdateView();
+            menuController.Update(menuRect);
+
+            Point workSpaceRectPoint = Grid.GetLeftTop();
+            workSpaceRectPoint.Y += menuSize.Height;
+            Size workSpaceSize = new Size(rect.Width, rect.Height);
+            workSpaceSize.Height -= menuSize.Height;
+            Rect workSpaceRect = new Rect(workSpaceRectPoint, workSpaceSize);
+            workspaceController.Update(workSpaceRect);
         }
     }
 }

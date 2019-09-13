@@ -24,23 +24,19 @@ namespace SchemeCreator.Data
             double stepW = actSize.Width / (Constants.netSize + 1),
                 stepH = actSize.Height / (Constants.netSize + 1);
 
-            Thickness margin;
+            //Thickness margin;
 
             for (int i = 1; i <= Constants.netSize; i++)
                 for (int j = 1; j <= Constants.netSize; j++)
                 {
-                    margin.Left = stepW * i;
-                    margin.Top = stepH * j;
-
-                    Ellipse ellipse = new Ellipse
-                    {
-                        Margin = margin,
+                    Ellipse ellipse = new Ellipse { 
                         Fill = Constants.brushes[Constants.AccentEnum.dark1]
                     };
 
-                    ellipse.SetStandartAlingment();
-                    ellipse.SetSize(Constants.dotSize);
+                    ellipse.SetSizeAndCenterPoint(Constants.dotSize, new Point(stepW * i, stepH * j));
 
+                    ellipse.SetStandartAlingment();
+                 
                     Dots.Add(ellipse);
                 }
         }

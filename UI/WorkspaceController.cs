@@ -9,7 +9,7 @@ using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.UI
 {
-    class WorkspaceController : IFrameInterface
+    class WorkspaceController
     {
         /*      methods      */
         public void SetParentGrid(Grid parentGrid) =>
@@ -21,7 +21,7 @@ namespace SchemeCreator.UI
             isActive = false;
         }
 
-        public void Update(Size size) => grid.SetSize(size);
+        public void Update(Rect rect) => grid.SetRect(rect);
 
         public void ShowDots(ref Data.DotController dotController)
         {
