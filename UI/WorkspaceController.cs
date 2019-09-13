@@ -145,7 +145,7 @@ namespace SchemeCreator.UI
 
         /*   -----   events   -----   */
 
-        public event Action<Button> LogicGateTappedEvent, ExternalGateTapped,
+        public event Action<Button> LogicGateTappedEvent,
             GateINTapped, GateOUTTapped;
 
         public event Action<Ellipse> DotTappedEvent, LogicGateInTapped,
