@@ -23,7 +23,7 @@ namespace SchemeCreator.UI {
 
         /*      data        */
         Dictionary<Constants.BtId, Button> buttons = new Dictionary<Constants.BtId, Button>();
-        Grid grid = new Grid;
+        Grid grid = new Grid();
         
 
         /*      constructor     */
