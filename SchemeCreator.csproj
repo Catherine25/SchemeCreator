@@ -143,9 +143,9 @@
     <Compile Include="UI\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ModeManager.cs" />
-    <Compile Include="UI\NewGateBt.cs" />
-    <Compile Include="UI\NewGateMenuController.cs" />
+    <Compile Include="UI\NewGateDialog.xaml.cs">
+      <DependentUpon>NewGateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\WorkspaceController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Message.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\NewGateDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
