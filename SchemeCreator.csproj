@@ -121,10 +121,10 @@
     </Compile>
     <Compile Include="Data\ConstantsNamespace\Constants.cs" />
     <Compile Include="Data\ConstantsNamespace\Text.cs" />
-    <Compile Include="Data\ConstantsNamespace\TruthTable.cs" />
     <Compile Include="Data\Controllers\DotController.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
+    <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Controllers\LineController.cs" />
@@ -143,9 +143,9 @@
     <Compile Include="UI\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ModeManager.cs" />
-    <Compile Include="UI\NewGateBt.cs" />
-    <Compile Include="UI\NewGateMenuController.cs" />
+    <Compile Include="UI\NewGateDialog.xaml.cs">
+      <DependentUpon>NewGateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\WorkspaceController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Message.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\NewGateDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

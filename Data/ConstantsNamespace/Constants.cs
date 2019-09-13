@@ -1,25 +1,31 @@
 using Windows.UI.Xaml.Media;
 using Windows.UI.ViewManagement;
 using System.Collections.Generic;
+using Windows.Foundation;
 
 namespace SchemeCreator.Data.ConstantsNamespace {
     static public class Constants
     {
-        public const int netSize = 8,
-            dotSize = 10,
-            traceNumbersWidth = 50,
-            traceNumbersHeight = 30,
-            gateWidth = 50,
-            gateHeight = 70,
-            externalGateHeight = 50,
-            externalGateWidth = 50;
+        public static Size externalGateSize = new Size { Width = 50, Height = 50 };
+        public static Size logicGateSize = new Size { Width = 50, Height = 70 };
+        public static Size traceTextSize = new Size { Width = 50, Height = 30 };
+        public static Size dotSize = new Size { Width = 10, Height = 10 };
+        public static Size gatePortSize = new Size { Width = 10, Height = 10 };
+
+        public const int netSize = 8;
 
         public const double offset = 10.0,
             lineStartOffset = 5.0,
-            wireThickness = 5.0,
-            gateInOutSize = 10.0;
+            wireThickness = 5.0;
 
         public static SortedSet<GateEnum> singleInput = new SortedSet<GateEnum> {
+            GateEnum.Buffer,
+            GateEnum.NOT,
+            GateEnum.IN,
+            GateEnum.OUT
+        };
+
+        public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
             GateEnum.AND,
             GateEnum.Buffer,
             GateEnum.NAND,
@@ -27,12 +33,9 @@ namespace SchemeCreator.Data.ConstantsNamespace {
             GateEnum.NOT,
             GateEnum.OR,
             GateEnum.XNOR,
-            GateEnum.XOR
-        };
-
-        public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
-            GateEnum.Buffer,
-            GateEnum.NOT
+            GateEnum.XOR,
+            GateEnum.IN,
+            GateEnum.OUT
         };
 
         public static SortedSet<GateEnum> external = new SortedSet<GateEnum> {
@@ -87,7 +90,7 @@ namespace SchemeCreator.Data.ConstantsNamespace {
         public enum FrameEnum { workspace, newGate }
         public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
         public enum ComponentTypeEnum { gate, wire }
-        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView }
+        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView, createGate }
         public enum MessageAttribute { title, text, button1, button2 }
         public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected }
         public enum ConnectionType { input, output }

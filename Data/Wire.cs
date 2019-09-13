@@ -45,5 +45,11 @@ namespace SchemeCreator.Data {
         
         return l;
         }
+
+        public Point Center => new Point
+        {
+            X = (start.X + end.X) / 2,
+            Y = (start.Y + end.Y) / 2
+        };
     }
 }

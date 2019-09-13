@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static SchemeCreator.Data.ConstantsNamespace.Constants;
 
 namespace SchemeCreator.Data
 {
@@ -26,36 +27,55 @@ namespace SchemeCreator.Data
 
         public bool IsAllConnected()
         {
-            int wLength = lineController.Wires.Count;
-            int gLength = gateController.Gates.Count;
-            int inputsCount = 0;
+            Stack<Gate> gates = new Stack<Gate>(gateController.Gates);
+            int wireCount = lineController.Wires.Count;
+            bool found = true;
 
-            for (int g = 0; g < gLength; g++)
+            while(gates.Count != 0 && found)
             {
-                inputsCount += gateController.Gates[g].inputs;
-                inputsCount += gateController.Gates[g].outputs;
-            }
+                Gate gate = gates.Pop();
+                found = false;
 
-            int counter = 0;
-
-            for (int i = 0; i < wLength; i++)
-            {
-                for (int j = 0; j < gLength; j++)
+                if (gate.type == GateEnum.IN)
                 {
-                    Gate g = gateController.Gates[j];
-
-                    Wire w = lineController.Wires[i];
-
-                    if (g.WireConnects(w.start) || g.WireConnects(w.end))
-                        counter++;
+                    for (int i = 0; i < wireCount; i++)
+                    {
+                        if (gate.WireConnects(lineController.Wires[i].start))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                else if (gate.type == GateEnum.OUT)
+                {
+                    for (int i = 0; i < wireCount; i++)
+                    {
+                        if (gate.WireConnects(lineController.Wires[i].end))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    int connections = gate.inputs + gate.outputs;
+                    for (int i = 0; i < wireCount; i++)
+                    {
+                        if (gate.WireConnects(lineController.Wires[i].start))
+                            connections--;
+                        else if (gate.WireConnects(lineController.Wires[i].end))
+                            connections--;
+                    }
+                    if (connections == 0)
+                        found = true;
                 }
             }
 
-            if (inputsCount == counter)
+            if (gates.Count == 0)
                 return true;
-            else
-                return false;
-
+            else return false;
         }
     }
 }
