@@ -6,21 +6,21 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
+using System.Collections.Generic;
 
 namespace SchemeCreator.UI
 {
     class WorkspaceController
     {
-        /*      methods      */
-        public void SetParentGrid(Grid parentGrid) =>
-            parentGrid.Children.Add(grid);
-
-        public void Hide()
+        public WorkspaceController()
         {
-            grid.Children.Clear();
-            isActive = false;
+            grid = new Grid();
+            grid.SetStandartAlighnment();
         }
 
+        /*      methods      */
+        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
+        public void Hide() => grid.Children.Clear();
         public void Update(Rect rect) => grid.SetRect(rect);
 
         public void ShowDots(ref Data.DotController dotController)
@@ -38,13 +38,11 @@ namespace SchemeCreator.UI
                 e.PointerEntered += E_PointerEntered;
                 e.PointerExited += E_PointerExited;
             }
-
-            isActive = true;
         }
 
         public void ShowGates(ref Data.GateController gateController)
         {
-            var logicGates = gateController.GetLogicGates();
+            IList<Data.Gate> logicGates = gateController.GetLogicGates();
 
             foreach (Data.Gate gate in logicGates)
             {
@@ -70,11 +68,11 @@ namespace SchemeCreator.UI
                 }
             }
 
-            var externalGates = gateController.GetExternalGates();
+            IList<Data.Gate> externalGates = gateController.GetExternalGates();
 
             foreach (Data.Gate gate in externalGates)
             {
-                var gateBody = gate.DrawBody();
+                Button gateBody = gate.DrawBody();
 
                 if (gate.type == Constants.GateEnum.IN)
                     gateBody.Tapped += GateINBodyTapped;
@@ -84,15 +82,19 @@ namespace SchemeCreator.UI
             }
         }
 
-        private void E_PointerExited(object sender, PointerRoutedEventArgs e) => (sender as Ellipse).DecreaseSize();
+        private void E_PointerExited(object sender, PointerRoutedEventArgs e) =>
+            (sender as Ellipse).DecreaseSize();
 
-        private void E_PointerEntered(object sender, PointerRoutedEventArgs e) => (sender as Ellipse).IncreaseSize();
+        private void E_PointerEntered(object sender, PointerRoutedEventArgs e) =>
+            (sender as Ellipse).IncreaseSize();
 
         public void ShowLines(ref Data.LineController lineController)
         {
             for (int i = 0; i < lineController.Wires.Count; i++)
-                grid.Children.Add(lineController.Wires[i].
-                CreateLine(lineController.Wires[i].isActive));
+            {
+                Line line = lineController.Wires[i].CreateLine();
+                grid.Children.Add(line);
+            }
         }
 
         public void ShowWireTraceIndexes(int[] tracedWireIndexes, Data.LineController lc)
@@ -123,8 +125,6 @@ namespace SchemeCreator.UI
         }
 
         /*  -----   Button event handlers   -----   */
-        //private void ExternalGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
-        //    ExternalGateTapped(sender as Button);
         private void LogicGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
             LogicGateTappedEvent(sender as Button);
         private void GateINBodyTapped(object sender, TappedRoutedEventArgs e) =>
@@ -154,14 +154,6 @@ namespace SchemeCreator.UI
         /*   -----   events   -----   */
 
         /*      data        */
-        public bool IsActive { get => isActive; }
-
-        bool isActive;
-        readonly Grid grid = new Grid()
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 60, 0, 0)
-        };
+        readonly Grid grid;
     }
 }
