@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
@@ -9,9 +8,9 @@ namespace SchemeCreator.Data
 {
     public class DotController
     {
-        private IList<Ellipse> dots;
+        private List<Ellipse> dots;
 
-        public IList<Ellipse> Dots
+        public List<Ellipse> Dots
         {
             get => dots;
             set => dots = value;
