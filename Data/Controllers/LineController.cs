@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SchemeCreator.Data.Extensions;
+using System.Collections.Generic;
+using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data
 {
@@ -16,19 +18,8 @@ namespace SchemeCreator.Data
         //constructor
         public LineController() => wires = new List<Wire>();
 
-        // public void colorLineByValues(Line l, bool? value) {
-        //     if (value == true)
-        //         l.Stroke = SchemeCreator.Constants.brushes[Constants.AccentEnum.light1];
-        //     else if (value == false)
-        //         l.Stroke = SchemeCreator.Constants.brushes[Constants.AccentEnum.dark1];
-        //     l.UpdateLayout();
-        // }
-
-        // public void reloadLines() {
-        //     foreach (Wire w in Wires)
-        //         Wires.Add(new Wire {
-        //             start = w.start,
-        //             end = w.end });
-        // }
+        //methods
+        public Wire FindWireByLine(Line line) =>
+            wires.Find(x => x.start == line.GetStartPoint() && x.end == line.GetEndPoint());
     }
 }
