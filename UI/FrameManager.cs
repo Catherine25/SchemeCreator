@@ -1,11 +1,7 @@
 ﻿using SchemeCreator.Data;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using static SchemeCreator.Data.ConstantsNamespace.Constants;
@@ -54,6 +50,16 @@ namespace SchemeCreator.UI
             workspaceController.LogicGateTappedEvent += LogicGateTappedEvent;
             workspaceController.GateINTapped += GateINTappedEvent;
             workspaceController.GateOUTTapped += GateOUTTappedEvent;
+            workspaceController.LineTappedEvent += WorkspaceController_LineTappedEvent;
+        }
+
+        private void WorkspaceController_LineTappedEvent(Line line)
+        {
+            if (CurrentMode == ModeEnum.removeLineMode)
+            {
+                scheme.lineController.Wires.Remove(scheme.lineController.FindWireByLine(line));
+                workspaceController.RemoveLine(line);
+            }
         }
 
         private void LogicGateOutTapped(Ellipse e)
@@ -93,13 +99,12 @@ namespace SchemeCreator.UI
 
             await msg.ShowAsync();
 
-            if(msg.gateType != null)
+            if (msg.gateType != null)
             {
                 Gate gate = new Gate(msg.gateType.Value, msg.inputs, msg.outputs, e.GetCenterPoint());
                 scheme.gateController.Gates.Add(gate);
 
-                workspaceController.Hide();
-                workspaceController.ShowAll(ref scheme);
+                workspaceController.AddGateToGrid(gate);
             }
         }
 
@@ -217,13 +222,13 @@ namespace SchemeCreator.UI
 
         private void TraceSchemeEvent()
         {
-            Debug.Write("\n[Event] TraceSchemeEvent started");
+            //Debug.Write("\n[Event] TraceSchemeEvent started");
 
             int gateCount = scheme.gateController.Gates.Count;
-            Debug.WriteLine(gateCount);
+            //Debug.WriteLine(gateCount);
 
             int wireCount = scheme.lineController.Wires.Count;
-            Debug.WriteLine(wireCount);
+            //Debug.WriteLine(wireCount);
 
             Tracer tracer = new Tracer(gateCount, wireCount);
 
@@ -233,18 +238,18 @@ namespace SchemeCreator.UI
 
             int length = tracedWireIndexes.Length;
 
-            for (int i = 0; i < length; i++)
-                Debug.Write(" " + tracedWireIndexes[i]);
+            //for (int i = 0; i < length; i++)
+            //    Debug.Write(" " + tracedWireIndexes[i]);
 
             workspaceController.ShowWireTraceIndexes(tracedWireIndexes,
             scheme.lineController);
 
-            Debug.Write("\n[Event] TraceSchemeEvent ended");
+            //Debug.Write("\n[Event] TraceSchemeEvent ended");
         }
 
         private async void WorkSchemeEvent()
         {
-            Debug.Write("\n[Event] WorkSchemeEvent started");
+            //Debug.Write("\n[Event] WorkSchemeEvent started");
 
             //trace at first
             int gateCount = scheme.gateController.Gates.Count;
@@ -254,16 +259,16 @@ namespace SchemeCreator.UI
 
             tracer.Trace(scheme.gateController, scheme.lineController);
 
-            List<HistoryComponent> tracedComponentsHistory = tracer.traceHistory;
-            int length = tracedComponentsHistory.Count;
+            //List<HistoryComponent> tracedComponentsHistory = tracer.traceHistory;
+            //int length = tracedComponentsHistory.Count;
 
-            Debug.Write("\ntracedComponentsHistory:");
-            for (int i = 0; i < length; i++)
-                Debug.Write(" " + tracedComponentsHistory[i].index + " " + tracedComponentsHistory[i].component);
+            //Debug.Write("\ntracedComponentsHistory:");
+            //for (int i = 0; i < length; i++)
+            //    Debug.Write(" " + tracedComponentsHistory[i].index + " " + tracedComponentsHistory[i].component);
 
             //clear all values
             scheme.gateController.ClearValuesExcludingIN();
-            Debug.Write("\nClearValuesExcludingIN() ended");
+            //Debug.Write("\nClearValuesExcludingIN() ended");
 
             WorkAlgorithmResult Result = WorkAlgorithm.Visualize(scheme);
 
@@ -271,13 +276,17 @@ namespace SchemeCreator.UI
                 await new Message(MessageTypes.exInsNotInited).ShowAsync();
             else if(Result == WorkAlgorithmResult.gatesNotConnected)
                 await new Message(MessageTypes.gatesNotConnected).ShowAsync();
+            else if(Result == WorkAlgorithmResult.schemeIsntCorrect)
+                await new Message(MessageTypes.visualizingFailed).ShowAsync();
             else
             {
                 workspaceController.Hide();
                 workspaceController.ShowAll(ref scheme);
             }
+                //workspaceController.ShowWireTraceIndexes(tracer.tracedWireIndexes, scheme.lineController);
 
-            Debug.WriteLine("[Event] WorkSchemeEvent ended");
+
+            //Debug.WriteLine("[Event] WorkSchemeEvent ended");
         }
 
         private void ChangeModeEvent(BtId obj)
