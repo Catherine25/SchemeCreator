@@ -12,19 +12,6 @@ namespace SchemeCreator.Data
 
         //constructors
         public Scheme() => frameManager = new UI.FrameManager(this);
-
-        public bool IsExternalInputsInited()
-        {
-            IList<Gate> exINs = gateController.GetExternalInputs();
-
-            //check is all exINs are inited
-            for (int i = 0; i < exINs.Count; i++)
-                if (exINs[i].values[0] == null)
-                    return false;
-
-            return true;
-        }
-
         public bool IsAllConnected()
         {
             Stack<Gate> gates = new Stack<Gate>(gateController.Gates);
