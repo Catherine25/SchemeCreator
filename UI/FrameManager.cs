@@ -214,11 +214,15 @@ namespace SchemeCreator.UI
             }
         }
 
-        private void LoadSchemeEvent() =>
-            Serializer.DeserializeAll(scheme);
+        private async void LoadSchemeEvent()
+        {
+            await Serializer.Load(scheme);
+            workspaceController.Hide();
+            workspaceController.ShowAll(ref scheme);
+        }
 
-        private void SaveSchemeEvent() =>
-            Serializer.SerializeAll(scheme);
+        private async void SaveSchemeEvent() =>
+            await Serializer.Save(scheme);
 
         private void TraceSchemeEvent()
         {
