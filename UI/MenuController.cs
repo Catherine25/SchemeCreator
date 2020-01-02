@@ -4,32 +4,28 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.UI {
     class MenuController {
 
         /*      events      */
-        public delegate void LastClickedBtEventHandler(object sender, LastClickedBtEventArgs e);
-        public event LastClickedBtEventHandler NewSchemeBtClickEvent,
+        public event Action NewSchemeBtClickEvent,
             LoadSchemeBtClickEvent,
             SaveSchemeBtClickEvent,
             TraceSchemeBtClickEvent,
-            WorkSchemeBtClickEvent,
-            AddGateBtClickEvent,
-            AddLineBtClickEvent,
-            RemoveLineBtClickEvent,
-            ChangeValueBtClickEvent;
+            WorkSchemeBtClickEvent;
+        public event Action<Constants.BtId>
+            ChangeModeEvent;
 
         /*      data        */
         Dictionary<Constants.BtId, Button> buttons = new Dictionary<Constants.BtId, Button>();
-        Grid grid = new Grid {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top
-        };
+        Grid grid = new Grid();
         
 
         /*      constructor     */
         public MenuController() {
+            grid.SetStandartAlighnment();
             //The cast to (BtId[]) is not strictly necessary, but does make the code faster
             foreach (Constants.BtId id in (Constants.BtId[])Enum.GetValues(typeof(Constants.BtId))) {
                 Button button = new Button {
@@ -56,29 +52,29 @@ namespace SchemeCreator.UI {
         }
 
         private void NewSchemeBtClick(object sender, RoutedEventArgs e) =>
-            NewSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.newSchemeBt));
+            NewSchemeBtClickEvent();
         private void LoadSchemeBtClick(object sender, RoutedEventArgs e) =>
-            LoadSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.loadSchemeBt));
+            LoadSchemeBtClickEvent();
         private void SaveSchemeBtClick(object sender, RoutedEventArgs e) =>
-            SaveSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.saveSchemeBt));
+            SaveSchemeBtClickEvent();
         private void TraceSchemeBtClick(object sender, RoutedEventArgs e) =>
-            TraceSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.traceSchemeBt));
+            TraceSchemeBtClickEvent();
         private void WorkSchemeBtClick(object sender, RoutedEventArgs e) =>
-            WorkSchemeBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.workSchemeBt));
+            WorkSchemeBtClickEvent();
         private void AddGateBtClick(object sender, RoutedEventArgs e) {
-            AddGateBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.addGateBt));
+            ChangeModeEvent(Constants.BtId.addGateBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }
         private void AddLineBtClick(object sender, RoutedEventArgs e) {
-            AddLineBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.addLineBt));
+            ChangeModeEvent(Constants.BtId.addLineBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }       
         private void RemoveLineBtClick (object sender, RoutedEventArgs e) {
-            RemoveLineBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.removeLineBt));
+            ChangeModeEvent(Constants.BtId.removeLineBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }
         private void ChangeValueBtClick (object sender, RoutedEventArgs e) {
-            ChangeValueBtClickEvent(this, new LastClickedBtEventArgs(sender as Button, Constants.BtId.changeValueBt));
+            ChangeModeEvent(Constants.BtId.changeValueBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }
 
@@ -107,15 +103,6 @@ namespace SchemeCreator.UI {
             buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.removeLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.changeValueBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
-        }
-    }
-
-    class LastClickedBtEventArgs {
-        public Constants.BtId btId;
-        public Button button;
-        public LastClickedBtEventArgs(Button _b, Constants.BtId _btId) {
-            button = _b;
-            btId = _btId;
         }
     }
 }

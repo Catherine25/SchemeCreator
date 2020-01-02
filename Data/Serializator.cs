@@ -37,6 +37,9 @@ namespace SchemeCreator.Data
 
         public static void DeserializeAll(Scheme scheme)
         {
+            scheme.gateController.Gates.Clear();
+            scheme.lineController.Wires.Clear();
+
             foreach (string s in serializeGateData)
                 scheme.gateController.Gates.Add(s.DeserializeGate());
 
@@ -123,17 +126,27 @@ namespace SchemeCreator.Data
 
             //serialization of gates
             StorageFile gateFile = await folder.GetFileAsync(gatePath);
+
+            if (gateFile == null)
+                await folder.CreateFileAsync(gatePath);
+
             serializeGateData.AddRange(await FileIO.ReadLinesAsync(gateFile));
 
             //serialization of lines
             StorageFile lineFile = await folder.GetFileAsync(linePath);
+
+            if (lineFile == null)
+                await folder.CreateFileAsync(linePath);
+
             serializeLineData.AddRange(await FileIO.ReadLinesAsync(lineFile));
 
             DeserializeAll(scheme);
         }
 
-        public static async Task Save()
+        public static async Task Save(Scheme scheme)
         {
+            SerializeAll(scheme);
+
             StorageFolder folder = KnownFolders.PicturesLibrary;
 
             //serialization of gates

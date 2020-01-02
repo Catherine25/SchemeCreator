@@ -50,69 +50,27 @@ namespace SchemeCreator.Data
             throw new System.Exception();
         }
 
-        public IList<Gate> GetLogicGates()
-        {
-            var logicGates = new List<Gate>();
+        public IEnumerable<Gate> GetLogicGates() =>
+            gates.Where(gate => (!Constants.external.Contains(gate.type)));
 
-            foreach (Gate gate in from Gate g in Gates
-                                 where (!Constants.external.Contains(g.type))
-                                 select g)
-            {
-                logicGates.Add(gate);
-            }
+        public IEnumerable<Gate> GetExternalGates() =>
+            gates.Where(gate => Constants.external.Contains(gate.type));
 
-            return logicGates;
-        }
+        public IEnumerable<Gate> GetExternalInputs() =>
+            gates.Where(x => x.type == Constants.GateEnum.IN);
 
-        public IList<Gate> GetExternalGates()
-        {
-            var externalGates = new List<Gate>();
+        public Gate GetFirstNotInitedGate() =>
+            GetExternalInputs().FirstOrDefault(x => x.values[0] == null);
 
-            foreach (var gate in from Gate g in Gates
-                                 where (Constants.external.Contains(g.type))
-                                 select g)
-            {
-                externalGates.Add(gate);
-            }
+        public Gate GetGateByWireStart(Point point) =>
+            gates.FirstOrDefault(
+                x => x.GetBodyByWirePart(point) != null
+                || x.GetInOutByWirePart(point) != null);
 
-            return externalGates;
-        }
-
-        public IList<Gate> GetExternalInputs()
-        {
-            var externalInputs = new List<Gate>();
-
-            foreach (var gate in from Gate g in Gates
-                                 where (Constants.GateEnum.IN == g.type)
-                                 select g)
-            {
-                externalInputs.Add(gate);
-            }
-
-            return externalInputs;
-        }
-
-        public Gate GetGateByWireStart(Point point)
-        {
-            foreach (Gate gate in Gates)
-                if (gate.GetBodyByWirePart(point) != null)
-                    return gate;
-                else if (gate.GetInOutByWirePart(point) != null)
-                    return gate;
-
-            throw new System.Exception("No gate connected to the wire!");
-        }
-
-        public Gate GetGateByWireEnd(Point point)
-        {
-            foreach (Gate gate in Gates)
-                if (gate.GetBodyByWirePart(point) != null)
-                    return gate;
-                else if (gate.GetInOutByWirePart(point) != null)
-                    return gate;
-
-            return null;
-        }
+        public Gate GetGateByWireEnd(Point point) =>
+            gates.FirstOrDefault(
+                gate => gate.GetBodyByWirePart(point) != null
+                || gate.GetInOutByWirePart(point) != null);
 
         public void ClearValuesExcludingIN()
         {

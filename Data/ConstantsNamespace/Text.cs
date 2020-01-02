@@ -57,6 +57,16 @@ namespace SchemeCreator.Data.ConstantsNamespace
             };
 
             SetText(MessageTypes.newSchemeButtonClicked, newSchemeButtonClicked);
+
+            string[] visualizingFailed = new string[4]
+            {
+                "It's impossible to visualize scheme",
+                "You have some feedbacks in the scheme",
+                "",
+                "Ok"
+            };
+
+            SetText(MessageTypes.visualizingFailed, visualizingFailed);
         }
 
         public static string GetText(MessageTypes mt, MessageAttribute ma)

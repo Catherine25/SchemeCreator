@@ -10,7 +10,7 @@ namespace SchemeCreator.Data {
     [DataMember] public Point start, end;
     [DataMember] public bool? isActive;
 
-    public Line CreateLine(bool? isActive) {
+    public Line CreateLine() {
 
         Line l = new Line {
             X1 = start.X,

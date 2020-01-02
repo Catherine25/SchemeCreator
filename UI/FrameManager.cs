@@ -1,10 +1,7 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using static SchemeCreator.Data.ConstantsNamespace.Constants;
@@ -22,10 +19,13 @@ namespace SchemeCreator.UI
             workspaceController = new WorkspaceController();
             menuController = new MenuController();
 
-            menuController.SetParentGrid(Grid);
-            workspaceController.SetParentGrid(Grid);
+            grid = new Grid();
+            grid.SetStandartAlighnment();
 
-            SwitchToFrame(FrameEnum.workspace, Grid);
+            menuController.SetParentGrid(grid);
+            workspaceController.SetParentGrid(grid);
+
+            SwitchToFrame(FrameEnum.workspace, grid);
 
             EventSubscribe();
         }
@@ -39,10 +39,10 @@ namespace SchemeCreator.UI
             menuController.SaveSchemeBtClickEvent += SaveSchemeEvent;
             menuController.TraceSchemeBtClickEvent += TraceSchemeEvent;
             menuController.WorkSchemeBtClickEvent += WorkSchemeEvent;
-            menuController.AddGateBtClickEvent += AddGateEvent;
-            menuController.AddLineBtClickEvent += AddLineEvent;
-            menuController.RemoveLineBtClickEvent += RemoveLineEvent;
-            menuController.ChangeValueBtClickEvent += ChangeValueEvent;
+            menuController.ChangeModeEvent += ChangeModeEvent;
+            menuController.ChangeModeEvent += ChangeModeEvent;
+            menuController.ChangeModeEvent += ChangeModeEvent;
+            menuController.ChangeModeEvent += ChangeModeEvent;
 
             workspaceController.DotTappedEvent += DotTappedEventAsync;
             workspaceController.LogicGateInTapped += LogicGateInTapped;
@@ -50,6 +50,16 @@ namespace SchemeCreator.UI
             workspaceController.LogicGateTappedEvent += LogicGateTappedEvent;
             workspaceController.GateINTapped += GateINTappedEvent;
             workspaceController.GateOUTTapped += GateOUTTappedEvent;
+            workspaceController.LineTappedEvent += WorkspaceController_LineTappedEvent;
+        }
+
+        private void WorkspaceController_LineTappedEvent(Line line)
+        {
+            if (CurrentMode == ModeEnum.removeLineMode)
+            {
+                scheme.lineController.Wires.Remove(scheme.lineController.FindWireByLine(line));
+                workspaceController.RemoveLine(line);
+            }
         }
 
         private void LogicGateOutTapped(Ellipse e)
@@ -89,13 +99,12 @@ namespace SchemeCreator.UI
 
             await msg.ShowAsync();
 
-            if(msg.gateType != null)
+            if (msg.gateType != null)
             {
                 Gate gate = new Gate(msg.gateType.Value, msg.inputs, msg.outputs, e.GetCenterPoint());
                 scheme.gateController.Gates.Add(gate);
 
-                workspaceController.Hide();
-                workspaceController.ShowAll(ref scheme);
+                workspaceController.AddGateToGrid(gate);
             }
         }
 
@@ -179,14 +188,10 @@ namespace SchemeCreator.UI
 
         private Wire newWire;
 
-        public Grid Grid { get; } = new Grid
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top
-        };
+        public Grid grid { get; }
 
         /*      events      */
-        private async void NewSchemeEventAsync(object sender, LastClickedBtEventArgs e)
+        private async void NewSchemeEventAsync()
         {
             if (scheme.gateController.Gates.Count == 0
                 && scheme.lineController.Wires.Count == 0)
@@ -209,21 +214,25 @@ namespace SchemeCreator.UI
             }
         }
 
-        private void LoadSchemeEvent(object sender, LastClickedBtEventArgs e) =>
-            Serializer.DeserializeAll(scheme);
-
-        private void SaveSchemeEvent(object sender, LastClickedBtEventArgs e) =>
-            Serializer.SerializeAll(scheme);
-
-        private void TraceSchemeEvent(object sender, LastClickedBtEventArgs e)
+        private async void LoadSchemeEvent()
         {
-            Debug.Write("\n[Event] TraceSchemeEvent started");
+            await Serializer.Load(scheme);
+            workspaceController.Hide();
+            workspaceController.ShowAll(ref scheme);
+        }
+
+        private async void SaveSchemeEvent() =>
+            await Serializer.Save(scheme);
+
+        private void TraceSchemeEvent()
+        {
+            //Debug.Write("\n[Event] TraceSchemeEvent started");
 
             int gateCount = scheme.gateController.Gates.Count;
-            Debug.WriteLine(gateCount);
+            //Debug.WriteLine(gateCount);
 
             int wireCount = scheme.lineController.Wires.Count;
-            Debug.WriteLine(wireCount);
+            //Debug.WriteLine(wireCount);
 
             Tracer tracer = new Tracer(gateCount, wireCount);
 
@@ -233,18 +242,18 @@ namespace SchemeCreator.UI
 
             int length = tracedWireIndexes.Length;
 
-            for (int i = 0; i < length; i++)
-                Debug.Write(" " + tracedWireIndexes[i]);
+            //for (int i = 0; i < length; i++)
+            //    Debug.Write(" " + tracedWireIndexes[i]);
 
             workspaceController.ShowWireTraceIndexes(tracedWireIndexes,
             scheme.lineController);
 
-            Debug.Write("\n[Event] TraceSchemeEvent ended");
+            //Debug.Write("\n[Event] TraceSchemeEvent ended");
         }
 
-        private async void WorkSchemeEvent(object sender, LastClickedBtEventArgs e)
+        private async void WorkSchemeEvent()
         {
-            Debug.Write("\n[Event] WorkSchemeEvent started");
+            //Debug.Write("\n[Event] WorkSchemeEvent started");
 
             //trace at first
             int gateCount = scheme.gateController.Gates.Count;
@@ -254,16 +263,16 @@ namespace SchemeCreator.UI
 
             tracer.Trace(scheme.gateController, scheme.lineController);
 
-            List<HistoryComponent> tracedComponentsHistory = tracer.traceHistory;
-            int length = tracedComponentsHistory.Count;
+            //List<HistoryComponent> tracedComponentsHistory = tracer.traceHistory;
+            //int length = tracedComponentsHistory.Count;
 
-            Debug.Write("\ntracedComponentsHistory:");
-            for (int i = 0; i < length; i++)
-                Debug.Write(" " + tracedComponentsHistory[i].index + " " + tracedComponentsHistory[i].component);
+            //Debug.Write("\ntracedComponentsHistory:");
+            //for (int i = 0; i < length; i++)
+            //    Debug.Write(" " + tracedComponentsHistory[i].index + " " + tracedComponentsHistory[i].component);
 
             //clear all values
             scheme.gateController.ClearValuesExcludingIN();
-            Debug.Write("\nClearValuesExcludingIN() ended");
+            //Debug.Write("\nClearValuesExcludingIN() ended");
 
             WorkAlgorithmResult Result = WorkAlgorithm.Visualize(scheme);
 
@@ -271,43 +280,31 @@ namespace SchemeCreator.UI
                 await new Message(MessageTypes.exInsNotInited).ShowAsync();
             else if(Result == WorkAlgorithmResult.gatesNotConnected)
                 await new Message(MessageTypes.gatesNotConnected).ShowAsync();
+            else if(Result == WorkAlgorithmResult.schemeIsntCorrect)
+                await new Message(MessageTypes.visualizingFailed).ShowAsync();
             else
             {
                 workspaceController.Hide();
                 workspaceController.ShowAll(ref scheme);
             }
+                //workspaceController.ShowWireTraceIndexes(tracer.tracedWireIndexes, scheme.lineController);
 
-            Debug.WriteLine("[Event] WorkSchemeEvent ended");
+
+            //Debug.WriteLine("[Event] WorkSchemeEvent ended");
         }
 
-        private void AddGateEvent(object sender, LastClickedBtEventArgs e)
+        private void ChangeModeEvent(BtId obj)
         {
             menuController.InActivateModeButtons();
-            e.button.BorderBrush = brushes[AccentEnum.light1];
-            scheme.frameManager.CurrentMode = ModeEnum.addGateMode;
-        }
 
-        private void AddLineEvent(object sender, LastClickedBtEventArgs e)
-        {
-            menuController.InActivateModeButtons();
-            e.button.BorderBrush = brushes[AccentEnum.light1];
-            scheme.frameManager.CurrentMode = ModeEnum.addLineStartMode;
-        }
-
-        private async void RemoveLineEvent(object sender, LastClickedBtEventArgs e)
-        {
-            menuController.InActivateModeButtons();
-            e.button.BorderBrush = brushes[AccentEnum.light1];
-            scheme.frameManager.CurrentMode = ModeEnum.removeLineMode;
-
-            await new Message(MessageTypes.functionIsNotSupported).ShowAsync();
-        }
-
-        private void ChangeValueEvent(object sender, LastClickedBtEventArgs e)
-        {
-            menuController.InActivateModeButtons();
-            e.button.BorderBrush = brushes[AccentEnum.light1];
-            scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
+            if (obj == BtId.addGateBt)
+                scheme.frameManager.CurrentMode = ModeEnum.addGateMode;
+            else if (obj == BtId.addLineBt)
+                scheme.frameManager.CurrentMode = ModeEnum.addLineStartMode;
+            else if (obj == BtId.removeLineBt)
+                scheme.frameManager.CurrentMode = ModeEnum.removeLineMode;
+            else
+                scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
         }
 
         public void SwitchToFrame(FrameEnum frame, Grid grid)
@@ -322,15 +319,15 @@ namespace SchemeCreator.UI
 
         public void SizeChanged(Rect rect)
         {
-            Grid.SetRect(rect);
+            grid.SetRect(rect);
 
-            Point menuPoint = Grid.GetLeftTop();
+            Point menuPoint = grid.GetLeftTop();
             Size menuSize = new Size(rect.Width, rect.Height / 20);
             Rect menuRect = new Rect(menuPoint, menuSize);
 
             menuController.Update(menuRect);
 
-            Point workSpaceRectPoint = Grid.GetLeftTop();
+            Point workSpaceRectPoint = grid.GetLeftTop();
             workSpaceRectPoint.Y += menuSize.Height;
             Size workSpaceSize = new Size(rect.Width, rect.Height);
             workSpaceSize.Height -= menuSize.Height;
