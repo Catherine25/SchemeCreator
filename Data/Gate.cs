@@ -187,12 +187,12 @@ namespace SchemeCreator.Data.Model
             return ports;
         }
 
-        public bool ContainsInOutByCenter(Ellipse e, Constants.ConnectionType type)
+        public bool ContainsInOutByCenter(Point center, Constants.ConnectionType type)
         {
             if(type == Constants.ConnectionType.input)
-                return DrawGateInPorts().Exists(x => x.GetCenterPoint() == e.GetCenterPoint());
+                return DrawGateInPorts().Exists(x => x.CenterPoint == center);
             else
-                return DrawGateOutPorts().Exists(x => x.GetCenterPoint() == e.GetCenterPoint());
+                return DrawGateOutPorts().Exists(x => x.CenterPoint == center);
         }
 
         public bool ContainsBodyByMargin(Thickness t) =>
