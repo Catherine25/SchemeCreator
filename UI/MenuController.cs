@@ -46,7 +46,6 @@ namespace SchemeCreator.UI {
             buttons[Constants.BtId.traceSchemeBt].Click += TraceSchemeBtClick;
             buttons[Constants.BtId.workSchemeBt].Click += WorkSchemeBtClick;
             buttons[Constants.BtId.addLineBt].Click += AddLineBtClick;
-            buttons[Constants.BtId.removeLineBt].Click += RemoveLineBtClick;
             buttons[Constants.BtId.changeValueBt].Click += ChangeValueBtClick;
         }
 
@@ -64,9 +63,6 @@ namespace SchemeCreator.UI {
             ChangeModeEvent(Constants.BtId.addLineBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }       
-            ChangeModeEvent(Constants.BtId.removeLineBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
-        }
         private void ChangeValueBtClick (object sender, RoutedEventArgs e) {
             ChangeModeEvent(Constants.BtId.changeValueBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
@@ -94,7 +90,6 @@ namespace SchemeCreator.UI {
         
         public void InActivateModeButtons() {
             buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
-            buttons[Constants.BtId.removeLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.changeValueBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
         }
     }
