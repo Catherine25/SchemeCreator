@@ -188,15 +188,10 @@ namespace SchemeCreator.UI
 
         private readonly MenuController menuController;
 
-        private ModeEnum CurrentMode;
 
-        private Scheme scheme;
 
-        private FrameEnum currentFrame;
 
-        private Wire newWire;
 
-        public Grid grid { get; }
 
         private async void NewSchemeEventAsync()
         {
