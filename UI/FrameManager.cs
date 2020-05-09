@@ -10,6 +10,20 @@ namespace SchemeCreator.UI
 {
     public class FrameManager
     {
+        private readonly WorkspaceController workspaceController;
+
+        private readonly MenuController menuController;
+
+        private ModeEnum CurrentMode;
+
+        private Scheme scheme;
+
+        private FrameEnum currentFrame;
+
+        private Wire newWire;
+
+        public Grid grid { get; }
+
 
         public FrameManager(Scheme _scheme)
         {
