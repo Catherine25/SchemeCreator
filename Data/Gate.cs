@@ -164,27 +164,27 @@ namespace SchemeCreator.Data.Model
             return ports;
         }
 
-        public List<Ellipse> DrawGateOutPorts()
+        public List<Port> DrawGateOutPorts()
         {
-            List<Ellipse> ellipses = new List<Ellipse>();
+            List<Port> ports = new List<Port>();
             int length = outputs;
 
             for (int i = 0; i < length; i++)
             {
-                Ellipse ellipse = new Ellipse();
-                ellipse.SetStandartAlingment();
+                Port port = new Port(Constants.ConnectionType.output);
 
-                ellipse.SetSizeAndCenterPoint(Constants.gatePortSize, new Point
-                {
-                    X = GetLeftTop().X + Constants.logicGateSize.Width,
-                    Y = GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1))
-                });
+                Point center = new Point(GetLeftTop().X + Constants.logicGateSize.Width, GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1)));
 
-                ellipse.SetFillByValue(values[i]);
-                ellipses.Add(ellipse);
+                port.CenterPoint = center;
+
+                port.Size = Constants.gatePortSize;
+
+                port.BooleanValue = values[i];
+
+                ports.Add(port);
             }
 
-            return ellipses;
+            return ports;
         }
 
         public bool ContainsInOutByCenter(Ellipse e, Constants.ConnectionType type)
