@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Model
 {
     [DataContract]
     public class Gate
