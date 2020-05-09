@@ -240,47 +240,22 @@ namespace SchemeCreator.Data.Model
 
         public bool WireConnects(Point point)
         {
-            System.Diagnostics.Debug.Write("\nRunning WireConnects()... ");
-
             if (Constants.external.Contains(type))
-            {
-                if (center == point)
-                {
-                    System.Diagnostics.Debug.Write("Result: true");
-                    return true;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.Write("Result: false");
-                    return false;
-                }
-            }
+                return center == point;
             else
             {
                 var inputs = DrawGateInPorts();
 
                 for (int i = 0; i < inputs.Count; i++)
-                {
-                    if (point == inputs[i].GetCenterPoint())
-                    {
-                        System.Diagnostics.Debug.Write("Result: true");
+                    if (point == inputs[i].CenterPoint)
                         return true;
-                    }
-                }
 
                 var outputs = DrawGateOutPorts();
 
                 for (int i = 0; i < outputs.Count; i++)
-                {
-                    if (point == outputs[i].GetCenterPoint())
-                    {
-                        System.Diagnostics.Debug.Write("Result: true");
+                    if (point == outputs[i].CenterPoint)
                         return true;
-                    }
-                }
             }
-
-            System.Diagnostics.Debug.Write("Result: false");
 
             return false;
         }
