@@ -214,14 +214,14 @@ namespace SchemeCreator.Data.Model
             return null;
         }
 
-        public Ellipse GetInOutByWirePart(Point p)
+        public Port GetInOutByWirePart(Point p)
         {
-            List<Ellipse> inputs = DrawGateInPorts();
-            List<Ellipse> outputs = DrawGateOutPorts();
+            List<Port> inputs = DrawGateInPorts();
+            List<Port> outputs = DrawGateOutPorts();
 
             for (int i = 0; i < inputs.Count; i++)
             {
-                Point point = inputs[i].GetCenterPoint();
+                Point point = inputs[i].CenterPoint;
 
                 if (point == p)
                     return inputs[i];
@@ -229,7 +229,7 @@ namespace SchemeCreator.Data.Model
 
             for (int i = 0; i < outputs.Count; i++)
             {
-                Point point = outputs[i].GetCenterPoint();
+                Point point = outputs[i].CenterPoint;
 
                 if (point == p)
                     return outputs[i];
