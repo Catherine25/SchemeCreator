@@ -40,9 +40,6 @@ namespace SchemeCreator.UI
             menuController.TraceSchemeBtClickEvent += TraceSchemeEvent;
             menuController.WorkSchemeBtClickEvent += WorkSchemeEvent;
             menuController.ChangeModeEvent += ChangeModeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
 
             workspaceController.DotTappedEvent += DotTappedEventAsync;
             workspaceController.LogicGateInTapped += LogicGateInTapped;
