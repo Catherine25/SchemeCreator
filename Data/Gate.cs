@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 
@@ -200,9 +199,9 @@ namespace SchemeCreator.Data.Model
 
         public int GetIndexOfInOutByCenter(Point center, Constants.ConnectionType type) {
             if (type == Constants.ConnectionType.input)
-                return DrawGateInPorts().FindIndex(x => x.GetCenterPoint() == center);
+                return DrawGateInPorts().FindIndex(x => x.CenterPoint == center);
             else
-                return DrawGateOutPorts().FindIndex(x => x.GetCenterPoint() == center);
+                return DrawGateOutPorts().FindIndex(x => x.CenterPoint == center);
         }
         
         public Button GetBodyByWirePart(Point p)
