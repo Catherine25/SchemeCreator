@@ -6,11 +6,19 @@ namespace SchemeCreator.Data.Extensions
 {
     public static class EllipseExtension
     {
+        private static Thickness CalculateMargin(Point center, Size size) => new Thickness
+        {
+            Left = center.X - size.Width / 2,
+            Top = center.Y - size.Height / 2
+        };
+
         public static Point GetCenterPoint(this Ellipse ellipse) => new Point
         {
             X = ellipse.Margin.Left + ellipse.Width / 2,
             Y = ellipse.Margin.Top + ellipse.Height / 2
         };
+
+        public static Size GetSize(this Ellipse ellipse) => new Size(ellipse.Width, ellipse.Height);
 
         public static void SetSize(this Ellipse ellipse, Size size)
         {
@@ -22,11 +30,7 @@ namespace SchemeCreator.Data.Extensions
         {
             ellipse.SetSize(size);
 
-            ellipse.Margin = new Thickness
-            {
-                Left = center.X - size.Width / 2,
-                Top = center.Y - size.Height / 2
-            };
+            ellipse.Margin = CalculateMargin(center, size);
         }
 
         public static void IncreaseSize(this Ellipse ellipse)
@@ -36,11 +40,7 @@ namespace SchemeCreator.Data.Extensions
             ellipse.Width *= 2;
             ellipse.Height *= 2;
 
-            ellipse.Margin = new Thickness
-            {
-                Left = center.X - ellipse.Width / 2,
-                Top = center.Y - ellipse.Height / 2
-            };
+            ellipse.Margin = CalculateMargin(center, GetSize(ellipse));
         }
 
         public static void DecreaseSize(this Ellipse ellipse)
@@ -50,11 +50,7 @@ namespace SchemeCreator.Data.Extensions
             ellipse.Width /= 2;
             ellipse.Height /= 2;
 
-            ellipse.Margin = new Thickness
-            {
-                Left = center.X - ellipse.Width / 2,
-                Top = center.Y - ellipse.Height / 2
-            };
+            ellipse.Margin = CalculateMargin(center, GetSize(ellipse));
         }
 
         public static void SetStandartAlingment(this Ellipse ellipse)

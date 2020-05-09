@@ -45,9 +45,7 @@ namespace SchemeCreator.UI {
             buttons[Constants.BtId.saveSchemeBt].Click += SaveSchemeBtClick;
             buttons[Constants.BtId.traceSchemeBt].Click += TraceSchemeBtClick;
             buttons[Constants.BtId.workSchemeBt].Click += WorkSchemeBtClick;
-            buttons[Constants.BtId.addGateBt].Click += AddGateBtClick;
             buttons[Constants.BtId.addLineBt].Click += AddLineBtClick;
-            buttons[Constants.BtId.removeLineBt].Click += RemoveLineBtClick;
             buttons[Constants.BtId.changeValueBt].Click += ChangeValueBtClick;
         }
 
@@ -61,18 +59,10 @@ namespace SchemeCreator.UI {
             TraceSchemeBtClickEvent();
         private void WorkSchemeBtClick(object sender, RoutedEventArgs e) =>
             WorkSchemeBtClickEvent();
-        private void AddGateBtClick(object sender, RoutedEventArgs e) {
-            ChangeModeEvent(Constants.BtId.addGateBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
-        }
         private void AddLineBtClick(object sender, RoutedEventArgs e) {
             ChangeModeEvent(Constants.BtId.addLineBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
         }       
-        private void RemoveLineBtClick (object sender, RoutedEventArgs e) {
-            ChangeModeEvent(Constants.BtId.removeLineBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
-        }
         private void ChangeValueBtClick (object sender, RoutedEventArgs e) {
             ChangeModeEvent(Constants.BtId.changeValueBt);
             (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
@@ -99,9 +89,7 @@ namespace SchemeCreator.UI {
         public void Hide() => grid.Children.Clear();
         
         public void InActivateModeButtons() {
-            buttons[Constants.BtId.addGateBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
-            buttons[Constants.BtId.removeLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
             buttons[Constants.BtId.changeValueBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
         }
     }

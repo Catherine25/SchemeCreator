@@ -10,11 +10,26 @@ namespace SchemeCreator.UI
 {
     public class FrameManager
     {
-        /*      constructor     */
+        private readonly WorkspaceController workspaceController;
+
+        private readonly MenuController menuController;
+
+        private ModeEnum CurrentMode;
+
+        private Scheme scheme;
+
+        private FrameEnum currentFrame;
+
+        private Wire newWire;
+
+        public Grid grid { get; }
+
 
         public FrameManager(Scheme _scheme)
         {
             scheme = _scheme;
+
+            newWire = null;
 
             workspaceController = new WorkspaceController();
             menuController = new MenuController();
@@ -40,9 +55,6 @@ namespace SchemeCreator.UI
             menuController.TraceSchemeBtClickEvent += TraceSchemeEvent;
             menuController.WorkSchemeBtClickEvent += WorkSchemeEvent;
             menuController.ChangeModeEvent += ChangeModeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
 
             workspaceController.DotTappedEvent += DotTappedEventAsync;
             workspaceController.LogicGateInTapped += LogicGateInTapped;
@@ -55,42 +67,26 @@ namespace SchemeCreator.UI
 
         private void WorkspaceController_LineTappedEvent(Line line)
         {
-            if (CurrentMode == ModeEnum.removeLineMode)
-            {
-                scheme.lineController.Wires.Remove(scheme.lineController.FindWireByLine(line));
-                workspaceController.RemoveLine(line);
-            }
+            scheme.lineController.Wires.Remove(scheme.lineController.FindWireByLine(line));
+            workspaceController.RemoveLine(line);
         }
 
         private void LogicGateOutTapped(Ellipse e)
         {
-            if (CurrentMode == ModeEnum.addLineStartMode)
+            if (CurrentMode == ModeEnum.addLineMode)
             {
-                CurrentMode = ModeEnum.addLineEndMode;
-
-                newWire = new Wire
-                {
-                    start = e.GetCenterPoint()
-                };
-
                 Gate gate = scheme.gateController.GetGateByInOut(e, ConnectionType.output);
 
-                newWire.isActive = gate.values[gate.GetIndexOfInOutByCenter(e.GetCenterPoint(), ConnectionType.output)];
+                bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(e.GetCenterPoint(), ConnectionType.output)];
+
+                TryCreate(e.GetCenterPoint(), true, isActive);
             }
         }
 
         private void LogicGateInTapped(Ellipse e)
         {
-            if (CurrentMode == ModeEnum.addLineEndMode)
-            {
-                CurrentMode = ModeEnum.addLineStartMode;
-
-                newWire.end = e.GetCenterPoint();
-
-                scheme.lineController.Wires.Add(newWire);
-
-                workspaceController.ShowLines(ref scheme.lineController);
-            }
+            if (CurrentMode == ModeEnum.addLineMode)
+                TryCreate(e.GetCenterPoint(), false);
         }
 
         private async void DotTappedEventAsync(Ellipse e)
@@ -119,17 +115,11 @@ namespace SchemeCreator.UI
         {
             ModeEnum curMode = CurrentMode;
 
-            if (curMode == ModeEnum.addLineStartMode)
+            if (curMode == ModeEnum.addLineMode)
             {
-                CurrentMode = ModeEnum.addLineEndMode;
-
                 Point point = b.GetCenter();
 
-                newWire = new Wire
-                {
-                    start = point,
-                    isActive = scheme.gateController.GetGateByBody(b).values[0]
-                };
+                TryCreate(point, true);
             }
             else if (curMode == ModeEnum.changeValueMode)
             {
@@ -157,40 +147,47 @@ namespace SchemeCreator.UI
 
         private async void GateOUTTappedEvent(Button b)
         {
-            if (CurrentMode == ModeEnum.addLineEndMode)
+            if (CurrentMode == ModeEnum.addLineMode)
             {
-                CurrentMode = ModeEnum.addLineStartMode;
-
                 Point point = b.GetCenter();
 
-                newWire.end = point;
-
-                scheme.lineController.Wires.Add(newWire);
-
-                workspaceController.ShowLines(ref scheme.lineController);
+                TryCreate(point, false);
             }
             else
                 await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
         }
 
+        private bool WireCanBeCreated() => newWire != null
+            && newWire.start.X != 0
+            && newWire.start.Y != 0
+            && newWire.end.X != 0
+            && newWire.end.Y != 0;
+        
+        private void TryCreate(Point p, bool isStart, bool? value = null)
+        {
+            if (newWire == null)
+                newWire = new Wire();   
+
+            if (isStart)
+            {
+                newWire.start = p;
+                newWire.isActive = value;
+            }
+            else
+                newWire.end = p;
+
+            if (WireCanBeCreated())
+            {
+                scheme.lineController.Wires.Add(newWire);
+
+                workspaceController.ShowLines(ref scheme.lineController);
+
+                newWire = null;
+            }
+        }
+
         public FrameEnum GetActiveFrame() => currentFrame;
 
-        /*      data        */
-        private readonly WorkspaceController workspaceController;
-
-        private readonly MenuController menuController;
-
-        private ModeEnum CurrentMode;
-
-        private Scheme scheme;
-
-        private FrameEnum currentFrame;
-
-        private Wire newWire;
-
-        public Grid grid { get; }
-
-        /*      events      */
         private async void NewSchemeEventAsync()
         {
             if (scheme.gateController.Gates.Count == 0
@@ -226,13 +223,9 @@ namespace SchemeCreator.UI
 
         private void TraceSchemeEvent()
         {
-            //Debug.Write("\n[Event] TraceSchemeEvent started");
-
             int gateCount = scheme.gateController.Gates.Count;
-            //Debug.WriteLine(gateCount);
 
             int wireCount = scheme.lineController.Wires.Count;
-            //Debug.WriteLine(wireCount);
 
             Tracer tracer = new Tracer(gateCount, wireCount);
 
@@ -242,20 +235,12 @@ namespace SchemeCreator.UI
 
             int length = tracedWireIndexes.Length;
 
-            //for (int i = 0; i < length; i++)
-            //    Debug.Write(" " + tracedWireIndexes[i]);
-
             workspaceController.ShowWireTraceIndexes(tracedWireIndexes,
             scheme.lineController);
-
-            //Debug.Write("\n[Event] TraceSchemeEvent ended");
         }
 
         private async void WorkSchemeEvent()
         {
-            //Debug.Write("\n[Event] WorkSchemeEvent started");
-
-            //trace at first
             int gateCount = scheme.gateController.Gates.Count;
             int wireCount = scheme.lineController.Wires.Count;
 
@@ -263,17 +248,8 @@ namespace SchemeCreator.UI
 
             tracer.Trace(scheme.gateController, scheme.lineController);
 
-            //List<HistoryComponent> tracedComponentsHistory = tracer.traceHistory;
-            //int length = tracedComponentsHistory.Count;
-
-            //Debug.Write("\ntracedComponentsHistory:");
-            //for (int i = 0; i < length; i++)
-            //    Debug.Write(" " + tracedComponentsHistory[i].index + " " + tracedComponentsHistory[i].component);
-
-            //clear all values
             scheme.gateController.ClearValuesExcludingIN();
-            //Debug.Write("\nClearValuesExcludingIN() ended");
-
+            
             WorkAlgorithmResult Result = WorkAlgorithm.Visualize(scheme);
 
             if (Result == WorkAlgorithmResult.exInsNotInited)
@@ -287,22 +263,14 @@ namespace SchemeCreator.UI
                 workspaceController.Hide();
                 workspaceController.ShowAll(ref scheme);
             }
-                //workspaceController.ShowWireTraceIndexes(tracer.tracedWireIndexes, scheme.lineController);
-
-
-            //Debug.WriteLine("[Event] WorkSchemeEvent ended");
         }
 
         private void ChangeModeEvent(BtId obj)
         {
             menuController.InActivateModeButtons();
 
-            if (obj == BtId.addGateBt)
-                scheme.frameManager.CurrentMode = ModeEnum.addGateMode;
-            else if (obj == BtId.addLineBt)
-                scheme.frameManager.CurrentMode = ModeEnum.addLineStartMode;
-            else if (obj == BtId.removeLineBt)
-                scheme.frameManager.CurrentMode = ModeEnum.removeLineMode;
+            if (obj == BtId.addLineBt)
+                scheme.frameManager.CurrentMode = ModeEnum.addLineMode;
             else
                 scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
         }

@@ -62,9 +62,7 @@ namespace SchemeCreator.Data.ConstantsNamespace {
             { BtId.saveSchemeBt, "Save Scheme" },
             { BtId.traceSchemeBt, "Trace Scheme" },
             { BtId.workSchemeBt, "Work" },
-            { BtId.addGateBt, "Add Gate" },
             { BtId.addLineBt, "Add Line" },
-            { BtId.removeLineBt, "Remove Line" },
             { BtId.changeValueBt, "Change Value" }
         };
 
@@ -84,9 +82,9 @@ namespace SchemeCreator.Data.ConstantsNamespace {
             { AccentEnum.accent2, new SolidColorBrush(Windows.UI.Colors.Maroon) }
         };
 
-        public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addGateBt, addLineBt, removeLineBt, changeValueBt }
+        public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addLineBt, changeValueBt }
         public enum GateEnum { IN, OUT, Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
-        public enum ModeEnum { addGateMode, addLineEndMode, addLineStartMode, removeLineMode, changeValueMode }
+        public enum ModeEnum { addGateMode, addLineMode, changeValueMode }
         public enum FrameEnum { workspace, newGate }
         public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
         public enum ComponentTypeEnum { gate, wire }
