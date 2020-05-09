@@ -4,6 +4,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Model;
 
 namespace SchemeCreator.Data
 {
@@ -41,10 +42,10 @@ namespace SchemeCreator.Data
             return null;
         }
 
-        public Gate GetGateByInOut(Ellipse e, Constants.ConnectionType type)
+        public Gate GetGateByInOut(Port p, Constants.ConnectionType type)
         {
             foreach (Gate gate in Gates)
-                if (gate.ContainsInOutByCenter(e, type))
+                if (gate.ContainsInOutByCenter(p.CenterPoint, type))
                     return gate;
 
             throw new System.Exception();
