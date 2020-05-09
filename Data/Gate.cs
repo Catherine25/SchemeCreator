@@ -141,28 +141,27 @@ namespace SchemeCreator.Data.Model
             return button;
         }
 
-        public List<Ellipse> DrawGateInPorts()
+        public List<Port> DrawGateInPorts()
         {
-            List<Ellipse> ellipses = new List<Ellipse>();
+            List<Port> ports = new List<Port>();
             int length = inputs;
 
             for (int i = 0; i < length; i++)
             {
-                Ellipse ellipse = new Ellipse();
-                ellipse.SetStandartAlingment();
+                Port port = new Port(Constants.ConnectionType.input);
 
-                ellipse.SetSizeAndCenterPoint(Constants.gatePortSize, new Point
-                {
-                    X = GetLeftTop().X,
-                    Y = GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1)) 
-                });
+                Point center = new Point(GetLeftTop().X, GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1)));
 
-                ellipse.SetFillByValue(values[i]);
+                port.CenterPoint = center;
 
-                ellipses.Add(ellipse);
+                port.Size = Constants.gatePortSize;
+
+                port.BooleanValue = values[i];
+
+                ports.Add(port);
             }
 
-            return ellipses;
+            return ports;
         }
 
         public List<Ellipse> DrawGateOutPorts()
