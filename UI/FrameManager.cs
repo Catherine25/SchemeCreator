@@ -1,6 +1,6 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Model;
+﻿using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;

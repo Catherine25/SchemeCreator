@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
 using Windows.Foundation;
-using SchemeCreator.Data.Model;
+using SchemeCreator.Data.Models;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

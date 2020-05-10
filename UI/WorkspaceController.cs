@@ -6,7 +6,8 @@ using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using System.Collections.Generic;
-using SchemeCreator.Data.Model;
+using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Controllers;
 
 namespace SchemeCreator.UI
 {
@@ -52,7 +53,7 @@ namespace SchemeCreator.UI
         public void Hide() => grid.Children.Clear();
         public void Update(Rect rect) => grid.SetRect(rect);
 
-        public void ShowDots(ref Data.DotController dotController)
+        public void ShowDots(ref DotController dotController)
         {
             dotController.InitNet(grid.GetActualSize());
 
@@ -65,7 +66,7 @@ namespace SchemeCreator.UI
             });
         }
 
-        public void ShowGates(ref Data.GateController gateController)
+        public void ShowGates(ref GateController gateController)
         {
             IEnumerable<Gate> logicGates = gateController.GetLogicGates();
 
@@ -102,7 +103,7 @@ namespace SchemeCreator.UI
             }
         }
 
-        public void ShowLines(ref Data.LineController lineController)
+        public void ShowLines(ref LineController lineController)
         {
             for (int i = 0; i < lineController.Wires.Count; i++)
             {
@@ -123,13 +124,13 @@ namespace SchemeCreator.UI
         private void Wire_Tapped(object sender, TappedRoutedEventArgs e) =>
             LineTappedEvent(sender as Line);
 
-        public void ShowWireTraceIndexes(int[] tracedWireIndexes, Data.LineController lc)
+        public void ShowWireTraceIndexes(int[] tracedWireIndexes, LineController lc)
         {
             int wireCount = lc.Wires.Count;
 
             for (int i = 0; i < wireCount; i++)
             {
-                Data.Wire wire = lc.Wires[i];
+                Wire wire = lc.Wires[i];
 
                 Button tb = new Button()
                 {

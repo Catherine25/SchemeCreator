@@ -1,4 +1,4 @@
-﻿using SchemeCreator.Data.Model;
+﻿using SchemeCreator.Data.Models;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
