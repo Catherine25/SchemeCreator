@@ -41,7 +41,7 @@ namespace SchemeCreator.Data.Models
             else
             {
                 l.Stroke = Constants.brushes[Constants.AccentEnum.accent2];
-                l.Fill = Constants.brushes[Constants.AccentEnum.background];
+                l.Fill = Constants.brushes[Constants.AccentEnum.accent2];
             }
         
         return l;
