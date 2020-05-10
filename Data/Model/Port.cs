@@ -12,7 +12,7 @@ namespace SchemeCreator.Data.Model
     {
         #region Fields
 
-        private readonly ConnectionType type;
+        public readonly ConnectionType Type;
 
         public bool? BooleanValue
         {
@@ -65,7 +65,7 @@ namespace SchemeCreator.Data.Model
         
         public Port(ConnectionType connectionType)
         {
-            type = connectionType;
+            Type = connectionType;
 
             ellipse = new Ellipse
             {
