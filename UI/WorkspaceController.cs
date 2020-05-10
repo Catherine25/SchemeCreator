@@ -3,11 +3,11 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using System.Collections.Generic;
 using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Controllers;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.UI
 {
@@ -22,12 +22,12 @@ namespace SchemeCreator.UI
         /*      methods      */
         public void AddGateToGrid(Gate gate)
         {
-            Button body = gate.DrawBody();
-            grid.Children.Add(body);
+            var body = gate.DrawBody();
+            body.AddToParent(grid);
 
-            if (Constants.external.Contains(gate.type))
+            if (external.Contains(gate.type))
             {
-                if (gate.type == Constants.GateEnum.IN)
+                if (gate.type == GateEnum.IN)
                     body.Tapped += GateINBodyTapped;
                 else
                     body.Tapped += GateOUTBodyTapped;
@@ -72,9 +72,9 @@ namespace SchemeCreator.UI
 
             foreach (Gate gate in logicGates)
             {
-                Button rect = gate.DrawBody();
-                rect.Tapped += LogicGateBodyTapped;
-                grid.Children.Add(rect);
+                var body = gate.DrawBody();
+                body.AddToParent(grid);
+                body.Tapped += LogicGateBodyTapped;
 
                 foreach (Port p in gate.DrawGateInPorts())
                 {
@@ -92,14 +92,13 @@ namespace SchemeCreator.UI
             List<Gate> externalGates = new List<Gate>(gateController.GetExternalGates());
             foreach(Gate gate in externalGates)
             {
-                Button body = gate.DrawBody();
+                var body = gate.DrawBody();
+                body.AddToParent(grid);
 
-                if (gate.type == Constants.GateEnum.IN)
+                if (gate.type == GateEnum.IN)
                     body.Tapped += GateINBodyTapped;
                 else
                     body.Tapped += GateOUTBodyTapped;
-
-                grid.Children.Add(body);
             }
         }
 
@@ -138,7 +137,7 @@ namespace SchemeCreator.UI
                 };
 
                 tb.SetStandartAlignment();
-                tb.SetSizeAndCenter(Constants.traceTextSize, wire.Center);
+                tb.SetSizeAndCenter(traceTextSize, wire.Center);
 
                 grid.Children.Add(tb);
             };
@@ -152,12 +151,13 @@ namespace SchemeCreator.UI
         }
 
         #region Button event handlers 
-        private void LogicGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
-            LogicGateTappedEvent(sender as Button);
-        private void GateINBodyTapped(object sender, TappedRoutedEventArgs e) =>
-            GateINTapped(sender as Button);
-        private void GateOUTBodyTapped(object sender, TappedRoutedEventArgs e) =>
-            GateOUTTapped(sender as Button);
+
+        private void LogicGateBodyTapped(Gate gate, Button button) => LogicGateTappedEvent(button);
+
+        private void GateINBodyTapped(Gate gate, Button button) => GateINTapped(button);
+
+        private void GateOUTBodyTapped(Gate gate, Button button) => GateOUTTapped(button);
+        
         #endregion
 
         #region Ellipse event handlers

@@ -119,8 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\ConstantsNamespace\Constants.cs" />
-    <Compile Include="Data\ConstantsNamespace\Text.cs" />
+    <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Controllers\DotController.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
@@ -130,9 +129,12 @@
     <Compile Include="Data\Models\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Controllers\LineController.cs" />
+    <Compile Include="Data\Models\GateBody.cs" />
     <Compile Include="Data\Models\Port.cs" />
     <Compile Include="Data\Interfaces\IResizable.cs" />
+    <Compile Include="Data\Services\Colorer.cs" />
     <Compile Include="Data\Services\Serializer.cs" />
+    <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
     <Compile Include="Data\Models\Wire.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />

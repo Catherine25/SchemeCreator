@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Windows.UI.Xaml.Controls;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+using static SchemeCreator.Data.Constants;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SchemeCreator.UI
