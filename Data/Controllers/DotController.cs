@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Shapes;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using Windows.Foundation;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Controllers
 {
@@ -20,19 +20,16 @@ namespace SchemeCreator.Data.Controllers
 
         public void InitNet(Size actSize)
         {
-            double stepW = actSize.Width / (Constants.netSize + 1),
-                stepH = actSize.Height / (Constants.netSize + 1);
+            double stepW = actSize.Width / (netSize + 1),
 
-            //Thickness margin;
-
-            for (int i = 1; i <= Constants.netSize; i++)
-                for (int j = 1; j <= Constants.netSize; j++)
+            for (int i = 1; i <= netSize; i++)
+                for (int j = 1; j <= netSize; j++)
                 {
                     Ellipse ellipse = new Ellipse { 
                         Fill = Constants.brushes[Constants.AccentEnum.dark1]
                     };
 
-                    ellipse.SetSizeAndCenterPoint(Constants.dotSize, new Point(stepW * i, stepH * j));
+                    ellipse.SetSizeAndCenterPoint(dotSize, new Point(stepW * i, stepH * j));
 
                     ellipse.SetStandartAlingment();
                  
