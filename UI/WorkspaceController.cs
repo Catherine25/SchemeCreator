@@ -162,8 +162,8 @@ namespace SchemeCreator.UI
         #region Ellipse event handlers
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
             DotTappedEvent(sender as Ellipse);
-        private void GateOutTapped(Port port) => LogicGateOutTapped(port);
-        private void GateInTapped(Port port) => LogicGateInTapped(port);
+        private void GateOutTapped(Port port) => PortTapped(port);
+        private void GateInTapped(Port port) => PortTapped(port);
         #endregion
 
         #region Events
@@ -172,7 +172,7 @@ namespace SchemeCreator.UI
             GateINTapped, GateOUTTapped;
 
         public event Action<Ellipse> DotTappedEvent;
-        public event Action<Port> LogicGateInTapped, LogicGateOutTapped;
+        public event Action<Port> PortTapped;
 
         public event Action<Line> LineTappedEvent;
 
