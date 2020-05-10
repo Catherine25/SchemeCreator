@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Model;
 
 namespace SchemeCreator.Data
 {
