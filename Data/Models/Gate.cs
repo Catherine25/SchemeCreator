@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Interfaces;
 using static SchemeCreator.Data.Constants;
+using System.Linq;
 
 namespace SchemeCreator.Data.Models
 {
@@ -113,70 +114,50 @@ namespace SchemeCreator.Data.Models
 
         public GateBody DrawBody() => new GateBody(this);
 
-        public List<Port> DrawGateInPorts()
+        public List<Port> DrawPorts(ConnectionType type)
         {
-            List<Port> ports = new List<Port>();
-            int length = inputs;
-
-            for (int i = 0; i < length; i++)
+            if(type == ConnectionType.both)
             {
-                Port port = new Port(ConnectionType.input);
-
-                Point center = new Point(GetLeftTop().X, GetLeftTop().Y + ((logicGateSize.Height / (length + 1)) * (i + 1)));
-
-                port.CenterPoint = center;
-
-                port.Size = gatePortSize;
-
-                port.BooleanValue = values[i];
-
-                ports.Add(port);
+                var items = DrawPorts(ConnectionType.input);
+                items.AddRange(DrawPorts(ConnectionType.output));
+                return items;
             }
-
-            return ports;
-        }
-
-        public List<Port> DrawGateOutPorts()
-        {
-            List<Port> ports = new List<Port>();
-            int length = outputs;
-
-            for (int i = 0; i < length; i++)
-            {
-                Port port = new Port(ConnectionType.output);
-
-                Point center = new Point(GetLeftTop().X + logicGateSize.Width, GetLeftTop().Y + ((logicGateSize.Height / (length + 1)) * (i + 1)));
-
-                port.CenterPoint = center;
-
-                port.Size = gatePortSize;
-
-                port.BooleanValue = values[i];
-
-                ports.Add(port);
-            }
-
-            return ports;
-        }
-
-        public bool ContainsInOutByCenter(Point center, ConnectionType type)
-        {
-            if(type == ConnectionType.input)
-                return DrawGateInPorts().Exists(x => x.CenterPoint == center);
             else
-                return DrawGateOutPorts().Exists(x => x.CenterPoint == center);
+            {
+                List<Port> ports = new List<Port>();
+                int length = type == ConnectionType.input ? inputs : outputs;
+
+                for (int i = 0; i < length; i++)
+                {
+                    Port port = new Port(type);
+
+                    Point center =
+                        type == ConnectionType.input
+                        ? new Point(GetLeftTop().X, GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1)))
+                        : new Point(GetLeftTop().X + logicGateSize.Width, GetLeftTop().Y + ((logicGateSize.Height / (length + 1)) * (i + 1)));
+
+                    port.CenterPoint = center;
+
+                    port.Size = gatePortSize;
+
+                    port.BooleanValue = values[i];
+
+                    ports.Add(port);
+                }
+
+                return ports;
+            }            
         }
+
+        public bool ContainsInOutByCenter(Point center, ConnectionType type) =>
+            DrawPorts(type).Exists(x => x.CenterPoint == center);
 
         public bool ContainsBodyByMargin(Thickness t) =>
             DrawBody().ContainsBodyByMargin(t);
 
-        public int GetIndexOfInOutByCenter(Point center, ConnectionType type) {
-            if (type == ConnectionType.input)
-                return DrawGateInPorts().FindIndex(x => x.CenterPoint == center);
-            else
-                return DrawGateOutPorts().FindIndex(x => x.CenterPoint == center);
-        }
-        
+        public int GetIndexOfInOutByCenter(Point center, ConnectionType type) =>
+            DrawPorts(type).FindIndex(x => x.CenterPoint == center);
+
         public GateBody GetBodyByWirePart(Point p)
         {
             if (type == GateEnum.IN || type == GateEnum.OUT)
@@ -188,26 +169,8 @@ namespace SchemeCreator.Data.Models
 
         public Port GetInOutByWirePart(Point p)
         {
-            List<Port> inputs = DrawGateInPorts();
-            List<Port> outputs = DrawGateOutPorts();
-
-            for (int i = 0; i < inputs.Count; i++)
-            {
-                Point point = inputs[i].CenterPoint;
-
-                if (point == p)
-                    return inputs[i];
-            }
-
-            for (int i = 0; i < outputs.Count; i++)
-            {
-                Point point = outputs[i].CenterPoint;
-
-                if (point == p)
-                    return outputs[i];
-            }
-               
-            return null;
+            var items = DrawPorts(ConnectionType.both);
+            return items.FirstOrDefault(i => i.CenterPoint == p);
         }
 
         public bool WireConnects(Point point)
@@ -216,20 +179,9 @@ namespace SchemeCreator.Data.Models
                 return center == point;
             else
             {
-                var inputs = DrawGateInPorts();
-
-                for (int i = 0; i < inputs.Count; i++)
-                    if (point == inputs[i].CenterPoint)
-                        return true;
-
-                var outputs = DrawGateOutPorts();
-
-                for (int i = 0; i < outputs.Count; i++)
-                    if (point == outputs[i].CenterPoint)
-                        return true;
+                var items = DrawPorts(ConnectionType.both);
+                return items.Any(i => i.CenterPoint == point);
             }
-
-            return false;
         }
 
         public int FirstFreeValueBoxIndex()
