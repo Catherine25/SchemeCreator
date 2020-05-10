@@ -76,18 +76,18 @@ namespace SchemeCreator.UI
         {
             if (CurrentMode == ModeEnum.addLineMode)
             {
-                Gate gate = scheme.gateController.GetGateByInOut(e, ConnectionType.output);
+                Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionType.output);
 
-                bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(e.GetCenterPoint(), ConnectionType.output)];
+                bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionType.output)];
 
-                TryCreate(e.GetCenterPoint(), true, isActive);
+                TryCreate(p.CenterPoint, true, isActive);
             }
         }
 
-        private void LogicGateInTapped(Ellipse e)
+        private void LogicGateInTapped(Port p)
         {
             if (CurrentMode == ModeEnum.addLineMode)
-                TryCreate(e.GetCenterPoint(), false);
+                TryCreate(p.CenterPoint, false);
         }
 
         private async void DotTappedEventAsync(Ellipse e)
