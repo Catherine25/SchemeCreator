@@ -72,7 +72,7 @@ namespace SchemeCreator.UI
             workspaceController.RemoveLine(line);
         }
 
-        private void LogicGateOutTapped(Ellipse e)
+        private void LogicGateOutTapped(Port p)
         {
             if (CurrentMode == ModeEnum.addLineMode)
             {
