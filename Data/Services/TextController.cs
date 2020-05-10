@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+using static SchemeCreator.Data.Constants;
 
-namespace SchemeCreator.Data.ConstantsNamespace
+namespace SchemeCreator.Data.Services
 {
-    static class Text
+    static class TextController
     {
-        static Text()
+        static TextController()
         {
             string[] exInsNotInited = new string[4]
             {
@@ -102,5 +102,15 @@ namespace SchemeCreator.Data.ConstantsNamespace
 
         private static readonly IDictionary<Tuple<MessageTypes, MessageAttribute>, string> messagesText =
             new Dictionary<Tuple<MessageTypes, MessageAttribute>, string>();
+
+        public static string BuildButtonBodyText(GateEnum type, int inputs, int outputs)
+        {
+            string s = type.ToString();
+
+            if (!singleOutput.Contains(type))
+                s += "\n" + inputs.ToString() + " in " + outputs.ToString();
+
+            return s;
+        }
     }
 }
