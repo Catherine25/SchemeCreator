@@ -132,16 +132,7 @@ namespace SchemeCreator.UI
 
                 gate.values[0] = !gate.values[0];
 
-                if (gate.values[0] == true)
-                {
-                    b.Background = brushes[AccentEnum.light1];
-                    b.Foreground = brushes[AccentEnum.dark1];
-                }
-                else
-                {
-                    b.Background = brushes[AccentEnum.dark1];
-                    b.Foreground = brushes[AccentEnum.light1];
-                }
+                Colorer.SetFillByValue(b, gate.values[0]);
             }
             else
                 await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
