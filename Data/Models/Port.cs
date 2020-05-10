@@ -9,7 +9,7 @@ using static SchemeCreator.Data.ConstantsNamespace.Constants;
 
 namespace SchemeCreator.Data.Models
 {
-    public class Port : IResizable
+    public class Port : IGridChild, IResizable
     {
         #region Fields
 
@@ -82,6 +82,6 @@ namespace SchemeCreator.Data.Models
         public void ChangeSize(bool increase) =>
             Size = increase ? new Size(Size.Width * 2, Size.Height * 2) : new Size(Size.Width / 2, Size.Height / 2);
 
-        public void SetParentGrid(Grid grid) => grid.Children.Add(this.ellipse);
+        public void AddToParent(Grid grid) => grid.Children.Add(ellipse);
     }
 }
