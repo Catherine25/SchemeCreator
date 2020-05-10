@@ -5,7 +5,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 
-namespace SchemeCreator.Data {
+namespace SchemeCreator.Data.Models
+{
     [DataContract] public class Wire {
     [DataMember] public Point start, end;
     [DataMember] public bool? isActive;
