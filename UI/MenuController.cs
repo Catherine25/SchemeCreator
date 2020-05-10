@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
+using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Services;
 
-namespace SchemeCreator.UI {
-    class MenuController {
+namespace SchemeCreator.UI
+{
+    class MenuController
+    {
+        Dictionary<BtId, Button> buttons = new Dictionary<BtId, Button>();
+        Grid grid = new Grid();
 
         /*      events      */
         public event Action NewSchemeBtClickEvent,
@@ -15,24 +20,19 @@ namespace SchemeCreator.UI {
             SaveSchemeBtClickEvent,
             TraceSchemeBtClickEvent,
             WorkSchemeBtClickEvent;
-        public event Action<Constants.BtId>
-            ChangeModeEvent;
-
-        /*      data        */
-        Dictionary<Constants.BtId, Button> buttons = new Dictionary<Constants.BtId, Button>();
-        Grid grid = new Grid();
-        
+        public event Action<BtId> ChangeModeEvent;
 
         /*      constructor     */
-        public MenuController() {
+        public MenuController()
+        {
             grid.SetStandartAlighnment();
             //The cast to (BtId[]) is not strictly necessary, but does make the code faster
-            foreach (Constants.BtId id in (Constants.BtId[])Enum.GetValues(typeof(Constants.BtId))) {
-                Button button = new Button {
-                    Content = Constants.btText[id],
-                    Background = Constants.brushes[Constants.AccentEnum.dark1],
-                    Foreground = Constants.brushes[Constants.AccentEnum.light1]
-                };
+            foreach (BtId id in (BtId[])Enum.GetValues(typeof(BtId)))
+            {
+                Button button = new Button { Content = btText[id] };
+
+                Colorer.ColorMenuButton(button);
+
                 buttons.Add(id, button);
             }
             EventSubscribe();
@@ -40,13 +40,13 @@ namespace SchemeCreator.UI {
         
         /*      events      */
         private void EventSubscribe() {
-            buttons[Constants.BtId.newSchemeBt].Click += NewSchemeBtClick;
-            buttons[Constants.BtId.loadSchemeBt].Click += LoadSchemeBtClick;
-            buttons[Constants.BtId.saveSchemeBt].Click += SaveSchemeBtClick;
-            buttons[Constants.BtId.traceSchemeBt].Click += TraceSchemeBtClick;
-            buttons[Constants.BtId.workSchemeBt].Click += WorkSchemeBtClick;
-            buttons[Constants.BtId.addLineBt].Click += AddLineBtClick;
-            buttons[Constants.BtId.changeValueBt].Click += ChangeValueBtClick;
+            buttons[BtId.newSchemeBt].Click += NewSchemeBtClick;
+            buttons[BtId.loadSchemeBt].Click += LoadSchemeBtClick;
+            buttons[BtId.saveSchemeBt].Click += SaveSchemeBtClick;
+            buttons[BtId.traceSchemeBt].Click += TraceSchemeBtClick;
+            buttons[BtId.workSchemeBt].Click += WorkSchemeBtClick;
+            buttons[BtId.addLineBt].Click += AddLineBtClick;
+            buttons[BtId.changeValueBt].Click += ChangeValueBtClick;
         }
 
         private void NewSchemeBtClick(object sender, RoutedEventArgs e) =>
@@ -60,12 +60,12 @@ namespace SchemeCreator.UI {
         private void WorkSchemeBtClick(object sender, RoutedEventArgs e) =>
             WorkSchemeBtClickEvent();
         private void AddLineBtClick(object sender, RoutedEventArgs e) {
-            ChangeModeEvent(Constants.BtId.addLineBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
+            ChangeModeEvent(BtId.addLineBt);
+            Colorer.ColorMenuButtonBorderByValue(sender as Button, true);
         }       
         private void ChangeValueBtClick (object sender, RoutedEventArgs e) {
-            ChangeModeEvent(Constants.BtId.changeValueBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
+            ChangeModeEvent(BtId.changeValueBt);
+            Colorer.ColorMenuButtonBorderByValue(sender as Button, true);
         }
 
         /*      methods     */
@@ -89,8 +89,8 @@ namespace SchemeCreator.UI {
         public void Hide() => grid.Children.Clear();
         
         public void InActivateModeButtons() {
-            buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
-            buttons[Constants.BtId.changeValueBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
+            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.addLineBt] as Button, false);
+            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.changeValueBt] as Button, false);
         }
     }
 }
