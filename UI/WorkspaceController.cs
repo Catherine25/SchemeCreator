@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using System.Collections.Generic;
+using SchemeCreator.Data.Model;
 
 namespace SchemeCreator.UI
 {

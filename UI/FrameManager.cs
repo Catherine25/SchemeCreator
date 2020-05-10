@@ -1,5 +1,6 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Model;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
