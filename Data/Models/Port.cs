@@ -1,11 +1,12 @@
 using SchemeCreator.Data.Interfaces;
+using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Models
 {
@@ -22,12 +23,7 @@ namespace SchemeCreator.Data.Models
             {
                 booleanValue = value;
 
-                if (booleanValue == true)
-                    ellipse.Fill = brushes[AccentEnum.light1];
-                else if (booleanValue == false)
-                    ellipse.Fill = brushes[AccentEnum.dark1];
-                else
-                    ellipse.Fill = brushes[AccentEnum.accent2];
+                Colorer.SetFillByValue(ellipse, BooleanValue);
             }
         }
         private bool? booleanValue;
