@@ -1,3 +1,4 @@
+using SchemeCreator.Data.Interfaces;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -6,7 +7,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using static SchemeCreator.Data.ConstantsNamespace.Constants;
 
-namespace SchemeCreator.Data.Model
+namespace SchemeCreator.Data.Models
 {
     public class Port : IResizable
     {
