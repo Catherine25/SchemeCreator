@@ -1,4 +1,4 @@
-﻿using SchemeCreator.Data.Model;
+﻿using SchemeCreator.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Windows.Storage;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Services
 {
     internal static class Serializer
     {
