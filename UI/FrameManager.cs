@@ -5,7 +5,7 @@ using System;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.UI
 {
