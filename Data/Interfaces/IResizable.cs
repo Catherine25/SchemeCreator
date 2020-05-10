@@ -1,4 +1,4 @@
-namespace SchemeCreator.Data.Model
+namespace SchemeCreator.Data.Interfaces
 {
     public interface IResizable
     {
