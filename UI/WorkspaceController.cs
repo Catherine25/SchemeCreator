@@ -39,13 +39,13 @@ namespace SchemeCreator.UI
             gate.DrawGateInPorts().ForEach(p =>
             {
                 p.Tapped += GateInTapped;
-                p.SetParentGrid(grid);
+                p.AddToParent(grid);
             });
 
             gate.DrawGateOutPorts().ForEach(p =>
             {
                 p.Tapped += GateOutTapped;
-                p.SetParentGrid(grid);
+                p.AddToParent(grid);
             });
         }
         public void RemoveLine(Line line) => grid.Children.Remove(line);
@@ -78,13 +78,13 @@ namespace SchemeCreator.UI
 
                 foreach (Port p in gate.DrawGateInPorts())
                 {
-                    p.SetParentGrid(grid);
+                    p.AddToParent(grid);
                     p.Tapped += GateInTapped;
                 }
 
                 foreach (Port p in gate.DrawGateOutPorts())
                 {
-                    p.SetParentGrid(grid);
+                    p.AddToParent(grid);
                     p.Tapped += GateOutTapped;
                 }
             }
