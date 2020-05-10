@@ -67,9 +67,9 @@ namespace SchemeCreator.UI
 
         public void ShowGates(ref Data.GateController gateController)
         {
-            IEnumerable<Data.Gate> logicGates = gateController.GetLogicGates();
+            IEnumerable<Gate> logicGates = gateController.GetLogicGates();
 
-            foreach (Data.Gate gate in logicGates)
+            foreach (Gate gate in logicGates)
             {
                 Button rect = gate.DrawBody();
                 rect.Tapped += LogicGateBodyTapped;
@@ -88,8 +88,8 @@ namespace SchemeCreator.UI
                 }
             }
 
-            List<Data.Gate> externalGates = new List<Data.Gate>(gateController.GetExternalGates());
-            foreach(Data.Gate gate in externalGates)
+            List<Gate> externalGates = new List<Gate>(gateController.GetExternalGates());
+            foreach(Gate gate in externalGates)
             {
                 Button body = gate.DrawBody();
 
@@ -143,7 +143,7 @@ namespace SchemeCreator.UI
             };
         }
 
-        public void ShowAll(ref Data.Scheme scheme)
+        public void ShowAll(ref Scheme scheme)
         {
             ShowDots(ref scheme.dotController);
             ShowGates(ref scheme.gateController);
