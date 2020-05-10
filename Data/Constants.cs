@@ -75,6 +75,6 @@ namespace SchemeCreator.Data
         public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView, createGate, visualizingFailed }
         public enum MessageAttribute { title, text, button1, button2 }
         public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected, schemeIsntCorrect }
-        public enum ConnectionType { input, output }
+        public enum ConnectionType { input, output, both }
     }
 }
