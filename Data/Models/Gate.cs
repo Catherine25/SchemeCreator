@@ -5,11 +5,12 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.Data.Models
 {
     [DataContract]
-    public class Gate
+    public class Gate : IGridChild
     {
         /*      data        */
         [DataMember] public Constants.GateEnum type;
@@ -266,6 +267,12 @@ namespace SchemeCreator.Data.Models
                     return i;
 
             return -1;
+        }
+
+        public void AddToParent(Grid parent)
+        {
+            var body = DrawBody();
+            parent.Children.Add(body);
         }
     }
 }
