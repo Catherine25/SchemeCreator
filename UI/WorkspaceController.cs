@@ -60,8 +60,8 @@ namespace SchemeCreator.UI
             {
                 grid.Children.Add(dot);
                 dot.Tapped += DotTapped;
-                dot.PointerEntered += E_PointerEntered;
-                dot.PointerExited += E_PointerExited;
+                dot.PointerEntered += (object sender, PointerRoutedEventArgs args) => dot.IncreaseSize();
+                dot.PointerExited += (object sender, PointerRoutedEventArgs args) => dot.DecreaseSize();
             });
         }
 
