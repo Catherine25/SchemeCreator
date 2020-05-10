@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using SchemeCreator.Data.ConstantsNamespace;
-using SchemeCreator.Data.Model;
+using SchemeCreator.Data.Controllers;
+using SchemeCreator.Data.Models;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Services
 {
     public class Tracer
     {
