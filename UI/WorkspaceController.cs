@@ -150,17 +150,16 @@ namespace SchemeCreator.UI
             ShowLines(ref scheme.lineController);
         }
 
-        /*  -----   Button event handlers   -----   */
+        #region Button event handlers 
         private void LogicGateBodyTapped(object sender, TappedRoutedEventArgs e) =>
             LogicGateTappedEvent(sender as Button);
         private void GateINBodyTapped(object sender, TappedRoutedEventArgs e) =>
             GateINTapped(sender as Button);
         private void GateOUTBodyTapped(object sender, TappedRoutedEventArgs e) =>
             GateOUTTapped(sender as Button);
-        /*  -----   Button event handlers   -----   */
+        #endregion
 
-
-        /*   -----   Ellipse event handlers   -----   */
+        #region Ellipse event handlers
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
             DotTappedEvent(sender as Ellipse);
         private void GateOutTapped(object sender, TappedRoutedEventArgs e) =>
@@ -168,8 +167,9 @@ namespace SchemeCreator.UI
         private void GateInTapped(object sender, TappedRoutedEventArgs e) =>
             LogicGateInTapped(sender as Ellipse);
         /*   -----   Ellipse event handlers   -----   */
+        #endregion
 
-        /*   -----   events   -----   */
+        #region Events
 
         public event Action<Button> LogicGateTappedEvent,
             GateINTapped, GateOUTTapped;
@@ -179,9 +179,8 @@ namespace SchemeCreator.UI
 
         public event Action<Line> LineTappedEvent;
 
-        /*   -----   events   -----   */
+        #endregion
 
-        /*      data        */
         readonly Grid grid;
     }
 }
