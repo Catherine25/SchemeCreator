@@ -3,9 +3,9 @@ using System.Runtime.Serialization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Models
 {
@@ -13,12 +13,12 @@ namespace SchemeCreator.Data.Models
     public class Gate : IGridChild
     {
         /*      data        */
-        [DataMember] public Constants.GateEnum type;
+        [DataMember] public GateEnum type;
         [DataMember] public int inputs, outputs;
         [DataMember] public Point center;
         [DataMember] public List<bool?> values;
 
-        public Gate(Constants.GateEnum type, int inputs, int outputs, Point point)
+        public Gate(GateEnum type, int inputs, int outputs, Point point)
         {
             this.type = type;
             this.inputs = inputs;
@@ -33,20 +33,20 @@ namespace SchemeCreator.Data.Models
 
         public Point GetLeftTop()
         {
-            if(Constants.external.Contains(type))
+            if(external.Contains(type))
             {
                 return new Point
                 {
-                    X = center.X - Constants.externalGateSize.Width / 2,
-                    Y = center.Y - Constants.externalGateSize.Height / 2
+                    X = center.X - externalGateSize.Width / 2,
+                    Y = center.Y - externalGateSize.Height / 2
                 };
             }
             else
             {
                 return new Point
                 {
-                    X = center.X - Constants.logicGateSize.Width / 2,
-                    Y = center.Y - Constants.logicGateSize.Height / 2
+                    X = center.X - logicGateSize.Width / 2,
+                    Y = center.Y - logicGateSize.Height / 2
                 };
             }
             
@@ -58,16 +58,16 @@ namespace SchemeCreator.Data.Models
 
             switch (type)
             {
-                case Constants.GateEnum.NOT:
+                case GateEnum.NOT:
                     values[0] = !values[0];
                     break;
 
-                case Constants.GateEnum.AND:
+                case GateEnum.AND:
                     for (int i = 0; i < length; i++)
                         values[0] &= values[i];
                     break;
 
-                case Constants.GateEnum.NAND:
+                case GateEnum.NAND:
                     {
                         for (int i = 0; i < length; i++)
                             values[0] &= values[i];
@@ -76,14 +76,14 @@ namespace SchemeCreator.Data.Models
                     }
                     break;
 
-                case Constants.GateEnum.OR:
+                case GateEnum.OR:
                     {
                         for (int i = 0; i < length; i++)
                             values[0] |= values[i];
                     }
                     break;
 
-                case Constants.GateEnum.NOR:
+                case GateEnum.NOR:
                     {
                         for (int i = 0; i < length; i++)
                             values[0] |= values[i];
@@ -92,14 +92,14 @@ namespace SchemeCreator.Data.Models
                     }
                     break;
 
-                case Constants.GateEnum.XOR:
+                case GateEnum.XOR:
                     {
                         for (int i = 0; i < length; i++)
                             values[0] ^= values[i];
                     }
                     break;
 
-                case Constants.GateEnum.XNOR:
+                case GateEnum.XNOR:
                     {
                         for (int i = 0; i < length; i++)
                             values[0] ^= values[i];
@@ -148,13 +148,13 @@ namespace SchemeCreator.Data.Models
 
             for (int i = 0; i < length; i++)
             {
-                Port port = new Port(Constants.ConnectionType.input);
+                Port port = new Port(ConnectionType.input);
 
-                Point center = new Point(GetLeftTop().X, GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1)));
+                Point center = new Point(GetLeftTop().X, GetLeftTop().Y + ((logicGateSize.Height / (length + 1)) * (i + 1)));
 
                 port.CenterPoint = center;
 
-                port.Size = Constants.gatePortSize;
+                port.Size = gatePortSize;
 
                 port.BooleanValue = values[i];
 
@@ -171,13 +171,13 @@ namespace SchemeCreator.Data.Models
 
             for (int i = 0; i < length; i++)
             {
-                Port port = new Port(Constants.ConnectionType.output);
+                Port port = new Port(ConnectionType.output);
 
-                Point center = new Point(GetLeftTop().X + Constants.logicGateSize.Width, GetLeftTop().Y + ((Constants.logicGateSize.Height / (length + 1)) * (i + 1)));
+                Point center = new Point(GetLeftTop().X + logicGateSize.Width, GetLeftTop().Y + ((logicGateSize.Height / (length + 1)) * (i + 1)));
 
                 port.CenterPoint = center;
 
-                port.Size = Constants.gatePortSize;
+                port.Size = gatePortSize;
 
                 port.BooleanValue = values[i];
 
@@ -187,9 +187,9 @@ namespace SchemeCreator.Data.Models
             return ports;
         }
 
-        public bool ContainsInOutByCenter(Point center, Constants.ConnectionType type)
+        public bool ContainsInOutByCenter(Point center, ConnectionType type)
         {
-            if(type == Constants.ConnectionType.input)
+            if(type == ConnectionType.input)
                 return DrawGateInPorts().Exists(x => x.CenterPoint == center);
             else
                 return DrawGateOutPorts().Exists(x => x.CenterPoint == center);
@@ -198,8 +198,8 @@ namespace SchemeCreator.Data.Models
         public bool ContainsBodyByMargin(Thickness t) =>
             DrawBody().Margin == t;
 
-        public int GetIndexOfInOutByCenter(Point center, Constants.ConnectionType type) {
-            if (type == Constants.ConnectionType.input)
+        public int GetIndexOfInOutByCenter(Point center, ConnectionType type) {
+            if (type == ConnectionType.input)
                 return DrawGateInPorts().FindIndex(x => x.CenterPoint == center);
             else
                 return DrawGateOutPorts().FindIndex(x => x.CenterPoint == center);
@@ -207,7 +207,7 @@ namespace SchemeCreator.Data.Models
         
         public Button GetBodyByWirePart(Point p)
         {
-            if (type == Constants.GateEnum.IN || type == Constants.GateEnum.OUT)
+            if (type == GateEnum.IN || type == GateEnum.OUT)
                 if (p == center)
                     return DrawBody();
 
@@ -240,7 +240,7 @@ namespace SchemeCreator.Data.Models
 
         public bool WireConnects(Point point)
         {
-            if (Constants.external.Contains(type))
+            if (external.Contains(type))
                 return center == point;
             else
             {
