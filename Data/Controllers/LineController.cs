@@ -1,8 +1,9 @@
 ﻿using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Models;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Shapes;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Controllers
 {
     public class LineController
     {
