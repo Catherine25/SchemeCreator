@@ -28,23 +28,17 @@ namespace SchemeCreator.UI
             if (external.Contains(gate.type))
             {
                 if (gate.type == GateEnum.IN)
-                    body.Tapped += GateINBodyTapped;
+                    body.Tapped += (Gate g, Button button) => GateINTapped(gate, button);
                 else
-                    body.Tapped += GateOUTBodyTapped;
+                    body.Tapped += (Gate g, Button button) => GateOUTTapped(gate, button);
                 return;
             }
             else
-                body.Tapped += LogicGateBodyTapped;
+                body.Tapped += (Gate g, Button button) => LogicGateTappedEvent(gate, button); ;
 
-            gate.DrawGateInPorts().ForEach(p =>
+            gate.DrawPorts(ConnectionType.both).ForEach(p =>
             {
-                p.Tapped += GateInTapped;
-                p.AddToParent(grid);
-            });
-
-            gate.DrawGateOutPorts().ForEach(p =>
-            {
-                p.Tapped += GateOutTapped;
+                p.Tapped += (Port port) => PortTapped(port);
                 p.AddToParent(grid);
             });
         }
@@ -74,18 +68,13 @@ namespace SchemeCreator.UI
             {
                 var body = gate.DrawBody();
                 body.AddToParent(grid);
-                body.Tapped += LogicGateBodyTapped;
+                body.Tapped += (Gate g, Button button) => LogicGateTappedEvent(gate, button); ;
 
-                foreach (Port p in gate.DrawGateInPorts())
+                var items = gate.DrawPorts(ConnectionType.both);
+                foreach (var item in items)
                 {
-                    p.AddToParent(grid);
-                    p.Tapped += GateInTapped;
-                }
-
-                foreach (Port p in gate.DrawGateOutPorts())
-                {
-                    p.AddToParent(grid);
-                    p.Tapped += GateOutTapped;
+                    item.AddToParent(grid);
+                    item.Tapped += (Port port) => PortTapped(port);
                 }
             }
 
@@ -96,9 +85,9 @@ namespace SchemeCreator.UI
                 body.AddToParent(grid);
 
                 if (gate.type == GateEnum.IN)
-                    body.Tapped += GateINBodyTapped;
+                    body.Tapped += (Gate g, Button button) => GateINTapped(gate, button);
                 else
-                    body.Tapped += GateOUTBodyTapped;
+                    body.Tapped += (Gate g, Button button) => GateOUTTapped(gate, button);
             }
         }
 
@@ -150,26 +139,12 @@ namespace SchemeCreator.UI
             ShowLines(ref scheme.lineController);
         }
 
-        #region Button event handlers 
-
-        private void LogicGateBodyTapped(Gate gate, Button button) => LogicGateTappedEvent(button);
-
-        private void GateINBodyTapped(Gate gate, Button button) => GateINTapped(button);
-
-        private void GateOUTBodyTapped(Gate gate, Button button) => GateOUTTapped(button);
-        
-        #endregion
-
-        #region Ellipse event handlers
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
             DotTappedEvent(sender as Ellipse);
-        private void GateOutTapped(Port port) => PortTapped(port);
-        private void GateInTapped(Port port) => PortTapped(port);
-        #endregion
 
         #region Events
 
-        public event Action<Button> LogicGateTappedEvent,
+        public event Action<Gate, Button> LogicGateTappedEvent,
             GateINTapped, GateOUTTapped;
 
         public event Action<Ellipse> DotTappedEvent;
