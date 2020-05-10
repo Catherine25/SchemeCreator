@@ -58,8 +58,7 @@ namespace SchemeCreator.UI
             menuController.ChangeModeEvent += ChangeModeEvent;
 
             workspaceController.DotTappedEvent += DotTappedEventAsync;
-            workspaceController.LogicGateInTapped += LogicGateInTapped;
-            workspaceController.LogicGateOutTapped += LogicGateOutTapped;
+            workspaceController.PortTapped += PortTapped;
             workspaceController.LogicGateTappedEvent += LogicGateTappedEvent;
             workspaceController.GateINTapped += GateINTappedEvent;
             workspaceController.GateOUTTapped += GateOUTTappedEvent;
@@ -72,9 +71,16 @@ namespace SchemeCreator.UI
             workspaceController.RemoveLine(line);
         }
 
-        private void LogicGateOutTapped(Port p)
+        private void PortTapped(Port p)
         {
-            if (CurrentMode == ModeEnum.addLineMode)
+            if(p.Type == ConnectionType.input)
+            {
+                if (CurrentMode == ModeEnum.addLineMode)
+                TryCreate(p.CenterPoint, false);
+            }
+            else
+            {
+                if (CurrentMode == ModeEnum.addLineMode)
             {
                 Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionType.output);
 
@@ -82,12 +88,7 @@ namespace SchemeCreator.UI
 
                 TryCreate(p.CenterPoint, true, isActive);
             }
-        }
-
-        private void LogicGateInTapped(Port p)
-        {
-            if (CurrentMode == ModeEnum.addLineMode)
-                TryCreate(p.CenterPoint, false);
+            }
         }
 
         private async void DotTappedEventAsync(Ellipse e)
