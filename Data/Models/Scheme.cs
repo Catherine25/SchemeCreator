@@ -1,8 +1,8 @@
-﻿using SchemeCreator.Data.Model;
+﻿using SchemeCreator.Data.Controllers;
 using System.Collections.Generic;
 using static SchemeCreator.Data.ConstantsNamespace.Constants;
 
-namespace SchemeCreator.Data.Model
+namespace SchemeCreator.Data.Models
 {
     public class Scheme
     {
