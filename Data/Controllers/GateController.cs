@@ -2,11 +2,10 @@
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.ConstantsNamespace;
-using SchemeCreator.Data.Model;
+using SchemeCreator.Data.Models;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Controllers
 {
     public class GateController
     {
