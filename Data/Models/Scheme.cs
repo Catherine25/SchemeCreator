@@ -1,18 +1,19 @@
 ﻿using SchemeCreator.Data.Controllers;
+using SchemeCreator.UI;
 using System.Collections.Generic;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Models
 {
     public class Scheme
     {
-        public UI.FrameManager frameManager;
+        public FrameManager frameManager;
         public LineController lineController = new LineController();
         public GateController gateController = new GateController();
         public DotController dotController = new DotController();
 
         //constructors
-        public Scheme() => frameManager = new UI.FrameManager(this);
+        public Scheme() => frameManager = new FrameManager(this);
         public bool IsAllConnected()
         {
             Stack<Gate> gates = new Stack<Gate>(gateController.Gates);
