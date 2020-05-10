@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Models;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Services
 {
     static class WorkAlgorithm
     {
-        public static Constants.WorkAlgorithmResult Visualize(Scheme scheme)
+        public static WorkAlgorithmResult Visualize(Scheme scheme)
         {
             //Debug.WriteLine("\n" + "[Method] Ver5");
 
             if (scheme.gateController.GetFirstNotInitedGate() != null)
-                return Constants.WorkAlgorithmResult.exInsNotInited;
+                return WorkAlgorithmResult.exInsNotInited;
             else if (!scheme.IsAllConnected())
-                return Constants.WorkAlgorithmResult.gatesNotConnected;
+                return WorkAlgorithmResult.gatesNotConnected;
 
             Queue<Wire> wires = new Queue<Wire>(scheme.lineController.Wires);
 
@@ -25,7 +25,7 @@ namespace SchemeCreator.Data.Services
 
                 Gate startGate = scheme.gateController.GetGateByWireStart(wire.start);
 
-                if(startGate.type == Constants.GateEnum.IN)
+                if(startGate.type == GateEnum.IN)
                 {
                     //Debug.WriteLine("it's exIN");
 
@@ -54,7 +54,7 @@ namespace SchemeCreator.Data.Services
                         wires.Enqueue(wire);
 
                         if (connectionNotFound > wires.Count)
-                            return Constants.WorkAlgorithmResult.schemeIsntCorrect;
+                            return WorkAlgorithmResult.schemeIsntCorrect;
 
                         continue;
                     }
@@ -62,7 +62,7 @@ namespace SchemeCreator.Data.Services
 
                 Gate endGate = scheme.gateController.GetGateByWireEnd(wire.end);
 
-                if (endGate.type == Constants.GateEnum.OUT)
+                if (endGate.type == GateEnum.OUT)
                 {
                     //Debug.WriteLine("it's exOUT");
 
@@ -85,7 +85,7 @@ namespace SchemeCreator.Data.Services
                 }
             }
 
-            return Constants.WorkAlgorithmResult.correct;
+            return WorkAlgorithmResult.correct;
         }
     }
 }
