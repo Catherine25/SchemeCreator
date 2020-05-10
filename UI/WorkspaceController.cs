@@ -38,16 +38,12 @@ namespace SchemeCreator.UI
             gate.DrawGateInPorts().ForEach(e =>
             {
                 e.Tapped += GateInTapped;
-                e.PointerEntered += E_PointerEntered;
-                e.PointerExited += E_PointerExited;
                 grid.Children.Add(e);
             });
 
             gate.DrawGateOutPorts().ForEach(e =>
             {
                 e.Tapped += GateOutTapped;
-                e.PointerEntered += E_PointerEntered;
-                e.PointerExited += E_PointerExited;
                 grid.Children.Add(e);
             });
         }
@@ -83,16 +79,12 @@ namespace SchemeCreator.UI
                 {
                     grid.Children.Add(e);
                     e.Tapped += GateInTapped;
-                    e.PointerEntered += E_PointerEntered;
-                    e.PointerExited += E_PointerExited;
                 }
 
                 foreach (Ellipse e in gate.DrawGateOutPorts())
                 {
                     grid.Children.Add(e);
                     e.Tapped += GateOutTapped;
-                    e.PointerEntered += E_PointerEntered;
-                    e.PointerExited += E_PointerExited;
                 }
             }
 
@@ -109,12 +101,6 @@ namespace SchemeCreator.UI
                 grid.Children.Add(body);
             }
         }
-
-        private void E_PointerExited(object sender, PointerRoutedEventArgs e) =>
-            (sender as Ellipse).DecreaseSize();
-
-        private void E_PointerEntered(object sender, PointerRoutedEventArgs e) =>
-            (sender as Ellipse).IncreaseSize();
 
         public void ShowLines(ref Data.LineController lineController)
         {
