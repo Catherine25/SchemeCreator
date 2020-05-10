@@ -7,7 +7,7 @@ namespace SchemeCreator
 {
     public sealed partial class MainPage : Page
     {
-        private Data.Scheme scheme = new Data.Scheme();
+        private Scheme scheme = new Scheme();
 
         public MainPage()
         {

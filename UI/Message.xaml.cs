@@ -29,7 +29,7 @@ namespace SchemeCreator.UI
         {
             InitializeComponent();
 
-            Data.Gate gate = new Data.Gate(type, 2, 1, new Point(0.0, 0.0));
+            Gate gate = new Gate(type, 2, 1, new Point(0.0, 0.0));
 
             if (type == Constants.GateEnum.IN) {
                 textBlock.Text =

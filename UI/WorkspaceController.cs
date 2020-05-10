@@ -19,7 +19,7 @@ namespace SchemeCreator.UI
         }
 
         /*      methods      */
-        public void AddGateToGrid(Data.Gate gate)
+        public void AddGateToGrid(Gate gate)
         {
             Button body = gate.DrawBody();
             grid.Children.Add(body);
