@@ -58,15 +58,5 @@ namespace SchemeCreator.Data.Extensions
             ellipse.HorizontalAlignment = HorizontalAlignment.Left;
             ellipse.VerticalAlignment = VerticalAlignment.Top;
         }
-
-        public static void SetFillByValue(this Ellipse ellipse, bool? value)
-        {
-            if (value == true)
-                ellipse.Fill = ConstantsNamespace.Constants.brushes[ConstantsNamespace.Constants.AccentEnum.light1];
-            else if (value == false)
-                ellipse.Fill = ConstantsNamespace.Constants.brushes[ConstantsNamespace.Constants.AccentEnum.dark1];
-            else
-                ellipse.Fill = ConstantsNamespace.Constants.brushes[ConstantsNamespace.Constants.AccentEnum.accent2];
-        }
     }
 }
