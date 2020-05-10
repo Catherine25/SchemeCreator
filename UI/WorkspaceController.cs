@@ -35,16 +35,16 @@ namespace SchemeCreator.UI
             else
                 body.Tapped += LogicGateBodyTapped;
 
-            gate.DrawGateInPorts().ForEach(e =>
+            gate.DrawGateInPorts().ForEach(p =>
             {
-                e.Tapped += GateInTapped;
                 grid.Children.Add(e);
+                p.Tapped += GateInTapped;
             });
 
-            gate.DrawGateOutPorts().ForEach(e =>
+            gate.DrawGateOutPorts().ForEach(p =>
             {
-                e.Tapped += GateOutTapped;
                 grid.Children.Add(e);
+                p.Tapped += GateOutTapped;
             });
         }
         public void RemoveLine(Line line) => grid.Children.Remove(line);
@@ -75,16 +75,16 @@ namespace SchemeCreator.UI
                 rect.Tapped += LogicGateBodyTapped;
                 grid.Children.Add(rect);
 
-                foreach (Ellipse e in gate.DrawGateInPorts())
+                foreach (Port p in gate.DrawGateInPorts())
                 {
                     grid.Children.Add(e);
-                    e.Tapped += GateInTapped;
+                    p.Tapped += GateInTapped;
                 }
 
-                foreach (Ellipse e in gate.DrawGateOutPorts())
+                foreach (Port p in gate.DrawGateOutPorts())
                 {
                     grid.Children.Add(e);
-                    e.Tapped += GateOutTapped;
+                    p.Tapped += GateOutTapped;
                 }
             }
 
@@ -162,11 +162,8 @@ namespace SchemeCreator.UI
         #region Ellipse event handlers
         public void DotTapped(object sender, TappedRoutedEventArgs e) =>
             DotTappedEvent(sender as Ellipse);
-        private void GateOutTapped(object sender, TappedRoutedEventArgs e) =>
-            LogicGateOutTapped(sender as Ellipse);
-        private void GateInTapped(object sender, TappedRoutedEventArgs e) =>
-            LogicGateInTapped(sender as Ellipse);
-        /*   -----   Ellipse event handlers   -----   */
+        private void GateOutTapped(Port port) => LogicGateOutTapped(port);
+        private void GateInTapped(Port port) => LogicGateInTapped(port);
         #endregion
 
         #region Events
@@ -174,8 +171,8 @@ namespace SchemeCreator.UI
         public event Action<Button> LogicGateTappedEvent,
             GateINTapped, GateOUTTapped;
 
-        public event Action<Ellipse> DotTappedEvent, LogicGateInTapped,
-            LogicGateOutTapped;
+        public event Action<Ellipse> DotTappedEvent;
+        public event Action<Port> LogicGateInTapped, LogicGateOutTapped;
 
         public event Action<Line> LineTappedEvent;
 
