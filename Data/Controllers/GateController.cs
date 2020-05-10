@@ -2,7 +2,6 @@
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.Data.Controllers
