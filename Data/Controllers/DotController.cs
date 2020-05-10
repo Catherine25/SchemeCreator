@@ -4,7 +4,7 @@ using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using Windows.Foundation;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Controllers
 {
     public class DotController
     {
