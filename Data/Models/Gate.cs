@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using static SchemeCreator.Data.Constants;
 
@@ -112,34 +111,7 @@ namespace SchemeCreator.Data.Models
             }
         }
 
-        public Button DrawBody()
-        {
-            Button button = new Button()
-            {
-                FontSize = 10,
-                Content = type.ToString()
-            };
-
-            button.SetStandartAlignment();
-
-            if (Constants.external.Contains(type))
-            {
-                button.SetSizeAndCenter(Constants.externalGateSize, center);
-
-                button.SetFillByValue(values[0]);
-            }
-            else
-            {
-                button.SetSizeAndCenter(Constants.logicGateSize, center);
-                button.Background = Constants.brushes[Constants.AccentEnum.dark1];
-                button.Foreground = Constants.brushes[Constants.AccentEnum.light1];
-
-                if (!Constants.singleOutput.Contains(type))
-                    button.Content += "\n" + inputs.ToString() + " in " + outputs.ToString();
-            }
-
-            return button;
-        }
+        public GateBody DrawBody() => new GateBody(this);
 
         public List<Port> DrawGateInPorts()
         {
@@ -196,7 +168,7 @@ namespace SchemeCreator.Data.Models
         }
 
         public bool ContainsBodyByMargin(Thickness t) =>
-            DrawBody().Margin == t;
+            DrawBody().ContainsBodyByMargin(t);
 
         public int GetIndexOfInOutByCenter(Point center, ConnectionType type) {
             if (type == ConnectionType.input)
@@ -205,7 +177,7 @@ namespace SchemeCreator.Data.Models
                 return DrawGateOutPorts().FindIndex(x => x.CenterPoint == center);
         }
         
-        public Button GetBodyByWirePart(Point p)
+        public GateBody GetBodyByWirePart(Point p)
         {
             if (type == GateEnum.IN || type == GateEnum.OUT)
                 if (p == center)
@@ -269,10 +241,6 @@ namespace SchemeCreator.Data.Models
             return -1;
         }
 
-        public void AddToParent(Grid parent)
-        {
-            var body = DrawBody();
-            parent.Children.Add(body);
-        }
+        public void AddToParent(Grid parent) => DrawBody().AddToParent(parent);
     }
 }
