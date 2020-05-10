@@ -22,7 +22,7 @@ namespace SchemeCreator.UI
 
         private Wire newWire;
 
-        public Grid grid { get; }
+        public Grid Grid { get; }
 
 
         public FrameManager(Scheme _scheme)
@@ -34,13 +34,13 @@ namespace SchemeCreator.UI
             workspaceController = new WorkspaceController();
             menuController = new MenuController();
 
-            grid = new Grid();
-            grid.SetStandartAlighnment();
+            Grid = new Grid();
+            Grid.SetStandartAlighnment();
 
-            menuController.SetParentGrid(grid);
-            workspaceController.SetParentGrid(grid);
+            menuController.SetParentGrid(Grid);
+            workspaceController.SetParentGrid(Grid);
 
-            SwitchToFrame(FrameEnum.workspace, grid);
+            SwitchToFrame(FrameEnum.workspace, Grid);
 
             EventSubscribe();
         }
@@ -287,15 +287,15 @@ namespace SchemeCreator.UI
 
         public void SizeChanged(Rect rect)
         {
-            grid.SetRect(rect);
+            Grid.SetRect(rect);
 
-            Point menuPoint = grid.GetLeftTop();
+            Point menuPoint = Grid.GetLeftTop();
             Size menuSize = new Size(rect.Width, rect.Height / 20);
             Rect menuRect = new Rect(menuPoint, menuSize);
 
             menuController.Update(menuRect);
 
-            Point workSpaceRectPoint = grid.GetLeftTop();
+            Point workSpaceRectPoint = Grid.GetLeftTop();
             workSpaceRectPoint.Y += menuSize.Height;
             Size workSpaceSize = new Size(rect.Width, rect.Height);
             workSpaceSize.Height -= menuSize.Height;

@@ -12,7 +12,7 @@ namespace SchemeCreator
         {
             InitializeComponent();
 
-            Content = scheme.frameManager.grid;
+            Content = scheme.frameManager.Grid;
             SizeChanged += MainPageSizeChanged;
         }
 
