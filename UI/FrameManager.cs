@@ -106,27 +106,17 @@ namespace SchemeCreator.UI
             }
         }
 
-        private async void LogicGateTappedEvent(Button b)
-        {
-            Gate gate = scheme.gateController.GetGateByBody(b);
-
+        private async void LogicGateTappedEvent(Gate gate, Button b) =>
             await new Message(gate.type).ShowAsync();
-        }
 
-        private async void GateINTappedEvent(Button b)
+        private async void GateINTappedEvent(Gate gate, Button b)
         {
             ModeEnum curMode = CurrentMode;
 
             if (curMode == ModeEnum.addLineMode)
-            {
-                Point point = b.GetCenter();
-
-                TryCreate(point, true);
-            }
+                TryCreate(gate.center, true);
             else if (curMode == ModeEnum.changeValueMode)
             {
-                Gate gate = scheme.gateController.GetGateByBody(b);
-
                 if (gate.values[0] == null)
                     gate.values[0] = true;
 
@@ -138,14 +128,10 @@ namespace SchemeCreator.UI
                 await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
         }
 
-        private async void GateOUTTappedEvent(Button b)
+        private async void GateOUTTappedEvent(Gate gate, Button b)
         {
             if (CurrentMode == ModeEnum.addLineMode)
-            {
-                Point point = b.GetCenter();
-
-                TryCreate(point, false);
-            }
+                TryCreate(gate.center, false);
             else
                 await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
         }
