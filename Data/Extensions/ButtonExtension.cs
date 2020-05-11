@@ -6,12 +6,6 @@ namespace SchemeCreator.Data.Extensions
 {
     public static class ButtonExtension
     {
-        public static Point GetCenter(this Button button) => new Point
-        {
-            X = button.Margin.Left + button.Width / 2,
-            Y = button.Margin.Top + button.Height / 2
-        };
-
         public static void SetSizeAndCenter(this Button button, Size size, Point center)
         {
             button.SetSize(size);
