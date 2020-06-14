@@ -7,8 +7,8 @@
     <ProjectGuid>{CE51FDA1-D895-4F53-B55E-6A29C9EBD49C}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Course_Project</RootNamespace>
-    <AssemblyName>Course_Project</AssemblyName>
+    <RootNamespace>SchemeCreator</RootNamespace>
+    <AssemblyName>SchemeCreator</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
