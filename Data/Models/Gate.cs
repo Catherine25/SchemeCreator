@@ -65,7 +65,7 @@ namespace SchemeCreator.Data.Models
         }
 
         public void Work() { ProcessData(this); }
-        private Action<Gate> ProcessData;
+        private readonly Action<Gate> ProcessData;
 
         public GateBody DrawBody() => new GateBody(this);
 
