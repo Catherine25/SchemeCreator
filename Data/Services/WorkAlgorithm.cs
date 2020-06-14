@@ -25,13 +25,13 @@ namespace SchemeCreator.Data.Services
 
                 Gate startGate = scheme.gateController.GetGateByWireStart(wire.Start);
 
-                if(startGate.type == GateEnum.IN)
+                if(startGate.Type == GateEnum.IN)
                 {
                     //Debug.WriteLine("it's exIN");
 
                     connectionNotFound = 0;
 
-                    wire.isActive = startGate.values[0];
+                    wire.isActive = startGate.Values[0];
                 }
                 else
                 {
@@ -43,7 +43,7 @@ namespace SchemeCreator.Data.Services
 
                         connectionNotFound = 0;
 
-                        wire.isActive = startGate.values[0];
+                        wire.isActive = startGate.Values[0];
                     }
                     else
                     {
@@ -62,13 +62,13 @@ namespace SchemeCreator.Data.Services
 
                 Gate endGate = scheme.gateController.GetGateByWireEnd(wire.End);
 
-                if (endGate.type == GateEnum.OUT)
+                if (endGate.Type == GateEnum.OUT)
                 {
                     //Debug.WriteLine("it's exOUT");
 
                     connectionNotFound = 0;
 
-                    endGate.values[0] = wire.isActive;
+                    endGate.Values[0] = wire.isActive;
                 }
                 else
                 {
@@ -78,9 +78,9 @@ namespace SchemeCreator.Data.Services
 
                     connectionNotFound = 0;
 
-                    endGate.values[box] = wire.isActive;
+                    endGate.Values[box] = wire.isActive;
 
-                    if (box == endGate.inputs - 1)
+                    if (box == endGate.Inputs - 1)
                         endGate.Work();
                 }
             }

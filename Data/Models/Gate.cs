@@ -13,43 +13,52 @@ namespace SchemeCreator.Data.Models
     [DataContract]
     public class Gate : IGridChild
     {
-        /*      data        */
-        [DataMember] public GateEnum type;
-        [DataMember] public int inputs, outputs;
-        [DataMember] public Point center;
-        [DataMember] public List<bool?> values;
+        [DataMember]
+        public GateEnum Type;
+
+        [DataMember]
+        public int Inputs;
+
+        [DataMember]
+        public int Outputs;
+
+        [DataMember]
+        public Point Center;
+
+        [DataMember]
+        public List<bool?> Values;
 
         public Gate(GateEnum type, int inputs, int outputs, Point point)
         {
-            this.type = type;
-            this.inputs = inputs;
-            this.outputs = outputs;
-            center = point;
+            Type = type;
+            Inputs = inputs;
+            Outputs = outputs;
+            Center = point;
 
-            values = new List<bool?>(inputs);
+            Values = new List<bool?>(inputs);
 
             for (int i = 0; i < inputs; i++)
-                values.Add(null);
+                Values.Add(null);
 
             ProcessData = Services.GateWorkPatterns.ActionByType[type];
         }
 
         public Point GetLeftTop()
         {
-            if(external.Contains(type))
+            if(external.Contains(Type))
             {
                 return new Point
                 {
-                    X = center.X - externalGateSize.Width / 2,
-                    Y = center.Y - externalGateSize.Height / 2
+                    X = Center.X - externalGateSize.Width / 2,
+                    Y = Center.Y - externalGateSize.Height / 2
                 };
             }
             else
             {
                 return new Point
                 {
-                    X = center.X - logicGateSize.Width / 2,
-                    Y = center.Y - logicGateSize.Height / 2
+                    X = Center.X - logicGateSize.Width / 2,
+                    Y = Center.Y - logicGateSize.Height / 2
                 };
             }
             
@@ -71,7 +80,7 @@ namespace SchemeCreator.Data.Models
             else
             {
                 List<Port> ports = new List<Port>();
-                int length = type == ConnectionType.input ? inputs : outputs;
+                int length = type == ConnectionType.input ? Inputs : Outputs;
 
                 for (int i = 0; i < length; i++)
                 {
@@ -86,7 +95,7 @@ namespace SchemeCreator.Data.Models
 
                     port.Size = gatePortSize;
 
-                    port.BooleanValue = values[i];
+                    port.BooleanValue = Values[i];
 
                     ports.Add(port);
                 }
@@ -106,8 +115,8 @@ namespace SchemeCreator.Data.Models
 
         public GateBody GetBodyByWirePart(Point p)
         {
-            if (type == GateEnum.IN || type == GateEnum.OUT)
-                if (p == center)
+            if (Type == GateEnum.IN || Type == GateEnum.OUT)
+                if (p == Center)
                     return DrawBody();
 
             return null;
@@ -121,8 +130,8 @@ namespace SchemeCreator.Data.Models
 
         public bool WireConnects(Point point)
         {
-            if (external.Contains(type))
-                return center == point;
+            if (external.Contains(Type))
+                return Center == point;
             else
             {
                 var items = DrawPorts(ConnectionType.both);
@@ -132,13 +141,14 @@ namespace SchemeCreator.Data.Models
 
         public int FirstFreeValueBoxIndex()
         {
-            for (int i = 0; i < inputs; i++)
-                if (values[i] == null)
+            for (int i = 0; i < Inputs; i++)
+                if (Values[i] == null)
                     return i;
 
             return -1;
         }
 
-        public void AddToParent(Grid parent) => DrawBody().AddToParent(parent);
+        public void AddToParent(Grid parent) =>
+            DrawBody().AddToParent(parent);
     }
 }

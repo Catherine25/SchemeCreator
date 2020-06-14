@@ -84,7 +84,7 @@ namespace SchemeCreator.Data.Services
             for (int i = 0; i < gateCount; i++)
             {
                 //get type
-                var type = gc.Gates[i].type;
+                var type = gc.Gates[i].Type;
 
                 //if type is IN
                 if (type == Constants.GateEnum.IN)
@@ -187,7 +187,7 @@ namespace SchemeCreator.Data.Services
                         //that have been traced
 
                         //get inputs count
-                        int inputsCount = currentGate.inputs;
+                        int inputsCount = currentGate.Inputs;
 
                         for (int w2 = 0; w2 < wireCount; w2++)
                         {

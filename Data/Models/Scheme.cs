@@ -25,7 +25,7 @@ namespace SchemeCreator.Data.Models
                 Gate gate = gates.Pop();
                 found = false;
 
-                if (gate.type == GateEnum.IN)
+                if (gate.Type == GateEnum.IN)
                 {
                     for (int i = 0; i < wireCount; i++)
                     {
@@ -36,7 +36,7 @@ namespace SchemeCreator.Data.Models
                         }
                     }
                 }
-                else if (gate.type == GateEnum.OUT)
+                else if (gate.Type == GateEnum.OUT)
                 {
                     for (int i = 0; i < wireCount; i++)
                     {
@@ -49,7 +49,7 @@ namespace SchemeCreator.Data.Models
                 }
                 else
                 {
-                    int connections = gate.inputs + gate.outputs;
+                    int connections = gate.Inputs + gate.Outputs;
                     for (int i = 0; i < wireCount; i++)
                     {
                         if (gate.WireConnects(lineController.Wires[i].Start))

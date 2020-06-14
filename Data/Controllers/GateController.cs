@@ -50,16 +50,16 @@ namespace SchemeCreator.Data.Controllers
         }
 
         public IEnumerable<Gate> GetLogicGates() =>
-            gates.Where(gate => (!Constants.external.Contains(gate.type)));
+            gates.Where(gate => (!Constants.external.Contains(gate.Type)));
 
         public IEnumerable<Gate> GetExternalGates() =>
-            gates.Where(gate => Constants.external.Contains(gate.type));
+            gates.Where(gate => Constants.external.Contains(gate.Type));
 
         public IEnumerable<Gate> GetExternalInputs() =>
-            gates.Where(x => x.type == Constants.GateEnum.IN);
+            gates.Where(x => x.Type == Constants.GateEnum.IN);
 
         public Gate GetFirstNotInitedGate() =>
-            GetExternalInputs().FirstOrDefault(x => x.values[0] == null);
+            GetExternalInputs().FirstOrDefault(x => x.Values[0] == null);
 
         public Gate GetGateByWireStart(Point point) =>
             gates.FirstOrDefault(
@@ -76,12 +76,12 @@ namespace SchemeCreator.Data.Controllers
             int gatesCount = gates.Count;
 
             for (int i = 0; i < gatesCount; i++)
-                if (gates[i].type != Constants.GateEnum.IN)
+                if (gates[i].Type != Constants.GateEnum.IN)
                 {
-                    int gateValuesCount = gates[i].inputs;
+                    int gateValuesCount = gates[i].Inputs;
 
                     for (int j = 0; j < gateValuesCount; j++)
-                        gates[i].values[j] = null;
+                        gates[i].Values[j] = null;
                 }
         }
     }

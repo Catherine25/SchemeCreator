@@ -26,14 +26,14 @@ namespace SchemeCreator.Data.Models
                 VerticalContentAlignment = VerticalAlignment.Center
             };
 
-            if (external.Contains(gate.type))
-                button.SetSizeAndCenter(externalGateSize, gate.center);
+            if (external.Contains(gate.Type))
+                button.SetSizeAndCenter(externalGateSize, gate.Center);
             else
-                button.SetSizeAndCenter(logicGateSize, gate.center);
+                button.SetSizeAndCenter(logicGateSize, gate.Center);
 
-            button.Content = TextController.BuildButtonBodyText(gate.type, gate.inputs, gate.outputs);
+            button.Content = TextController.BuildButtonBodyText(gate.Type, gate.Inputs, gate.Outputs);
 
-            Colorer.SetFillByValue(button, gate.values[0]);
+            Colorer.SetFillByValue(button, gate.Values[0]);
 
             button.Tapped += (object sender, TappedRoutedEventArgs e) => Tapped(gate, button);
         }

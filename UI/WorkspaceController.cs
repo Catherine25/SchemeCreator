@@ -25,9 +25,9 @@ namespace SchemeCreator.UI
             var body = gate.DrawBody();
             body.AddToParent(grid);
 
-            if (external.Contains(gate.type))
+            if (external.Contains(gate.Type))
             {
-                if (gate.type == GateEnum.IN)
+                if (gate.Type == GateEnum.IN)
                     body.Tapped += (Gate g, Button button) => GateINTapped(gate, button);
                 else
                     body.Tapped += (Gate g, Button button) => GateOUTTapped(gate, button);
@@ -84,7 +84,7 @@ namespace SchemeCreator.UI
                 var body = gate.DrawBody();
                 body.AddToParent(grid);
 
-                if (gate.type == GateEnum.IN)
+                if (gate.Type == GateEnum.IN)
                     body.Tapped += (Gate g, Button button) => GateINTapped(gate, button);
                 else
                     body.Tapped += (Gate g, Button button) => GateOUTTapped(gate, button);

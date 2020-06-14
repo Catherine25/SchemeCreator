@@ -84,7 +84,7 @@ namespace SchemeCreator.UI
                 {
                     Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionType.output);
 
-                    bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionType.output)];
+                    bool? isActive = gate.Values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionType.output)];
 
                     TryCreate(p.CenterPoint, true, isActive);
                 }
@@ -107,33 +107,33 @@ namespace SchemeCreator.UI
         }
 
         private async void LogicGateTappedEvent(Gate gate, Button b) =>
-            await new Message(gate.type).ShowAsync();
+            await new Message(gate.Type).ShowAsync();
 
         private async void GateINTappedEvent(Gate gate, Button b)
         {
             ModeEnum curMode = CurrentMode;
 
             if (curMode == ModeEnum.addLineMode)
-                TryCreate(gate.center, true);
+                TryCreate(gate.Center, true);
             else if (curMode == ModeEnum.changeValueMode)
             {
-                if (gate.values[0] == null)
-                    gate.values[0] = true;
+                if (gate.Values[0] == null)
+                    gate.Values[0] = true;
 
-                gate.values[0] = !gate.values[0];
+                gate.Values[0] = !gate.Values[0];
 
-                Colorer.SetFillByValue(b, gate.values[0]);
+                Colorer.SetFillByValue(b, gate.Values[0]);
             }
             else
-                await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
+                await new Message(scheme.gateController.GetGateByBody(b).Type).ShowAsync();
         }
 
         private async void GateOUTTappedEvent(Gate gate, Button b)
         {
             if (CurrentMode == ModeEnum.addLineMode)
-                TryCreate(gate.center, false);
+                TryCreate(gate.Center, false);
             else
-                await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
+                await new Message(scheme.gateController.GetGateByBody(b).Type).ShowAsync();
         }
 
         private bool WireCanBeCreated() => newWire != null

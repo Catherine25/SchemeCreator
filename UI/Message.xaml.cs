@@ -46,35 +46,35 @@ namespace SchemeCreator.UI
             }
             else if(type == GateEnum.Buffer || type == GateEnum.NOT)
             {
-                gate.values[0] = false;
+                gate.Values[0] = false;
                 gate.Work();
-                textBlock.Text = "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text = "False" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = true;
+                gate.Values[0] = true;
                 gate.Work();
-                textBlock.Text = "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text = "False" + "\t|\t" + gate.Values[0] + "\n";
             }
             else
             {
-                gate.values[0] = false;
-                gate.values[1] = false;
+                gate.Values[0] = false;
+                gate.Values[1] = false;
                 gate.Work();
-                textBlock.Text = "False" + "\t" + "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text = "False" + "\t" + "False" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = false;
-                gate.values[1] = true;
+                gate.Values[0] = false;
+                gate.Values[1] = true;
                 gate.Work();
-                textBlock.Text += "False" + "\t" + "True" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text += "False" + "\t" + "True" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = true;
-                gate.values[1] = false;
+                gate.Values[0] = true;
+                gate.Values[1] = false;
                 gate.Work();
-                textBlock.Text += "True" + "\t" + "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text += "True" + "\t" + "False" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = true;
-                gate.values[1] = true;
+                gate.Values[0] = true;
+                gate.Values[1] = true;
                 gate.Work();
-                textBlock.Text += "True" + "\t" + "True" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text += "True" + "\t" + "True" + "\t|\t" + gate.Values[0] + "\n";
             }
 
             PrimaryButtonText = "Close";
