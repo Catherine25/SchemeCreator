@@ -29,7 +29,7 @@ namespace SchemeCreator.Data.Models
                 {
                     for (int i = 0; i < wireCount; i++)
                     {
-                        if (gate.WireConnects(lineController.Wires[i].start))
+                        if (gate.WireConnects(lineController.Wires[i].Start))
                         {
                             found = true;
                             break;
@@ -40,7 +40,7 @@ namespace SchemeCreator.Data.Models
                 {
                     for (int i = 0; i < wireCount; i++)
                     {
-                        if (gate.WireConnects(lineController.Wires[i].end))
+                        if (gate.WireConnects(lineController.Wires[i].End))
                         {
                             found = true;
                             break;
@@ -52,9 +52,9 @@ namespace SchemeCreator.Data.Models
                     int connections = gate.inputs + gate.outputs;
                     for (int i = 0; i < wireCount; i++)
                     {
-                        if (gate.WireConnects(lineController.Wires[i].start))
+                        if (gate.WireConnects(lineController.Wires[i].Start))
                             connections--;
-                        else if (gate.WireConnects(lineController.Wires[i].end))
+                        else if (gate.WireConnects(lineController.Wires[i].End))
                             connections--;
                     }
                     if (connections == 0)

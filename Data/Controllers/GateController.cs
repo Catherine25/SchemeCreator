@@ -30,11 +30,11 @@ namespace SchemeCreator.Data.Controllers
         public Gate GetGateByWire(Wire w)
         {
             foreach (Gate gate in Gates)
-                if (gate.GetBodyByWirePart(w.start) != null
-                    || gate.GetBodyByWirePart(w.end) != null)
+                if (gate.GetBodyByWirePart(w.Start) != null
+                    || gate.GetBodyByWirePart(w.End) != null)
                     return gate;
-                else if ((gate.GetInOutByWirePart(w.start) != null) ||
-                    gate.GetInOutByWirePart(w.end) != null)
+                else if ((gate.GetInOutByWirePart(w.Start) != null) ||
+                    gate.GetInOutByWirePart(w.End) != null)
                     return gate;
 
             return null;

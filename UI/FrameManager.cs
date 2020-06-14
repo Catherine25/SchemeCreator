@@ -81,13 +81,13 @@ namespace SchemeCreator.UI
             else
             {
                 if (CurrentMode == ModeEnum.addLineMode)
-            {
-                Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionType.output);
+                {
+                    Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionType.output);
 
-                bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionType.output)];
+                    bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionType.output)];
 
-                TryCreate(p.CenterPoint, true, isActive);
-            }
+                    TryCreate(p.CenterPoint, true, isActive);
+                }
             }
         }
 
@@ -137,10 +137,10 @@ namespace SchemeCreator.UI
         }
 
         private bool WireCanBeCreated() => newWire != null
-            && newWire.start.X != 0
-            && newWire.start.Y != 0
-            && newWire.end.X != 0
-            && newWire.end.Y != 0;
+            && newWire.Start.X != 0
+            && newWire.Start.Y != 0
+            && newWire.End.X != 0
+            && newWire.End.Y != 0;
         
         private void TryCreate(Point p, bool isStart, bool? value = null)
         {
@@ -149,11 +149,11 @@ namespace SchemeCreator.UI
 
             if (isStart)
             {
-                newWire.start = p;
+                newWire.Start = p;
                 newWire.isActive = value;
             }
             else
-                newWire.end = p;
+                newWire.End = p;
 
             if (WireCanBeCreated())
             {

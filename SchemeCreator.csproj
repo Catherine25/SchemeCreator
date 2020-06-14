@@ -126,6 +126,7 @@
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
     <Compile Include="Data\Interfaces\IGridChild.cs" />
+    <Compile Include="Data\Interfaces\IIdHolder.cs" />
     <Compile Include="Data\Models\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Controllers\LineController.cs" />

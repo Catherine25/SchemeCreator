@@ -23,7 +23,7 @@ namespace SchemeCreator.Data.Services
                 Wire wire = wires.Dequeue();
                 //Debug.WriteLine("Dequed a wire");
 
-                Gate startGate = scheme.gateController.GetGateByWireStart(wire.start);
+                Gate startGate = scheme.gateController.GetGateByWireStart(wire.Start);
 
                 if(startGate.type == GateEnum.IN)
                 {
@@ -60,7 +60,7 @@ namespace SchemeCreator.Data.Services
                     }
                 }
 
-                Gate endGate = scheme.gateController.GetGateByWireEnd(wire.end);
+                Gate endGate = scheme.gateController.GetGateByWireEnd(wire.End);
 
                 if (endGate.type == GateEnum.OUT)
                 {

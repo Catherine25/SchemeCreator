@@ -1,3 +1,4 @@
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using System.Runtime.Serialization;
 using Windows.Foundation;
@@ -9,22 +10,25 @@ using static SchemeCreator.Data.Constants;
 namespace SchemeCreator.Data.Models
 {
     [DataContract]
-    public class Wire
+    public class Wire : IIdHolder
     {
         [DataMember]
-        public Point start, end;
+        public Point Start;
+
+        [DataMember]
+        public Point End;
+
         [DataMember]
         public bool? isActive;
 
         public Line CreateLine()
         {
-
             Line l = new Line
             {
-                X1 = start.X,
-                X2 = end.X,
-                Y1 = start.Y,
-                Y2 = end.Y,
+                X1 = Start.X,
+                X2 = End.X,
+                Y1 = Start.Y,
+                Y2 = End.Y,
                 StrokeThickness = wireThickness,
                 StrokeEndLineCap = PenLineCap.Round,
                 StrokeStartLineCap = PenLineCap.Round,
@@ -39,8 +43,8 @@ namespace SchemeCreator.Data.Models
 
         public Point Center => new Point
         {
-            X = (start.X + end.X) / 2,
-            Y = (start.Y + end.Y) / 2
+            X = (Start.X + End.X) / 2,
+            Y = (Start.Y + End.Y) / 2
         };
 
         public int Id => GetHashCode();

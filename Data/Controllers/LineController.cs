@@ -21,6 +21,6 @@ namespace SchemeCreator.Data.Controllers
 
         //methods
         public Wire FindWireByLine(Line line) =>
-            wires.Find(x => x.start == line.GetStartPoint() && x.end == line.GetEndPoint());
+            wires.Find(x => x.Start == line.GetStartPoint() && x.End == line.GetEndPoint());
     }
 }
