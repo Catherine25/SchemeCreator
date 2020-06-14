@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Interfaces;
 using static SchemeCreator.Data.Constants;
 using System.Linq;
+using System;
 
 namespace SchemeCreator.Data.Models
 {
@@ -29,6 +30,8 @@ namespace SchemeCreator.Data.Models
 
             for (int i = 0; i < inputs; i++)
                 values.Add(null);
+
+            ProcessData = Services.GateWorkPatterns.ActionByType[type];
         }
 
         public Point GetLeftTop()
@@ -52,65 +55,8 @@ namespace SchemeCreator.Data.Models
             
         }
 
-        public void Work()
-        {
-            int length = values.Count;
-
-            switch (type)
-            {
-                case GateEnum.NOT:
-                    values[0] = !values[0];
-                    break;
-
-                case GateEnum.AND:
-                    for (int i = 0; i < length; i++)
-                        values[0] &= values[i];
-                    break;
-
-                case GateEnum.NAND:
-                    {
-                        for (int i = 0; i < length; i++)
-                            values[0] &= values[i];
-
-                        values[0] = !values[0];
-                    }
-                    break;
-
-                case GateEnum.OR:
-                    {
-                        for (int i = 0; i < length; i++)
-                            values[0] |= values[i];
-                    }
-                    break;
-
-                case GateEnum.NOR:
-                    {
-                        for (int i = 0; i < length; i++)
-                            values[0] |= values[i];
-
-                        values[0] = !values[0];
-                    }
-                    break;
-
-                case GateEnum.XOR:
-                    {
-                        for (int i = 0; i < length; i++)
-                            values[0] ^= values[i];
-                    }
-                    break;
-
-                case GateEnum.XNOR:
-                    {
-                        for (int i = 0; i < length; i++)
-                            values[0] ^= values[i];
-
-                        values[0] = !values[0];
-                    }
-                    break;
-
-                default: return;
-            }
-        }
+        public void Work() { ProcessData(this); }
+        private Action<Gate> ProcessData;
 
         public GateBody DrawBody() => new GateBody(this);
 

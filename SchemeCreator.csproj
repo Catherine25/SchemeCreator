@@ -134,6 +134,7 @@
     <Compile Include="Data\Models\Port.cs" />
     <Compile Include="Data\Interfaces\IResizable.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
+    <Compile Include="Data\Services\GateWorkPatterns.cs" />
     <Compile Include="Data\Services\Serializer.cs" />
     <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
