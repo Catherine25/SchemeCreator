@@ -42,5 +42,7 @@ namespace SchemeCreator.Data.Models
             X = (start.X + end.X) / 2,
             Y = (start.Y + end.Y) / 2
         };
+
+        public int Id => GetHashCode();
     }
 }
