@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.Extensions;
 using static SchemeCreator.Data.Constants;
 using SchemeCreator.Data.Services;
 using System.Linq;
+using System.Diagnostics;
 
 namespace SchemeCreator.UI
 {
     class MenuController
     {
         Dictionary<BtId, Button> buttons = new Dictionary<BtId, Button>();
-        Grid grid = new Grid();
+        StackPanel grid = new StackPanel();
 
         #region Events
 
@@ -29,46 +29,61 @@ namespace SchemeCreator.UI
 
         public MenuController()
         {
-            grid.SetStandartAlighnment();
-            //The cast to (BtId[]) is not strictly necessary, but does make the code faster
-            foreach (BtId id in (BtId[])Enum.GetValues(typeof(BtId)))
-            {
-                Button button = new Button { Content = btText[id] };
+            grid.Orientation = Orientation.Horizontal;
+            grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.VerticalAlignment = VerticalAlignment.Top;
+            Colorer.ColorGrid(grid);
 
-                Colorer.ColorMenuButton(button);
+            int counter = 0;
 
-                buttons.Add(id, button);
-            }
-
-            EventSubscribe();
-        }
-        
-        private void EventSubscribe()
-        {
+            CreateButton(BtId.newSchemeBt, ref counter);
             buttons[BtId.newSchemeBt].Click += (object o, RoutedEventArgs e) => NewSchemeBtClickEvent();
+
+            CreateButton(BtId.loadSchemeBt, ref counter);
             buttons[BtId.loadSchemeBt].Click += (object o, RoutedEventArgs e) => LoadSchemeBtClickEvent();
+
+            CreateButton(BtId.saveSchemeBt, ref counter);
             buttons[BtId.saveSchemeBt].Click += (object o, RoutedEventArgs e) => SaveSchemeBtClickEvent();
+
+            CreateButton(BtId.traceSchemeBt, ref counter);
             buttons[BtId.traceSchemeBt].Click += (object o, RoutedEventArgs e) => TraceSchemeBtClickEvent();
+
+            CreateButton(BtId.workSchemeBt, ref counter);
             buttons[BtId.workSchemeBt].Click += (object o, RoutedEventArgs e) => WorkSchemeBtClickEvent();
+
+            CreateButton(BtId.addLineBt, ref counter);
             buttons[BtId.addLineBt].Click += (object o, RoutedEventArgs e) => ChangeModeEvent(BtId.addLineBt);
 
+            CreateButton(BtId.changeValueBt, ref counter);
             buttons[BtId.changeValueBt].Click += (object o, RoutedEventArgs e) => {
                 ChangeModeEvent(BtId.changeValueBt);
                 Colorer.ColorMenuButtonBorderByValue(o as Button, true); };
+        }
+
+        private void CreateButton(BtId id, ref int counter)
+        {
+            Button button = new Button { Content = btText[id] };
+            button.HorizontalAlignment = HorizontalAlignment.Stretch;
+            button.VerticalAlignment = VerticalAlignment.Stretch;
+
+            Colorer.ColorMenuButton(button);
+
+            buttons.Add(id, button);
+
+            counter++;
+
+            Grid.SetRow(button, 0);
+            Grid.SetColumn(button, counter);
         }
 
         #region Public methods
 
         public void Update(Rect rect)
         {
-            int i = 0;
-            foreach (Button button in buttons.Values)
-            {
-                button.Height = rect.Height;
-                button.Width = rect.Width / buttons.Count;
-                button.Margin = new Thickness(i * button.Width, 0, 0, 0);
-                i++;
-            }
+            grid.Width = rect.Width;
+            grid.Height = rect.Height;
+
+            Debug.WriteLine($"Grid Width = {grid.Width}, Height = {grid.Height}");
         }
 
         public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);

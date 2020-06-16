@@ -86,6 +86,8 @@ namespace SchemeCreator.Data.Services
             }
         }
 
+        public static void ColorGrid(StackPanel grid) => grid.Background = InactiveBrush;
+
         public static void ColorMenuButton(Button button)
         {
             button.Background = InactiveBrush;

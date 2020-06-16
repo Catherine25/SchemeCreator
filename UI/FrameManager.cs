@@ -261,7 +261,6 @@ namespace SchemeCreator.UI
             Rect rect = grid.GetRect();
 
             menuController.Show();
-            menuController.Update(rect);
         }
 
         public void SizeChanged(Rect rect)
