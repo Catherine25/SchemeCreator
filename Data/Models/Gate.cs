@@ -70,25 +70,25 @@ namespace SchemeCreator.Data.Models
 
         public GateBody DrawBody() => new GateBody(this);
 
-        public List<Port> DrawPorts(ConnectionType type)
+        public List<Port> DrawPorts(ConnectionTypeEnum type)
         {
-            if(type == ConnectionType.both)
+            if(type == ConnectionTypeEnum.Both)
             {
-                var items = DrawPorts(ConnectionType.input);
-                items.AddRange(DrawPorts(ConnectionType.output));
+                var items = DrawPorts(ConnectionTypeEnum.Input);
+                items.AddRange(DrawPorts(ConnectionTypeEnum.Output));
                 return items;
             }
             else
             {
                 List<Port> ports = new List<Port>();
-                int length = type == ConnectionType.input ? Inputs : Outputs;
+                int length = type == ConnectionTypeEnum.Input ? Inputs : Outputs;
 
                 for (int i = 0; i < length; i++)
                 {
                     Port port = new Port(type);
 
                     Point center =
-                        type == ConnectionType.input
+                        type == ConnectionTypeEnum.Input
                         ? new Point(GetLeftTop().X, GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1)))
                         : new Point(GetLeftTop().X + logicGateSize.Width, GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1)));
 
@@ -103,13 +103,13 @@ namespace SchemeCreator.Data.Models
             }            
         }
 
-        public bool ContainsInOutByCenter(Point center, ConnectionType type) =>
+        public bool ContainsInOutByCenter(Point center, ConnectionTypeEnum type) =>
             DrawPorts(type).Exists(x => x.CenterPoint == center);
 
         public bool ContainsBodyByMargin(Thickness t) =>
             DrawBody().ContainsBodyByMargin(t);
 
-        public int GetIndexOfInOutByCenter(Point center, ConnectionType type) =>
+        public int GetIndexOfInOutByCenter(Point center, ConnectionTypeEnum type) =>
             DrawPorts(type).FindIndex(x => x.CenterPoint == center);
 
         public GateBody GetBodyByWirePart(Point p)
@@ -123,7 +123,7 @@ namespace SchemeCreator.Data.Models
 
         public Port GetInOutByWirePart(Point p)
         {
-            var items = DrawPorts(ConnectionType.both);
+            var items = DrawPorts(ConnectionTypeEnum.Both);
             return items.FirstOrDefault(i => i.CenterPoint == p);
         }
 
@@ -133,7 +133,7 @@ namespace SchemeCreator.Data.Models
                 return Center == point;
             else
             {
-                var items = DrawPorts(ConnectionType.both);
+                var items = DrawPorts(ConnectionTypeEnum.Both);
                 return items.Any(i => i.CenterPoint == point);
             }
         }

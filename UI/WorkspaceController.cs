@@ -37,7 +37,7 @@ namespace SchemeCreator.UI
             else
                 body.Tapped += (Gate g, Button button) => LogicGateTappedEvent(gate, button); ;
 
-            gate.DrawPorts(ConnectionType.both).ForEach(p =>
+            gate.DrawPorts(ConnectionTypeEnum.Both).ForEach(p =>
             {
                 p.Tapped += (Port port) => PortTapped(port);
                 p.AddToParent(grid);
@@ -71,7 +71,7 @@ namespace SchemeCreator.UI
                 body.AddToParent(grid);
                 body.Tapped += (Gate g, Button button) => LogicGateTappedEvent(gate, button); ;
 
-                var items = gate.DrawPorts(ConnectionType.both);
+                var items = gate.DrawPorts(ConnectionTypeEnum.Both);
                 foreach (var item in items)
                 {
                     item.AddToParent(grid);

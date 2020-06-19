@@ -41,7 +41,7 @@ namespace SchemeCreator.Data.Controllers
             return null;
         }
 
-        public Gate GetGateByInOut(Port p, ConnectionType type)
+        public Gate GetGateByInOut(Port p, ConnectionTypeEnum type)
         {
             foreach (Gate gate in Gates)
                 if (gate.ContainsInOutByCenter(p.CenterPoint, type))

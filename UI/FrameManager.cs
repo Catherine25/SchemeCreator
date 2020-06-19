@@ -74,7 +74,7 @@ namespace SchemeCreator.UI
 
         private void PortTapped(Port p)
         {
-            if(p.Type == ConnectionType.input)
+            if(p.Type == ConnectionTypeEnum.Input)
             {
                 if (CurrentMode == ModeEnum.addLineMode)
                 TryCreate(p.CenterPoint, false);
@@ -83,9 +83,9 @@ namespace SchemeCreator.UI
             {
                 if (CurrentMode == ModeEnum.addLineMode)
                 {
-                    Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionType.output);
+                    Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionTypeEnum.Output);
 
-                    bool? isActive = gate.Values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionType.output)];
+                    bool? isActive = gate.Values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionTypeEnum.Output)];
 
                     TryCreate(p.CenterPoint, true, isActive);
                 }

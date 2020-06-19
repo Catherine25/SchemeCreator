@@ -5,9 +5,9 @@ namespace SchemeCreator.Data.Models
 {
     public class Port : SmartEllipse
     {
-        public readonly ConnectionType Type;
+        public readonly ConnectionTypeEnum Type;
 
-        public Port(ConnectionType connectionType)
+        public Port(ConnectionTypeEnum connectionType)
         {
             Type = connectionType;
             SetCenterAndSize(null, Constants.gatePortSize);

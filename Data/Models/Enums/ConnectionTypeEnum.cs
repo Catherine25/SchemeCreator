@@ -1,9 +1,9 @@
 ﻿namespace SchemeCreator.Data.Models.Enums
 {
-    public enum ConnectionType
+    public enum ConnectionTypeEnum
     {
-        input,
-        output,
-        both
+        Input,
+        Output,
+        Both
     }
 }
