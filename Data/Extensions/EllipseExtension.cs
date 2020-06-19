@@ -26,11 +26,17 @@ namespace SchemeCreator.Data.Extensions
             ellipse.Height = size.Height;
         }
 
-        public static void SetSizeAndCenterPoint(this Ellipse ellipse, Size size, Point center)
+        public static void SetSizeAndCenterPoint(this Ellipse ellipse, Size? size, Point? center)
         {
-            ellipse.SetSize(size);
+            if (size == null)
+                size = GetSize(ellipse);
 
-            ellipse.Margin = CalculateMargin(center, size);
+            if (center == null)
+                center = GetCenterPoint(ellipse);
+
+            ellipse.SetSize(size.Value);
+
+            ellipse.Margin = CalculateMargin(center.Value, size.Value);
         }
 
         public static void IncreaseSize(this Ellipse ellipse)

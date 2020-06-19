@@ -1,5 +1,6 @@
 ﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Models.Enums;
 using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;

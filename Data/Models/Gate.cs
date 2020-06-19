@@ -7,6 +7,7 @@ using SchemeCreator.Data.Interfaces;
 using static SchemeCreator.Data.Constants;
 using System.Linq;
 using System;
+using SchemeCreator.Data.Models.Enums;
 
 namespace SchemeCreator.Data.Models
 {
@@ -89,11 +90,9 @@ namespace SchemeCreator.Data.Models
                     Point center =
                         type == ConnectionType.input
                         ? new Point(GetLeftTop().X, GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1)))
-                        : new Point(GetLeftTop().X + logicGateSize.Width, GetLeftTop().Y + ((logicGateSize.Height / (length + 1)) * (i + 1)));
+                        : new Point(GetLeftTop().X + logicGateSize.Width, GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1)));
 
-                    port.CenterPoint = center;
-
-                    port.Size = gatePortSize;
+                    port.SetCenterAndSize(center);
 
                     port.BooleanValue = Values[i];
 

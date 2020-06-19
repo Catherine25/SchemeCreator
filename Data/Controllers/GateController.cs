@@ -3,6 +3,7 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Models.Enums;
 
 namespace SchemeCreator.Data.Controllers
 {
@@ -40,7 +41,7 @@ namespace SchemeCreator.Data.Controllers
             return null;
         }
 
-        public Gate GetGateByInOut(Port p, Constants.ConnectionType type)
+        public Gate GetGateByInOut(Port p, ConnectionType type)
         {
             foreach (Gate gate in Gates)
                 if (gate.ContainsInOutByCenter(p.CenterPoint, type))

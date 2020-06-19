@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Controllers;
 using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Models.Enums;
 
 namespace SchemeCreator.UI
 {
