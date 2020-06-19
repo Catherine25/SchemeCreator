@@ -127,12 +127,15 @@
     <Compile Include="Data\Extensions\LineExtension.cs" />
     <Compile Include="Data\Interfaces\IGridChild.cs" />
     <Compile Include="Data\Interfaces\IIdHolder.cs" />
+    <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
+    <Compile Include="Data\Models\ExternalPort.cs" />
     <Compile Include="Data\Models\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Controllers\LineController.cs" />
     <Compile Include="Data\Models\GateBody.cs" />
     <Compile Include="Data\Models\Port.cs" />
     <Compile Include="Data\Interfaces\IResizable.cs" />
+    <Compile Include="Data\Models\SmartEllipse.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
     <Compile Include="Data\Services\GateWorkPatterns.cs" />
     <Compile Include="Data\Services\Serializer.cs" />
