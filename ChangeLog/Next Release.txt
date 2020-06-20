@@ -1,3 +1,4 @@
 ﻿SC-47: Cleanup the project.
 SC-40: Add ChangeLog folder.
 SC-31: Change serialization to JSON.
+SC-37: Save data to LocalFolder.
