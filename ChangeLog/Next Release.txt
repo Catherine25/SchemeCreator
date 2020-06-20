@@ -1,1 +1,2 @@
 ﻿SC-47: Cleanup the project.
+SC-40: Add ChangeLog folder.
