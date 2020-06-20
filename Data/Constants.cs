@@ -1,5 +1,3 @@
-using Windows.UI.Xaml.Media;
-using Windows.UI.ViewManagement;
 using System.Collections.Generic;
 using Windows.Foundation;
 
@@ -12,6 +10,7 @@ namespace SchemeCreator.Data
         public static Size traceTextSize = new Size { Width = 50, Height = 30 };
         public static Size dotSize = new Size { Width = 10, Height = 10 };
         public static Size gatePortSize = new Size { Width = 10, Height = 10 };
+        public static Size externalPortSize = new Size { Width = 20, Height = 20 };
 
         public const int netSize = 8;
 
