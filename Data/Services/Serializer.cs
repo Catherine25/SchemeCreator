@@ -23,7 +23,7 @@ namespace SchemeCreator.Data.Services
 
         public static async Task Load(Scheme scheme)
         {
-            StorageFolder folder = KnownFolders.PicturesLibrary;
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
 
             //serialization of gates
             StorageFile gateFile = await folder.GetFileAsync(gatePath);
@@ -46,7 +46,7 @@ namespace SchemeCreator.Data.Services
 
         public static async Task Save(Scheme scheme)
         {
-            StorageFolder folder = KnownFolders.PicturesLibrary;
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
 
             //serialization of gates
             StorageFile gateFile = await folder.CreateFileAsync(gatePath,
