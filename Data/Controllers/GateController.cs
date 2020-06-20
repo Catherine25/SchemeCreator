@@ -2,10 +2,10 @@
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
-using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Models.Enums;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Controllers
 {
     public class GateController
     {
@@ -31,36 +31,36 @@ namespace SchemeCreator.Data
         public Gate GetGateByWire(Wire w)
         {
             foreach (Gate gate in Gates)
-                if (gate.GetBodyByWirePart(w.start) != null
-                    || gate.GetBodyByWirePart(w.end) != null)
+                if (gate.GetBodyByWirePart(w.Start) != null
+                    || gate.GetBodyByWirePart(w.End) != null)
                     return gate;
-                else if ((gate.GetInOutByWirePart(w.start) != null) ||
-                    gate.GetInOutByWirePart(w.end) != null)
+                else if ((gate.GetInOutByWirePart(w.Start) != null) ||
+                    gate.GetInOutByWirePart(w.End) != null)
                     return gate;
 
             return null;
         }
 
-        public Gate GetGateByInOut(Ellipse e, Constants.ConnectionType type)
+        public Gate GetGateByInOut(Port p, ConnectionTypeEnum type)
         {
             foreach (Gate gate in Gates)
-                if (gate.ContainsInOutByCenter(e, type))
+                if (gate.ContainsInOutByCenter(p.CenterPoint, type))
                     return gate;
 
             throw new System.Exception();
         }
 
         public IEnumerable<Gate> GetLogicGates() =>
-            gates.Where(gate => (!Constants.external.Contains(gate.type)));
+            gates.Where(gate => (!Constants.external.Contains(gate.Type)));
 
         public IEnumerable<Gate> GetExternalGates() =>
-            gates.Where(gate => Constants.external.Contains(gate.type));
+            gates.Where(gate => Constants.external.Contains(gate.Type));
 
         public IEnumerable<Gate> GetExternalInputs() =>
-            gates.Where(x => x.type == Constants.GateEnum.IN);
+            gates.Where(x => x.Type == Constants.GateEnum.IN);
 
         public Gate GetFirstNotInitedGate() =>
-            GetExternalInputs().FirstOrDefault(x => x.values[0] == null);
+            GetExternalInputs().FirstOrDefault(x => x.Values[0] == null);
 
         public Gate GetGateByWireStart(Point point) =>
             gates.FirstOrDefault(
@@ -77,12 +77,12 @@ namespace SchemeCreator.Data
             int gatesCount = gates.Count;
 
             for (int i = 0; i < gatesCount; i++)
-                if (gates[i].type != Constants.GateEnum.IN)
+                if (gates[i].Type != Constants.GateEnum.IN)
                 {
-                    int gateValuesCount = gates[i].inputs;
+                    int gateValuesCount = gates[i].Inputs;
 
                     for (int j = 0; j < gateValuesCount; j++)
-                        gates[i].values[j] = null;
+                        gates[i].Values[j] = null;
                 }
         }
     }

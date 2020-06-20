@@ -1,9 +1,8 @@
-using Windows.UI.Xaml.Media;
-using Windows.UI.ViewManagement;
 using System.Collections.Generic;
 using Windows.Foundation;
 
-namespace SchemeCreator.Data.ConstantsNamespace {
+namespace SchemeCreator.Data
+{
     static public class Constants
     {
         public static Size externalGateSize = new Size { Width = 50, Height = 50 };
@@ -11,6 +10,7 @@ namespace SchemeCreator.Data.ConstantsNamespace {
         public static Size traceTextSize = new Size { Width = 50, Height = 30 };
         public static Size dotSize = new Size { Width = 10, Height = 10 };
         public static Size gatePortSize = new Size { Width = 10, Height = 10 };
+        public static Size externalPortSize = new Size { Width = 20, Height = 20 };
 
         public const int netSize = 8;
 
@@ -66,31 +66,13 @@ namespace SchemeCreator.Data.ConstantsNamespace {
             { BtId.changeValueBt, "Change Value" }
         };
 
-        public static Dictionary <AccentEnum, SolidColorBrush> brushes = new Dictionary<AccentEnum, SolidColorBrush> {
-            { AccentEnum.accent, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Accent)) },
-            { AccentEnum.background, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Background)) },
-            { AccentEnum.foreground, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Foreground)) },
-
-            { AccentEnum.dark1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark1)) },
-            { AccentEnum.dark2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark2)) },
-            { AccentEnum.dark3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark3)) },
-
-            { AccentEnum.light1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight1)) },
-            { AccentEnum.light2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight2)) },
-            { AccentEnum.light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) },
-
-            { AccentEnum.accent2, new SolidColorBrush(Windows.UI.Colors.Maroon) }
-        };
-
         public enum BtId { newSchemeBt, loadSchemeBt, saveSchemeBt, traceSchemeBt, workSchemeBt, addLineBt, changeValueBt }
         public enum GateEnum { IN, OUT, Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
         public enum ModeEnum { addGateMode, addLineMode, changeValueMode }
         public enum FrameEnum { workspace, newGate }
-        public enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
         public enum ComponentTypeEnum { gate, wire }
         public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView, createGate, visualizingFailed }
         public enum MessageAttribute { title, text, button1, button2 }
         public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected, schemeIsntCorrect }
-        public enum ConnectionType { input, output }
     }
 }

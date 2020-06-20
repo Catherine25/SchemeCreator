@@ -3,94 +3,102 @@ using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.ConstantsNamespace;
-using SchemeCreator.Data.Extensions;
+using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Services;
+using System.Linq;
+using System.Diagnostics;
+using SchemeCreator.Data.Models;
 
-namespace SchemeCreator.UI {
-    class MenuController {
+namespace SchemeCreator.UI
+{
+    class MenuController
+    {
+        Dictionary<BtId, Button> buttons = new Dictionary<BtId, Button>();
+        StackPanel panel = new StackPanel();
 
-        /*      events      */
-        public event Action NewSchemeBtClickEvent,
-            LoadSchemeBtClickEvent,
-            SaveSchemeBtClickEvent,
-            TraceSchemeBtClickEvent,
-            WorkSchemeBtClickEvent;
-        public event Action<Constants.BtId>
-            ChangeModeEvent;
+        #region Events
 
-        /*      data        */
-        Dictionary<Constants.BtId, Button> buttons = new Dictionary<Constants.BtId, Button>();
-        Grid grid = new Grid();
+        public event Action NewSchemeBtClickEvent;
+        public event Action LoadSchemeBtClickEvent;
+        public event Action SaveSchemeBtClickEvent;
+        public event Action TraceSchemeBtClickEvent;
+        public event Action WorkSchemeBtClickEvent;
+
+        public event Action<BtId> ChangeModeEvent;
+
+        #endregion
+
+        public MenuController()
+        {
+            panel.Orientation = Orientation.Horizontal;
+            panel.HorizontalAlignment = HorizontalAlignment.Left;
+            panel.VerticalAlignment = VerticalAlignment.Top;
+            Colorer.ColorGrid(panel);
+
+            int counter = 0;
+
+            CreateButton(BtId.newSchemeBt, ref counter);
+            buttons[BtId.newSchemeBt].Click += (object o, RoutedEventArgs e) => NewSchemeBtClickEvent();
+
+            CreateButton(BtId.loadSchemeBt, ref counter);
+            buttons[BtId.loadSchemeBt].Click += (object o, RoutedEventArgs e) => LoadSchemeBtClickEvent();
+
+            CreateButton(BtId.saveSchemeBt, ref counter);
+            buttons[BtId.saveSchemeBt].Click += (object o, RoutedEventArgs e) => SaveSchemeBtClickEvent();
+
+            CreateButton(BtId.traceSchemeBt, ref counter);
+            buttons[BtId.traceSchemeBt].Click += (object o, RoutedEventArgs e) => TraceSchemeBtClickEvent();
+
+            CreateButton(BtId.workSchemeBt, ref counter);
+            buttons[BtId.workSchemeBt].Click += (object o, RoutedEventArgs e) => WorkSchemeBtClickEvent();
+
+            CreateButton(BtId.addLineBt, ref counter);
+            buttons[BtId.addLineBt].Click += (object o, RoutedEventArgs e) => ChangeModeEvent(BtId.addLineBt);
+
+            CreateButton(BtId.changeValueBt, ref counter);
+            buttons[BtId.changeValueBt].Click += (object o, RoutedEventArgs e) => {
+                ChangeModeEvent(BtId.changeValueBt);
+                Colorer.ColorMenuButtonBorderByValue(o as Button, true); };
+        }
+
+        private void CreateButton(BtId id, ref int counter)
+        {
+            Button button = new Button { Content = btText[id] };
+            button.HorizontalAlignment = HorizontalAlignment.Stretch;
+            button.VerticalAlignment = VerticalAlignment.Stretch;
+
+            Colorer.ColorMenuButton(button);
+
+            buttons.Add(id, button);
+
+            counter++;
+
+            Grid.SetRow(button, 0);
+            Grid.SetColumn(button, counter);
+        }
+
+        #region Public methods
+
+        public void Update(Rect rect)
+        {
+            panel.Width = rect.Width;
+            panel.Height = rect.Height;
+
+            Debug.WriteLine($"Grid Width = {panel.Width}, Height = {panel.Height}");
+        }
+
+        public void SetParentGrid(SmartGrid parentGrid) => parentGrid.Add(panel);
+
+        public void Show() => buttons.Values.ToList().ForEach(b => panel.Children.Add(b));
+
+        public void Hide() => panel.Children.Clear();
         
-
-        /*      constructor     */
-        public MenuController() {
-            grid.SetStandartAlighnment();
-            //The cast to (BtId[]) is not strictly necessary, but does make the code faster
-            foreach (Constants.BtId id in (Constants.BtId[])Enum.GetValues(typeof(Constants.BtId))) {
-                Button button = new Button {
-                    Content = Constants.btText[id],
-                    Background = Constants.brushes[Constants.AccentEnum.dark1],
-                    Foreground = Constants.brushes[Constants.AccentEnum.light1]
-                };
-                buttons.Add(id, button);
-            }
-            EventSubscribe();
-        }
-        
-        /*      events      */
-        private void EventSubscribe() {
-            buttons[Constants.BtId.newSchemeBt].Click += NewSchemeBtClick;
-            buttons[Constants.BtId.loadSchemeBt].Click += LoadSchemeBtClick;
-            buttons[Constants.BtId.saveSchemeBt].Click += SaveSchemeBtClick;
-            buttons[Constants.BtId.traceSchemeBt].Click += TraceSchemeBtClick;
-            buttons[Constants.BtId.workSchemeBt].Click += WorkSchemeBtClick;
-            buttons[Constants.BtId.addLineBt].Click += AddLineBtClick;
-            buttons[Constants.BtId.changeValueBt].Click += ChangeValueBtClick;
+        public void InActivateModeButtons()
+        {
+            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.addLineBt] as Button, false);
+            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.changeValueBt] as Button, false);
         }
 
-        private void NewSchemeBtClick(object sender, RoutedEventArgs e) =>
-            NewSchemeBtClickEvent();
-        private void LoadSchemeBtClick(object sender, RoutedEventArgs e) =>
-            LoadSchemeBtClickEvent();
-        private void SaveSchemeBtClick(object sender, RoutedEventArgs e) =>
-            SaveSchemeBtClickEvent();
-        private void TraceSchemeBtClick(object sender, RoutedEventArgs e) =>
-            TraceSchemeBtClickEvent();
-        private void WorkSchemeBtClick(object sender, RoutedEventArgs e) =>
-            WorkSchemeBtClickEvent();
-        private void AddLineBtClick(object sender, RoutedEventArgs e) {
-            ChangeModeEvent(Constants.BtId.addLineBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
-        }       
-        private void ChangeValueBtClick (object sender, RoutedEventArgs e) {
-            ChangeModeEvent(Constants.BtId.changeValueBt);
-            (sender as Button).BorderBrush = Constants.brushes[Constants.AccentEnum.light1];
-        }
-
-        /*      methods     */
-        public void Update(Rect rect) {
-            int i = 0;
-            foreach (Button button in buttons.Values) {
-                button.Height = rect.Height;
-                button.Width = rect.Width / (buttons.Count);
-                button.Margin = new Thickness((i*button.Width), 0, 0, 0); 
-                i++;
-            }
-        }
-
-        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
-        
-        public void Show() {
-            foreach (Button button in buttons.Values)
-                grid.Children.Add(button);
-        }
-        
-        public void Hide() => grid.Children.Clear();
-        
-        public void InActivateModeButtons() {
-            buttons[Constants.BtId.addLineBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
-            buttons[Constants.BtId.changeValueBt].BorderBrush = Constants.brushes[Constants.AccentEnum.dark1];
-        }
+        #endregion
     }
 }

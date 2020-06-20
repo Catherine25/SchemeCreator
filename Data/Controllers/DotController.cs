@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Shapes;
-using SchemeCreator.Data.ConstantsNamespace;
 using SchemeCreator.Data.Extensions;
 using Windows.Foundation;
+using static SchemeCreator.Data.Constants;
+using Windows.UI.Xaml.Media;
+using SchemeCreator.Data.Services;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Controllers
 {
     public class DotController
     {
@@ -20,19 +22,17 @@ namespace SchemeCreator.Data
 
         public void InitNet(Size actSize)
         {
-            double stepW = actSize.Width / (Constants.netSize + 1),
-                stepH = actSize.Height / (Constants.netSize + 1);
+            double stepW = actSize.Width / (netSize + 1),
+                stepH = actSize.Height / (netSize + 1);
 
-            //Thickness margin;
-
-            for (int i = 1; i <= Constants.netSize; i++)
-                for (int j = 1; j <= Constants.netSize; j++)
+            for (int i = 1; i <= netSize; i++)
+                for (int j = 1; j <= netSize; j++)
                 {
-                    Ellipse ellipse = new Ellipse { 
-                        Fill = Constants.brushes[Constants.AccentEnum.dark1]
-                    };
+                    Ellipse ellipse = new Ellipse();
 
-                    ellipse.SetSizeAndCenterPoint(Constants.dotSize, new Point(stepW * i, stepH * j));
+                    Colorer.SetFillByValue(ellipse, false);
+
+                    ellipse.SetSizeAndCenterPoint(dotSize, new Point(stepW * i, stepH * j));
 
                     ellipse.SetStandartAlingment();
                  

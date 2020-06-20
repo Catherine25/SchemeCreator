@@ -7,8 +7,8 @@
     <ProjectGuid>{CE51FDA1-D895-4F53-B55E-6A29C9EBD49C}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Course_Project</RootNamespace>
-    <AssemblyName>Course_Project</AssemblyName>
+    <RootNamespace>SchemeCreator</RootNamespace>
+    <AssemblyName>SchemeCreator</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
@@ -119,25 +119,36 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\ConstantsNamespace\Constants.cs" />
-    <Compile Include="Data\ConstantsNamespace\Text.cs" />
+    <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Controllers\DotController.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
-    <Compile Include="Data\Gate.cs" />
+    <Compile Include="Data\Interfaces\IGridChild.cs" />
+    <Compile Include="Data\Interfaces\IIdHolder.cs" />
+    <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
+    <Compile Include="Data\Models\ExternalPort.cs" />
+    <Compile Include="Data\Models\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Controllers\LineController.cs" />
-    <Compile Include="Data\Serializator.cs" />
-    <Compile Include="Data\Tracing.cs" />
-    <Compile Include="Data\Wire.cs" />
-    <Compile Include="Data\WorkAlgorithm.cs" />
+    <Compile Include="Data\Models\GateBody.cs" />
+    <Compile Include="Data\Models\Port.cs" />
+    <Compile Include="Data\Interfaces\IResizable.cs" />
+    <Compile Include="Data\Models\SmartEllipse.cs" />
+    <Compile Include="Data\Models\SmartGrid.cs" />
+    <Compile Include="Data\Services\Colorer.cs" />
+    <Compile Include="Data\Services\GateWorkPatterns.cs" />
+    <Compile Include="Data\Services\Serializer.cs" />
+    <Compile Include="Data\Services\TextController.cs" />
+    <Compile Include="Data\Services\Tracer.cs" />
+    <Compile Include="Data\Models\Wire.cs" />
+    <Compile Include="Data\Services\WorkAlgorithm.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\Scheme.cs" />
+    <Compile Include="Data\Models\Scheme.cs" />
     <Compile Include="UI\FrameManager.cs" />
     <Compile Include="UI\MenuController.cs" />
     <Compile Include="UI\Message.xaml.cs">

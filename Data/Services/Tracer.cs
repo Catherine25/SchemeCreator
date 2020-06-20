@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Controllers;
+using SchemeCreator.Data.Models;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Services
 {
     public class Tracer
     {
@@ -83,7 +84,7 @@ namespace SchemeCreator.Data
             for (int i = 0; i < gateCount; i++)
             {
                 //get type
-                var type = gc.Gates[i].type;
+                var type = gc.Gates[i].Type;
 
                 //if type is IN
                 if (type == Constants.GateEnum.IN)
@@ -130,7 +131,7 @@ namespace SchemeCreator.Data
                         continue;
 
                     //get the connected wire
-                    if (gc.Gates[i].WireConnects(lc.Wires[j].start))
+                    if (gc.Gates[i].WireConnects(lc.Wires[j].Start))
                     {
                         //save the wire's indexes in tracedWireIndexes
                         tracedWireIndexes[j] = traceWireCounter;
@@ -180,13 +181,13 @@ namespace SchemeCreator.Data
                         continue;
 
                     //check if the wire' end connects to the current gate
-                    if (currentGate.WireConnects(curWire.end))
+                    if (currentGate.WireConnects(curWire.End))
                     {
                         //check is the gate' inputs have wires
                         //that have been traced
 
                         //get inputs count
-                        int inputsCount = currentGate.inputs;
+                        int inputsCount = currentGate.Inputs;
 
                         for (int w2 = 0; w2 < wireCount; w2++)
                         {
@@ -194,7 +195,7 @@ namespace SchemeCreator.Data
                             var w2Wire = lc.Wires[w2];
 
                             //check if connects
-                            if (currentGate.WireConnects(w2Wire.end))
+                            if (currentGate.WireConnects(w2Wire.End))
 
                                 //check if traced
                                 if (tracedWireIndexes[w2] != 0)

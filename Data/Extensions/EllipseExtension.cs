@@ -26,11 +26,17 @@ namespace SchemeCreator.Data.Extensions
             ellipse.Height = size.Height;
         }
 
-        public static void SetSizeAndCenterPoint(this Ellipse ellipse, Size size, Point center)
+        public static void SetSizeAndCenterPoint(this Ellipse ellipse, Size? size, Point? center)
         {
-            ellipse.SetSize(size);
+            if (size == null)
+                size = GetSize(ellipse);
 
-            ellipse.Margin = CalculateMargin(center, size);
+            if (center == null)
+                center = GetCenterPoint(ellipse);
+
+            ellipse.SetSize(size.Value);
+
+            ellipse.Margin = CalculateMargin(center.Value, size.Value);
         }
 
         public static void IncreaseSize(this Ellipse ellipse)
@@ -57,16 +63,6 @@ namespace SchemeCreator.Data.Extensions
         {
             ellipse.HorizontalAlignment = HorizontalAlignment.Left;
             ellipse.VerticalAlignment = VerticalAlignment.Top;
-        }
-
-        public static void SetFillByValue(this Ellipse ellipse, bool? value)
-        {
-            if (value == true)
-                ellipse.Fill = ConstantsNamespace.Constants.brushes[ConstantsNamespace.Constants.AccentEnum.light1];
-            else if (value == false)
-                ellipse.Fill = ConstantsNamespace.Constants.brushes[ConstantsNamespace.Constants.AccentEnum.dark1];
-            else
-                ellipse.Fill = ConstantsNamespace.Constants.brushes[ConstantsNamespace.Constants.AccentEnum.accent2];
         }
     }
 }

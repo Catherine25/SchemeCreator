@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using SchemeCreator.Data.Models;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -6,13 +7,15 @@ namespace SchemeCreator
 {
     public sealed partial class MainPage : Page
     {
-        private Data.Scheme scheme = new Data.Scheme();
+        private Scheme scheme;
 
         public MainPage()
         {
             InitializeComponent();
 
-            Content = scheme.frameManager.grid;
+            scheme = new Scheme();
+
+            scheme.frameManager.Grid.AddToParent(this);
             SizeChanged += MainPageSizeChanged;
         }
 

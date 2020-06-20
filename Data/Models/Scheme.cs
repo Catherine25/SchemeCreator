@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+﻿using SchemeCreator.Data.Controllers;
+using SchemeCreator.UI;
+using System.Collections.Generic;
+using static SchemeCreator.Data.Constants;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Models
 {
     public class Scheme
     {
-        public UI.FrameManager frameManager;
+        public FrameManager frameManager;
         public LineController lineController = new LineController();
         public GateController gateController = new GateController();
         public DotController dotController = new DotController();
 
         //constructors
-        public Scheme() => frameManager = new UI.FrameManager(this);
+        public Scheme() => frameManager = new FrameManager(this);
         public bool IsAllConnected()
         {
             Stack<Gate> gates = new Stack<Gate>(gateController.Gates);
@@ -23,22 +25,22 @@ namespace SchemeCreator.Data
                 Gate gate = gates.Pop();
                 found = false;
 
-                if (gate.type == GateEnum.IN)
+                if (gate.Type == GateEnum.IN)
                 {
                     for (int i = 0; i < wireCount; i++)
                     {
-                        if (gate.WireConnects(lineController.Wires[i].start))
+                        if (gate.WireConnects(lineController.Wires[i].Start))
                         {
                             found = true;
                             break;
                         }
                     }
                 }
-                else if (gate.type == GateEnum.OUT)
+                else if (gate.Type == GateEnum.OUT)
                 {
                     for (int i = 0; i < wireCount; i++)
                     {
-                        if (gate.WireConnects(lineController.Wires[i].end))
+                        if (gate.WireConnects(lineController.Wires[i].End))
                         {
                             found = true;
                             break;
@@ -47,12 +49,12 @@ namespace SchemeCreator.Data
                 }
                 else
                 {
-                    int connections = gate.inputs + gate.outputs;
+                    int connections = gate.Inputs + gate.Outputs;
                     for (int i = 0; i < wireCount; i++)
                     {
-                        if (gate.WireConnects(lineController.Wires[i].start))
+                        if (gate.WireConnects(lineController.Wires[i].Start))
                             connections--;
-                        else if (gate.WireConnects(lineController.Wires[i].end))
+                        else if (gate.WireConnects(lineController.Wires[i].End))
                             connections--;
                     }
                     if (connections == 0)

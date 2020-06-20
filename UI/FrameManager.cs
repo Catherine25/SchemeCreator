@@ -1,10 +1,12 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Models.Enums;
+using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
-using static SchemeCreator.Data.ConstantsNamespace.Constants;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.UI
 {
@@ -22,8 +24,7 @@ namespace SchemeCreator.UI
 
         private Wire newWire;
 
-        public Grid grid { get; }
-
+        public SmartGrid Grid { get; }
 
         public FrameManager(Scheme _scheme)
         {
@@ -33,14 +34,12 @@ namespace SchemeCreator.UI
 
             workspaceController = new WorkspaceController();
             menuController = new MenuController();
+            Grid = new SmartGrid();
 
-            grid = new Grid();
-            grid.SetStandartAlighnment();
+            menuController.SetParentGrid(Grid);
+            workspaceController.SetParentGrid(Grid);
 
-            menuController.SetParentGrid(grid);
-            workspaceController.SetParentGrid(grid);
-
-            SwitchToFrame(FrameEnum.workspace, grid);
+            SwitchToFrame(FrameEnum.workspace, Grid);
 
             EventSubscribe();
         }
@@ -57,8 +56,7 @@ namespace SchemeCreator.UI
             menuController.ChangeModeEvent += ChangeModeEvent;
 
             workspaceController.DotTappedEvent += DotTappedEventAsync;
-            workspaceController.LogicGateInTapped += LogicGateInTapped;
-            workspaceController.LogicGateOutTapped += LogicGateOutTapped;
+            workspaceController.PortTapped += PortTapped;
             workspaceController.LogicGateTappedEvent += LogicGateTappedEvent;
             workspaceController.GateINTapped += GateINTappedEvent;
             workspaceController.GateOUTTapped += GateOUTTappedEvent;
@@ -71,22 +69,24 @@ namespace SchemeCreator.UI
             workspaceController.RemoveLine(line);
         }
 
-        private void LogicGateOutTapped(Ellipse e)
+        private void PortTapped(Port p)
         {
-            if (CurrentMode == ModeEnum.addLineMode)
+            if(p.Type == ConnectionTypeEnum.Input)
             {
-                Gate gate = scheme.gateController.GetGateByInOut(e, ConnectionType.output);
-
-                bool? isActive = gate.values[gate.GetIndexOfInOutByCenter(e.GetCenterPoint(), ConnectionType.output)];
-
-                TryCreate(e.GetCenterPoint(), true, isActive);
+                if (CurrentMode == ModeEnum.addLineMode)
+                TryCreate(p.CenterPoint, false);
             }
-        }
+            else
+            {
+                if (CurrentMode == ModeEnum.addLineMode)
+                {
+                    Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionTypeEnum.Output);
 
-        private void LogicGateInTapped(Ellipse e)
-        {
-            if (CurrentMode == ModeEnum.addLineMode)
-                TryCreate(e.GetCenterPoint(), false);
+                    bool? isActive = gate.Values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionTypeEnum.Output)];
+
+                    TryCreate(p.CenterPoint, true, isActive);
+                }
+            }
         }
 
         private async void DotTappedEventAsync(Ellipse e)
@@ -104,64 +104,41 @@ namespace SchemeCreator.UI
             }
         }
 
-        private async void LogicGateTappedEvent(Button b)
-        {
-            Gate gate = scheme.gateController.GetGateByBody(b);
+        private async void LogicGateTappedEvent(Gate gate, Button b) =>
+            await new Message(gate.Type).ShowAsync();
 
-            await new Message(gate.type).ShowAsync();
-        }
-
-        private async void GateINTappedEvent(Button b)
+        private async void GateINTappedEvent(Gate gate, Button b)
         {
             ModeEnum curMode = CurrentMode;
 
             if (curMode == ModeEnum.addLineMode)
-            {
-                Point point = b.GetCenter();
-
-                TryCreate(point, true);
-            }
+                TryCreate(gate.Center, true);
             else if (curMode == ModeEnum.changeValueMode)
             {
-                Gate gate = scheme.gateController.GetGateByBody(b);
+                if (gate.Values[0] == null)
+                    gate.Values[0] = true;
 
-                if (gate.values[0] == null)
-                    gate.values[0] = true;
+                gate.Values[0] = !gate.Values[0];
 
-                gate.values[0] = !gate.values[0];
-
-                if (gate.values[0] == true)
-                {
-                    b.Background = brushes[AccentEnum.light1];
-                    b.Foreground = brushes[AccentEnum.dark1];
-                }
-                else
-                {
-                    b.Background = brushes[AccentEnum.dark1];
-                    b.Foreground = brushes[AccentEnum.light1];
-                }
+                Colorer.SetFillByValue(b, gate.Values[0]);
             }
             else
-                await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
+                await new Message(scheme.gateController.GetGateByBody(b).Type).ShowAsync();
         }
 
-        private async void GateOUTTappedEvent(Button b)
+        private async void GateOUTTappedEvent(Gate gate, Button b)
         {
             if (CurrentMode == ModeEnum.addLineMode)
-            {
-                Point point = b.GetCenter();
-
-                TryCreate(point, false);
-            }
+                TryCreate(gate.Center, false);
             else
-                await new Message(scheme.gateController.GetGateByBody(b).type).ShowAsync();
+                await new Message(scheme.gateController.GetGateByBody(b).Type).ShowAsync();
         }
 
         private bool WireCanBeCreated() => newWire != null
-            && newWire.start.X != 0
-            && newWire.start.Y != 0
-            && newWire.end.X != 0
-            && newWire.end.Y != 0;
+            && newWire.Start.X != 0
+            && newWire.Start.Y != 0
+            && newWire.End.X != 0
+            && newWire.End.Y != 0;
         
         private void TryCreate(Point p, bool isStart, bool? value = null)
         {
@@ -170,11 +147,11 @@ namespace SchemeCreator.UI
 
             if (isStart)
             {
-                newWire.start = p;
+                newWire.Start = p;
                 newWire.isActive = value;
             }
             else
-                newWire.end = p;
+                newWire.End = p;
 
             if (WireCanBeCreated())
             {
@@ -275,27 +252,26 @@ namespace SchemeCreator.UI
                 scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
         }
 
-        public void SwitchToFrame(FrameEnum frame, Grid grid)
+        public void SwitchToFrame(FrameEnum frame, SmartGrid grid)
         {
             currentFrame = frame;
 
-            Rect rect = grid.GetRect();
+            Rect rect = grid.Rect;
 
             menuController.Show();
-            menuController.Update(rect);
         }
 
         public void SizeChanged(Rect rect)
         {
-            grid.SetRect(rect);
+            Grid.Rect = rect;
 
-            Point menuPoint = grid.GetLeftTop();
+            Point menuPoint = Grid.GetXY();
             Size menuSize = new Size(rect.Width, rect.Height / 20);
             Rect menuRect = new Rect(menuPoint, menuSize);
 
             menuController.Update(menuRect);
 
-            Point workSpaceRectPoint = grid.GetLeftTop();
+            Point workSpaceRectPoint = Grid.GetXY();
             workSpaceRectPoint.Y += menuSize.Height;
             Size workSpaceSize = new Size(rect.Width, rect.Height);
             workSpaceSize.Height -= menuSize.Height;

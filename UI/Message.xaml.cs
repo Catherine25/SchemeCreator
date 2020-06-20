@@ -1,6 +1,8 @@
 ﻿using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.ConstantsNamespace;
 using Windows.Foundation;
+using SchemeCreator.Data.Models;
+using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Services;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -8,14 +10,14 @@ namespace SchemeCreator.UI
 {
     public sealed partial class Message : ContentDialog
     {
-        public Constants.GateEnum choosedGate;
+        public GateEnum choosedGate;
         public int inputs, outputs = 1;
 
-        public Message(Constants.MessageTypes mt)
+        public Message(MessageTypes mt)
         {
             InitializeComponent();
 
-            string[] messageInfo = Text.GetText(mt);
+            string[] messageInfo = TextController.GetText(mt);
 
             Title = messageInfo[0];
             PrimaryButtonText = messageInfo[2];
@@ -24,55 +26,55 @@ namespace SchemeCreator.UI
             textBlock.Text = messageInfo[1];
         }
 
-        public Message(Constants.GateEnum type)
+        public Message(GateEnum type)
         {
             InitializeComponent();
 
-            Data.Gate gate = new Data.Gate(type, 2, 1, new Point(0.0, 0.0));
+            Gate gate = new Gate(type, 2, 1, new Point(0.0, 0.0));
 
-            if (type == Constants.GateEnum.IN) {
+            if (type == GateEnum.IN) {
                 textBlock.Text =
                     "It's an external input.\n" +
                     "You can arrange 'False' or 'True' value by clicking on it.\n" +
                     "By default it's null.";
             }
-            else if(type == Constants.GateEnum.OUT) {
+            else if(type == GateEnum.OUT) {
                 textBlock.Text =
                     "It's an external output.\n" +
                     "It gets it's value via signals visualisation.\n" +
                     "You can try it clicking on 'Work' button.";
             }
-            else if(type == Constants.GateEnum.Buffer || type == Constants.GateEnum.NOT)
+            else if(type == GateEnum.Buffer || type == GateEnum.NOT)
             {
-                gate.values[0] = false;
+                gate.Values[0] = false;
                 gate.Work();
-                textBlock.Text = "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text = "False" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = true;
+                gate.Values[0] = true;
                 gate.Work();
-                textBlock.Text = "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text = "False" + "\t|\t" + gate.Values[0] + "\n";
             }
             else
             {
-                gate.values[0] = false;
-                gate.values[1] = false;
+                gate.Values[0] = false;
+                gate.Values[1] = false;
                 gate.Work();
-                textBlock.Text = "False" + "\t" + "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text = "False" + "\t" + "False" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = false;
-                gate.values[1] = true;
+                gate.Values[0] = false;
+                gate.Values[1] = true;
                 gate.Work();
-                textBlock.Text += "False" + "\t" + "True" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text += "False" + "\t" + "True" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = true;
-                gate.values[1] = false;
+                gate.Values[0] = true;
+                gate.Values[1] = false;
                 gate.Work();
-                textBlock.Text += "True" + "\t" + "False" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text += "True" + "\t" + "False" + "\t|\t" + gate.Values[0] + "\n";
 
-                gate.values[0] = true;
-                gate.values[1] = true;
+                gate.Values[0] = true;
+                gate.Values[1] = true;
                 gate.Work();
-                textBlock.Text += "True" + "\t" + "True" + "\t|\t" + gate.values[0] + "\n";
+                textBlock.Text += "True" + "\t" + "True" + "\t|\t" + gate.Values[0] + "\n";
             }
 
             PrimaryButtonText = "Close";

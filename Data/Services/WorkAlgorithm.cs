@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
-using SchemeCreator.Data.ConstantsNamespace;
+using SchemeCreator.Data.Models;
+using static SchemeCreator.Data.Constants;
 
-namespace SchemeCreator.Data
+namespace SchemeCreator.Data.Services
 {
     static class WorkAlgorithm
     {
-        public static Constants.WorkAlgorithmResult Visualize(Scheme scheme)
+        public static WorkAlgorithmResult Visualize(Scheme scheme)
         {
             //Debug.WriteLine("\n" + "[Method] Ver5");
 
             if (scheme.gateController.GetFirstNotInitedGate() != null)
-                return Constants.WorkAlgorithmResult.exInsNotInited;
+                return WorkAlgorithmResult.exInsNotInited;
             else if (!scheme.IsAllConnected())
-                return Constants.WorkAlgorithmResult.gatesNotConnected;
+                return WorkAlgorithmResult.gatesNotConnected;
 
             Queue<Wire> wires = new Queue<Wire>(scheme.lineController.Wires);
 
@@ -22,15 +23,15 @@ namespace SchemeCreator.Data
                 Wire wire = wires.Dequeue();
                 //Debug.WriteLine("Dequed a wire");
 
-                Gate startGate = scheme.gateController.GetGateByWireStart(wire.start);
+                Gate startGate = scheme.gateController.GetGateByWireStart(wire.Start);
 
-                if(startGate.type == Constants.GateEnum.IN)
+                if(startGate.Type == GateEnum.IN)
                 {
                     //Debug.WriteLine("it's exIN");
 
                     connectionNotFound = 0;
 
-                    wire.isActive = startGate.values[0];
+                    wire.isActive = startGate.Values[0];
                 }
                 else
                 {
@@ -42,7 +43,7 @@ namespace SchemeCreator.Data
 
                         connectionNotFound = 0;
 
-                        wire.isActive = startGate.values[0];
+                        wire.isActive = startGate.Values[0];
                     }
                     else
                     {
@@ -53,21 +54,21 @@ namespace SchemeCreator.Data
                         wires.Enqueue(wire);
 
                         if (connectionNotFound > wires.Count)
-                            return Constants.WorkAlgorithmResult.schemeIsntCorrect;
+                            return WorkAlgorithmResult.schemeIsntCorrect;
 
                         continue;
                     }
                 }
 
-                Gate endGate = scheme.gateController.GetGateByWireEnd(wire.end);
+                Gate endGate = scheme.gateController.GetGateByWireEnd(wire.End);
 
-                if (endGate.type == Constants.GateEnum.OUT)
+                if (endGate.Type == GateEnum.OUT)
                 {
                     //Debug.WriteLine("it's exOUT");
 
                     connectionNotFound = 0;
 
-                    endGate.values[0] = wire.isActive;
+                    endGate.Values[0] = wire.isActive;
                 }
                 else
                 {
@@ -77,14 +78,14 @@ namespace SchemeCreator.Data
 
                     connectionNotFound = 0;
 
-                    endGate.values[box] = wire.isActive;
+                    endGate.Values[box] = wire.isActive;
 
-                    if (box == endGate.inputs - 1)
+                    if (box == endGate.Inputs - 1)
                         endGate.Work();
                 }
             }
 
-            return Constants.WorkAlgorithmResult.correct;
+            return WorkAlgorithmResult.correct;
         }
     }
 }
