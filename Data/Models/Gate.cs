@@ -147,7 +147,7 @@ namespace SchemeCreator.Data.Models
             return -1;
         }
 
-        public void AddToParent(Grid parent) =>
+        public void AddToParent(SmartGrid parent) =>
             DrawBody().AddToParent(parent);
     }
 }
