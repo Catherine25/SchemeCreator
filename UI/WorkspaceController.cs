@@ -14,17 +14,13 @@ namespace SchemeCreator.UI
 {
     class WorkspaceController
     {
-        public WorkspaceController()
-        {
-            grid = new Grid();
-            grid.SetStandartAlighnment();
-        }
+        public WorkspaceController() => _grid = new SmartGrid();
 
         /*      methods      */
         public void AddGateToGrid(Gate gate)
         {
             var body = gate.DrawBody();
-            body.AddToParent(grid);
+            body.AddToParent(_grid);
 
             if (external.Contains(gate.Type))
             {
@@ -40,21 +36,21 @@ namespace SchemeCreator.UI
             gate.DrawPorts(ConnectionTypeEnum.Both).ForEach(p =>
             {
                 p.Tapped += (Port port) => PortTapped(port);
-                p.AddToParent(grid);
+                p.AddToParent(_grid);
             });
         }
-        public void RemoveLine(Line line) => grid.Children.Remove(line);
-        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
-        public void Hide() => grid.Children.Clear();
-        public void Update(Rect rect) => grid.SetRect(rect);
+        public void RemoveLine(Line line) => _grid.Remove(line);
+        public void SetParentGrid(SmartGrid parentGrid) => _grid.AddToParent(parentGrid);
+        public void Hide() => _grid.Clear();
+        public void Update(Rect rect) => _grid.Rect = rect;
 
         public void ShowDots(ref DotController dotController)
         {
-            dotController.InitNet(grid.GetActualSize());
+            dotController.InitNet(_grid.GetActualSize());
 
             dotController.Dots.ForEach(dot =>
             {
-                grid.Children.Add(dot);
+                _grid.Add(dot);
                 dot.Tapped += DotTapped;
                 dot.PointerEntered += (object sender, PointerRoutedEventArgs args) => dot.IncreaseSize();
                 dot.PointerExited += (object sender, PointerRoutedEventArgs args) => dot.DecreaseSize();
@@ -68,13 +64,13 @@ namespace SchemeCreator.UI
             foreach (Gate gate in logicGates)
             {
                 var body = gate.DrawBody();
-                body.AddToParent(grid);
+                body.AddToParent(_grid);
                 body.Tapped += (Gate g, Button button) => LogicGateTappedEvent(gate, button); ;
 
                 var items = gate.DrawPorts(ConnectionTypeEnum.Both);
                 foreach (var item in items)
                 {
-                    item.AddToParent(grid);
+                    item.AddToParent(_grid);
                     item.Tapped += (Port port) => PortTapped(port);
                 }
             }
@@ -83,7 +79,7 @@ namespace SchemeCreator.UI
             foreach(Gate gate in externalGates)
             {
                 var body = gate.DrawBody();
-                body.AddToParent(grid);
+                body.AddToParent(_grid);
 
                 if (gate.Type == GateEnum.IN)
                     body.Tapped += (Gate g, Button button) => GateINTapped(gate, button);
@@ -100,7 +96,7 @@ namespace SchemeCreator.UI
                 line.Tapped += Wire_Tapped;
                 line.PointerEntered += Line_PointerEntered;
                 line.PointerExited += Line_PointerExited;
-                grid.Children.Add(line);
+                _grid.Add(line);
             }
         }
 
@@ -129,7 +125,7 @@ namespace SchemeCreator.UI
                 tb.SetStandartAlignment();
                 tb.SetSizeAndCenter(traceTextSize, wire.Center);
 
-                grid.Children.Add(tb);
+                _grid.Add(tb);
             };
         }
 
@@ -155,6 +151,6 @@ namespace SchemeCreator.UI
 
         #endregion
 
-        readonly Grid grid;
+        private readonly SmartGrid _grid;
     }
 }

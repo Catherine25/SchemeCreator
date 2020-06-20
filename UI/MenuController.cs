@@ -7,13 +7,14 @@ using static SchemeCreator.Data.Constants;
 using SchemeCreator.Data.Services;
 using System.Linq;
 using System.Diagnostics;
+using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.UI
 {
     class MenuController
     {
         Dictionary<BtId, Button> buttons = new Dictionary<BtId, Button>();
-        StackPanel grid = new StackPanel();
+        StackPanel panel = new StackPanel();
 
         #region Events
 
@@ -29,10 +30,10 @@ namespace SchemeCreator.UI
 
         public MenuController()
         {
-            grid.Orientation = Orientation.Horizontal;
-            grid.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.VerticalAlignment = VerticalAlignment.Top;
-            Colorer.ColorGrid(grid);
+            panel.Orientation = Orientation.Horizontal;
+            panel.HorizontalAlignment = HorizontalAlignment.Left;
+            panel.VerticalAlignment = VerticalAlignment.Top;
+            Colorer.ColorGrid(panel);
 
             int counter = 0;
 
@@ -80,17 +81,17 @@ namespace SchemeCreator.UI
 
         public void Update(Rect rect)
         {
-            grid.Width = rect.Width;
-            grid.Height = rect.Height;
+            panel.Width = rect.Width;
+            panel.Height = rect.Height;
 
-            Debug.WriteLine($"Grid Width = {grid.Width}, Height = {grid.Height}");
+            Debug.WriteLine($"Grid Width = {panel.Width}, Height = {panel.Height}");
         }
 
-        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(grid);
+        public void SetParentGrid(SmartGrid parentGrid) => parentGrid.Add(panel);
 
-        public void Show() => buttons.Values.ToList().ForEach(b => grid.Children.Add(b));
+        public void Show() => buttons.Values.ToList().ForEach(b => panel.Children.Add(b));
 
-        public void Hide() => grid.Children.Clear();
+        public void Hide() => panel.Children.Clear();
         
         public void InActivateModeButtons()
         {

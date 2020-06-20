@@ -7,13 +7,15 @@ namespace SchemeCreator
 {
     public sealed partial class MainPage : Page
     {
-        private Scheme scheme = new Scheme();
+        private Scheme scheme;
 
         public MainPage()
         {
             InitializeComponent();
 
-            Content = scheme.frameManager.Grid;
+            scheme = new Scheme();
+
+            scheme.frameManager.Grid.AddToParent(this);
             SizeChanged += MainPageSizeChanged;
         }
 

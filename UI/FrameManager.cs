@@ -24,8 +24,7 @@ namespace SchemeCreator.UI
 
         private Wire newWire;
 
-        public Grid Grid { get; }
-
+        public SmartGrid Grid { get; }
 
         public FrameManager(Scheme _scheme)
         {
@@ -35,9 +34,7 @@ namespace SchemeCreator.UI
 
             workspaceController = new WorkspaceController();
             menuController = new MenuController();
-
-            Grid = new Grid();
-            Grid.SetStandartAlighnment();
+            Grid = new SmartGrid();
 
             menuController.SetParentGrid(Grid);
             workspaceController.SetParentGrid(Grid);
@@ -255,26 +252,26 @@ namespace SchemeCreator.UI
                 scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
         }
 
-        public void SwitchToFrame(FrameEnum frame, Grid grid)
+        public void SwitchToFrame(FrameEnum frame, SmartGrid grid)
         {
             currentFrame = frame;
 
-            Rect rect = grid.GetRect();
+            Rect rect = grid.Rect;
 
             menuController.Show();
         }
 
         public void SizeChanged(Rect rect)
         {
-            Grid.SetRect(rect);
+            Grid.Rect = rect;
 
-            Point menuPoint = Grid.GetLeftTop();
+            Point menuPoint = Grid.GetXY();
             Size menuSize = new Size(rect.Width, rect.Height / 20);
             Rect menuRect = new Rect(menuPoint, menuSize);
 
             menuController.Update(menuRect);
 
-            Point workSpaceRectPoint = Grid.GetLeftTop();
+            Point workSpaceRectPoint = Grid.GetXY();
             workSpaceRectPoint.Y += menuSize.Height;
             Size workSpaceSize = new Size(rect.Width, rect.Height);
             workSpaceSize.Height -= menuSize.Height;

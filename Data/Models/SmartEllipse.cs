@@ -4,7 +4,6 @@ using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 
@@ -50,7 +49,7 @@ namespace SchemeCreator.Data.Models
 
         #endregion
 
-        public void AddToParent(Grid grid) => grid.Children.Add(_ellipse);
+        public void AddToParent(SmartGrid grid) => grid.Add(_ellipse);
 
         public void SetCenterAndSize(Point? point = null, Size? size = null) => _ellipse.SetSizeAndCenterPoint(size, point);
 

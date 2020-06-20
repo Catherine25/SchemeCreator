@@ -1,9 +1,9 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.Data.Interfaces
 {
     interface IGridChild
     {
-        void AddToParent(Grid parent);
+        void AddToParent(SmartGrid parent);
     }
 }

@@ -40,6 +40,6 @@ namespace SchemeCreator.Data.Models
 
         public bool ContainsBodyByMargin(Thickness t) => button.Margin == t;
 
-        public void AddToParent(Grid parent) => parent.Children.Add(button);
+        public void AddToParent(SmartGrid parent) => parent.Add(button);
     }
 }
