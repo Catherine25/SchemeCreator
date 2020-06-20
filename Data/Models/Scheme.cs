@@ -57,7 +57,7 @@ namespace SchemeCreator.Data.Models
                         else if (gate.WireConnects(lineController.Wires[i].End))
                             connections--;
                     }
-                    if (connections == 0)
+                    if (connections <= 0)
                         found = true;
                 }
             }
