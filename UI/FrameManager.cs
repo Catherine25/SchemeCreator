@@ -1,12 +1,18 @@
-﻿using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Controllers;
 using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Models.Enums;
 using SchemeCreator.Data.Services;
+using SchemeCreator.UI.Dynamic;
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
+using SchemeCreator.Data;
+using SchemeCreator.Data.Extensions;
 using static SchemeCreator.Data.Constants;
+using Type = SchemeCreator.UI.Dynamic.PortType;
 
 namespace SchemeCreator.UI
 {
@@ -14,269 +20,341 @@ namespace SchemeCreator.UI
     {
         private readonly WorkspaceController workspaceController;
 
-        private readonly MenuController menuController;
+        //private readonly MenuController menuController;
 
-        private ModeEnum CurrentMode;
+        //private ModeEnum CurrentMode;
 
-        private Scheme scheme;
+        private SchemeView scheme;
 
         private FrameEnum currentFrame;
 
-        private Wire newWire;
+        private WireView newWire;
 
-        public SmartGrid Grid { get; }
+        private Stack<ConnectionPair> connections = new Stack<ConnectionPair>();
 
-        public FrameManager(Scheme _scheme)
-        {
-            scheme = _scheme;
+        public Grid MainGrid { get; }
 
-            newWire = null;
+        //public FrameManager(Scheme _scheme)
+        //{
+        //    scheme = _scheme;
 
-            workspaceController = new WorkspaceController();
-            menuController = new MenuController();
-            Grid = new SmartGrid();
+        //    newWire = null;
 
-            menuController.SetParentGrid(Grid);
-            workspaceController.SetParentGrid(Grid);
+        //    workspaceController = new WorkspaceController();
+        //    //menuController = new MenuController();
+        //    MainGrid = new Grid();
 
-            SwitchToFrame(FrameEnum.workspace, Grid);
+        //    //menuController.SetParentGrid(MainGrid);
+        //    workspaceController.SetParentGrid(MainGrid);
 
-            EventSubscribe();
-        }
+        //    SwitchToFrame(FrameEnum.workspace, MainGrid);
+
+        //    EventSubscribe();
+        //}
 
         /*      methods     */
 
-        private void EventSubscribe()
-        {
-            menuController.NewSchemeBtClickEvent += NewSchemeEventAsync;
-            menuController.LoadSchemeBtClickEvent += LoadSchemeEvent;
-            menuController.SaveSchemeBtClickEvent += SaveSchemeEvent;
-            menuController.TraceSchemeBtClickEvent += TraceSchemeEvent;
-            menuController.WorkSchemeBtClickEvent += WorkSchemeEvent;
-            menuController.ChangeModeEvent += ChangeModeEvent;
+        //private void EventSubscribe()
+        //{
+        //    //menuController.NewSchemeBtClickEvent += NewSchemeEventAsync;
+        //    //menuController.LoadSchemeBtClickEvent += LoadSchemeEvent;
+        //    //menuController.SaveSchemeBtClickEvent += SaveSchemeEvent;
+        //    //menuController.TraceSchemeBtClickEvent += TraceSchemeEvent;
+        //    //menuController.WorkSchemeBtClickEvent += WorkSchemeEvent;
+        //    //menuController.ChangeModeEvent += ChangeModeEvent;
 
-            workspaceController.DotTappedEvent += DotTappedEventAsync;
-            workspaceController.PortTapped += PortTapped;
-            workspaceController.LogicGateTappedEvent += LogicGateTappedEvent;
-            workspaceController.GateINTapped += GateINTappedEvent;
-            workspaceController.GateOUTTapped += GateOUTTappedEvent;
-            workspaceController.LineTappedEvent += WorkspaceController_LineTappedEvent;
-        }
+        //    workspaceController.DotTappedEvent += DotTappedEventAsync;
+        //    workspaceController.PortTapped += PortTapped;
+        //    workspaceController.LogicGateTappedEvent += LogicGateTappedEvent;
+        //    workspaceController.ExternalPortViewTappedEvent += ExternalPortViewTappedEvent;
+        //    workspaceController.LineTappedEvent += WorkspaceController_LineTappedEvent;
+        //}
 
-        private void WorkspaceController_LineTappedEvent(Line line)
-        {
-            scheme.lineController.Wires.Remove(scheme.lineController.FindWireByLine(line));
-            workspaceController.RemoveLine(line);
-        }
+        //private void ExternalPortViewTappedEvent(ExternalPortView obj)
+        //{
+        //    if (obj.Type == Type.Input)
+        //    {
+        //        ModeEnum curMode = CurrentMode;
 
-        private void PortTapped(Port p)
+        //        if (curMode == ModeEnum.addLineMode)
+        //            TryCreate(obj, true);
+        //        else if (curMode == ModeEnum.changeValueMode)
+        //        {
+        //            if (obj.Value == null)
+        //                obj.Value = true;
+
+        //            obj.Value = !obj.Value;
+        //        }
+        //        //else
+        //            //await new Message(scheme.gateController.GetGateByBody(body).Type).ShowAsync();
+        //    }
+        //    else
+        //    {
+        //        if (CurrentMode == ModeEnum.addLineMode)
+        //            TryCreate(obj, false);
+        //        //else
+        //            //await new Message(scheme.gateController.GetGateByBody(body).Type).ShowAsync();
+        //    }
+        //}
+
+        //private void WorkspaceController_LineTappedEvent(Line line)
+        //{
+        //    scheme.Wires.Remove(scheme.FindWireByLine(line));
+        //    workspaceController.RemoveLine(line);
+        //}
+
+        //TODO
+        //private void PortTapped(GatePortView p, GateView gate)
+        //{
+        //    if (p.Type == ConnectionTypeEnum.Input && CurrentMode == ModeEnum.addLineMode)
+        //        TryCreate(gate, p, false);
+        //    else if (CurrentMode == ModeEnum.addLineMode)
+        //        TryCreate(gate, p, true, p.Value);
+        //}
+
+        //private async void DotTappedEventAsync(Ellipse e, Vector2 point)
+        //{
+        //    NewGateDialog msg = new NewGateDialog();
+
+        //    await msg.ShowAsync();
+
+        //    if (msg.gateType != null)
+        //    {
+        //        //TODO here e.CenterPoint -> row number
+        //        GateView gate = new GateView(msg.gateType.Value, point, msg.inputs, msg.outputs);
+        //        scheme.gateController.Gates.Add(gate);
+
+        //        workspaceController.AddGateToGrid(gate);
+        //    }
+        //}
+
+        //TODO
+        //private async void LogicGateTappedEvent(GateBodyView body, GateView gate) =>
+        //    await new Message(gate.Type).ShowAsync();
+
+        //private async void GateINTappedEvent(GateView gate, Button body) {}
+
+        //private async void GateOUTTappedEvent(GateView gate, Button body){}
+
+        //private bool WireCanBeCreated() => newWire != null
+        //    && newWire.Start.X != 0
+        //    && newWire.Start.Y != 0
+        //    && newWire.End.X != 0
+        //    && newWire.End.Y != 0;
+        
+        //private void TryCreate(Vector2 p, bool isStart, bool? value = null)
+        //{
+        //    if (newWire == null)
+        //        newWire = new Wire();   
+
+        //    if (isStart)
+        //    {
+        //        newWire.Start = p;
+        //        newWire.isActive = value;
+        //    }
+        //    else
+        //        newWire.End = p;
+
+        //    if (WireCanBeCreated())
+        //    {
+        //        scheme.lineController.Wires.Add(newWire);
+
+        //        workspaceController.ShowLines(ref scheme.lineController);
+
+        //        newWire = null;
+        //    }
+        //}
+
+        private void TryCreate(ExternalPortView port, bool isStart, bool? value = null)
         {
-            if(p.Type == ConnectionTypeEnum.Input)
+            if (connections.TryPop(out ConnectionPair pair))
             {
-                if (CurrentMode == ModeEnum.addLineMode)
-                TryCreate(p.CenterPoint, false);
-            }
-            else
-            {
-                if (CurrentMode == ModeEnum.addLineMode)
+                if(pair.Start != null && pair.End != null)
+                    connections.Push(pair);
+
+                if (isStart)
                 {
-                    Gate gate = scheme.gateController.GetGateByInOut(p, ConnectionTypeEnum.Output);
-
-                    bool? isActive = gate.Values[gate.GetIndexOfInOutByCenter(p.CenterPoint, ConnectionTypeEnum.Output)];
-
-                    TryCreate(p.CenterPoint, true, isActive);
+                    pair.Start.Clear();
+                    pair.Start.externalPort = port;
+                    pair.Start.externalPort.Value = value;
+                }
+                else
+                {
+                    pair.End.Clear();
+                    pair.End.externalPort = port;
                 }
             }
-        }
-
-        private async void DotTappedEventAsync(Ellipse e)
-        {
-            NewGateDialog msg = new NewGateDialog();
-
-            await msg.ShowAsync();
-
-            if (msg.gateType != null)
+            else
             {
-                Gate gate = new Gate(msg.gateType.Value, msg.inputs, msg.outputs, e.GetCenterPoint());
-                scheme.gateController.Gates.Add(gate);
+                ConnectionPair newPair = new ConnectionPair();
 
-                workspaceController.AddGateToGrid(gate);
+                if (isStart)
+                {
+                    newPair.Start = new Connection {externalPort = port};
+                    newPair.Value = value;
+                }
+                else
+                    newPair.End = new Connection {externalPort = port};
+                
+                connections.Push(newPair);
             }
         }
-
-        private async void LogicGateTappedEvent(Gate gate, Button b) =>
-            await new Message(gate.Type).ShowAsync();
-
-        private async void GateINTappedEvent(Gate gate, Button b)
+        private void TryCreate(GateView gate, GatePortView gatePort, bool isStart, bool? value = null)
         {
-            ModeEnum curMode = CurrentMode;
-
-            if (curMode == ModeEnum.addLineMode)
-                TryCreate(gate.Center, true);
-            else if (curMode == ModeEnum.changeValueMode)
+            if (connections.TryPop(out ConnectionPair pair))
             {
-                if (gate.Values[0] == null)
-                    gate.Values[0] = true;
+                if (pair.Start != null && pair.End != null)
+                    connections.Push(pair);
 
-                gate.Values[0] = !gate.Values[0];
-
-                Colorer.SetFillByValue(b, gate.Values[0]);
+                if (isStart)
+                {
+                    pair.Start.Clear();
+                    pair.Start.gate = gate;
+                    pair.Start.port = gatePort;
+                    pair.Start.port.Value = value;
+                }
+                else
+                {
+                    pair.End.Clear();
+                    pair.End.gate = gate;
+                    pair.End.port = gatePort;
+                }
             }
             else
-                await new Message(scheme.gateController.GetGateByBody(b).Type).ShowAsync();
-        }
-
-        private async void GateOUTTappedEvent(Gate gate, Button b)
-        {
-            if (CurrentMode == ModeEnum.addLineMode)
-                TryCreate(gate.Center, false);
-            else
-                await new Message(scheme.gateController.GetGateByBody(b).Type).ShowAsync();
-        }
-
-        private bool WireCanBeCreated() => newWire != null
-            && newWire.Start.X != 0
-            && newWire.Start.Y != 0
-            && newWire.End.X != 0
-            && newWire.End.Y != 0;
-        
-        private void TryCreate(Point p, bool isStart, bool? value = null)
-        {
-            if (newWire == null)
-                newWire = new Wire();   
-
-            if (isStart)
             {
-                newWire.Start = p;
-                newWire.isActive = value;
-            }
-            else
-                newWire.End = p;
+                ConnectionPair newPair = new ConnectionPair();
 
-            if (WireCanBeCreated())
-            {
-                scheme.lineController.Wires.Add(newWire);
+                if (isStart)
+                {
+                    newPair.Start = new Connection
+                    {
+                        gate = gate,
+                        port = gatePort
+                    };
 
-                workspaceController.ShowLines(ref scheme.lineController);
+                    newPair.Value = value;
+                }
+                else
+                    newPair.End = new Connection
+                    {
+                        gate = gate,
+                        port = gatePort
+                    };
 
-                newWire = null;
+                connections.Push(newPair);
             }
         }
 
         public FrameEnum GetActiveFrame() => currentFrame;
 
-        private async void NewSchemeEventAsync()
-        {
-            if (scheme.gateController.Gates.Count == 0
-                && scheme.lineController.Wires.Count == 0)
-            {
-                workspaceController.Hide();
-                workspaceController.ShowAll(ref scheme);
-            }
-            else
-            {
-                ContentDialogResult result = await new Message(MessageTypes.newSchemeButtonClicked).ShowAsync();
+        //private async void NewSchemeEventAsync()
+        //{
+        //    if (scheme.gateController.Gates.Count == 0
+        //        && scheme.lineController.Wires.Count == 0)
+        //    {
+        //        workspaceController.Hide();
+        //        workspaceController.ShowAll(ref scheme);
+        //    }
+        //    else
+        //    {
+        //        ContentDialogResult result = await new Message(MessageTypes.newSchemeButtonClicked).ShowAsync();
 
-                if (result == ContentDialogResult.Primary)
-                {
-                    scheme.gateController.Gates.Clear();
-                    scheme.lineController.Wires.Clear();
+        //        if (result == ContentDialogResult.Primary)
+        //        {
+        //            scheme.gateController.Gates.Clear();
+        //            scheme.lineController.Wires.Clear();
 
-                    workspaceController.Hide();
-                    workspaceController.ShowAll(ref scheme);
-                }
-            }
-        }
+        //            workspaceController.Hide();
+        //            workspaceController.ShowAll(ref scheme);
+        //        }
+        //    }
+        //}
 
-        private async void LoadSchemeEvent()
-        {
-            await Serializer.Load(scheme);
-            workspaceController.Hide();
-            workspaceController.ShowAll(ref scheme);
-        }
+        //private async void LoadSchemeEvent()
+        //{
+        //    await Serializer.Load(scheme);
+        //    workspaceController.Hide();
+        //    workspaceController.ShowAll(ref scheme);
+        //}
 
-        private async void SaveSchemeEvent() =>
-            await Serializer.Save(scheme);
+        //private async void SaveSchemeEvent() =>
+        //    await Serializer.Save(scheme);
 
-        private void TraceSchemeEvent()
-        {
-            int gateCount = scheme.gateController.Gates.Count;
+        //private void TraceSchemeEvent()
+        //{
+        //    Tracer tracer = new Tracer();
 
-            int wireCount = scheme.lineController.Wires.Count;
+        //    tracer.Trace(scheme.gateController, scheme.lineController);
 
-            Tracer tracer = new Tracer(gateCount, wireCount);
+        //    //int[] tracedWireIndexes = tracer.tracedWireIndexes;
 
-            tracer.Trace(scheme.gateController, scheme.lineController);
+        //    //int length = tracedWireIndexes.Length;
 
-            int[] tracedWireIndexes = tracer.tracedWireIndexes;
+        //    //TODO
+        //    //workspaceController.ShowWireTraceIndexes(tracedWireIndexes,scheme.lineController);
+        //}
 
-            int length = tracedWireIndexes.Length;
+        //private async void WorkSchemeEvent()
+        //{
+        //    int gateCount = scheme.gateController.Gates.Count;
+        //    int wireCount = scheme.lineController.Wires.Count;
 
-            workspaceController.ShowWireTraceIndexes(tracedWireIndexes,
-            scheme.lineController);
-        }
+        //    Tracer tracer = new Tracer();
 
-        private async void WorkSchemeEvent()
-        {
-            int gateCount = scheme.gateController.Gates.Count;
-            int wireCount = scheme.lineController.Wires.Count;
+        //    tracer.Trace(scheme.gateController, scheme.lineController);
 
-            Tracer tracer = new Tracer(gateCount, wireCount);
-
-            tracer.Trace(scheme.gateController, scheme.lineController);
-
-            scheme.gateController.ClearValuesExcludingIN();
+        //    scheme.gateController.ResetGates();
             
-            WorkAlgorithmResult Result = WorkAlgorithm.Visualize(scheme);
+        //    WorkAlgorithmResult Result = WorkAlgorithm.Visualize(scheme, tracer.TraceHistory);
 
-            if (Result == WorkAlgorithmResult.exInsNotInited)
-                await new Message(MessageTypes.exInsNotInited).ShowAsync();
-            else if(Result == WorkAlgorithmResult.gatesNotConnected)
-                await new Message(MessageTypes.gatesNotConnected).ShowAsync();
-            else if(Result == WorkAlgorithmResult.schemeIsntCorrect)
-                await new Message(MessageTypes.visualizingFailed).ShowAsync();
-            else
-            {
-                workspaceController.Hide();
-                workspaceController.ShowAll(ref scheme);
-            }
-        }
+        //    if (Result == WorkAlgorithmResult.exInsNotInited)
+        //        await new Message(MessageTypes.exInsNotInited).ShowAsync();
+        //    else if(Result == WorkAlgorithmResult.gatesNotConnected)
+        //        await new Message(MessageTypes.gatesNotConnected).ShowAsync();
+        //    else if(Result == WorkAlgorithmResult.schemeIsntCorrect)
+        //        await new Message(MessageTypes.visualizingFailed).ShowAsync();
+        //    else
+        //    {
+        //        workspaceController.Hide();
+        //        workspaceController.ShowAll(ref scheme);
+        //    }
+        //}
 
-        private void ChangeModeEvent(BtId obj)
-        {
-            menuController.InActivateModeButtons();
+        //private void ChangeModeEvent(BtId obj)
+        //{
+        //    menuController.InActivateModeButtons();
 
-            if (obj == BtId.addLineBt)
-                scheme.frameManager.CurrentMode = ModeEnum.addLineMode;
-            else
-                scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
-        }
+        //    if (obj == BtId.addLineBt)
+        //        scheme.frameManager.CurrentMode = ModeEnum.addLineMode;
+        //    else
+        //        scheme.frameManager.CurrentMode = ModeEnum.changeValueMode;
+        //}
 
-        public void SwitchToFrame(FrameEnum frame, SmartGrid grid)
-        {
-            currentFrame = frame;
+        //public void SwitchToFrame(FrameEnum frame, Grid grid)
+        //{
+        //    currentFrame = frame;
 
-            Rect rect = grid.Rect;
+        //    //Rect rect = grid.GetRect();
 
-            menuController.Show();
-        }
+        //    menuController.Show();
+        //}
 
-        public void SizeChanged(Rect rect)
-        {
-            Grid.Rect = rect;
+        //public void SizeChanged(Rect rect)
+        //{
+        //    MainGrid.SetRect(rect);
 
-            Point menuPoint = Grid.GetXY();
-            Size menuSize = new Size(rect.Width, rect.Height / 20);
-            Rect menuRect = new Rect(menuPoint, menuSize);
+        //    Point menuPoint = MainGrid.GetLeftTop();
+        //    Size menuSize = new Size(rect.Width, rect.Height / 20);
+        //    Rect menuRect = new Rect(menuPoint, menuSize);
 
-            menuController.Update(menuRect);
+        //    menuController.Update(menuRect);
 
-            Point workSpaceRectPoint = Grid.GetXY();
-            workSpaceRectPoint.Y += menuSize.Height;
-            Size workSpaceSize = new Size(rect.Width, rect.Height);
-            workSpaceSize.Height -= menuSize.Height;
-            Rect workSpaceRect = new Rect(workSpaceRectPoint, workSpaceSize);
-            workspaceController.Update(workSpaceRect);
-        }
+        //    Point workSpaceRectPoint = MainGrid.GetLeftTop();
+        //    workSpaceRectPoint.Y += menuSize.Height;
+        //    Size workSpaceSize = new Size(rect.Width, rect.Height);
+        //    workSpaceSize.Height -= menuSize.Height;
+        //    Rect workSpaceRect = new Rect(workSpaceRectPoint, workSpaceSize);
+        //    workspaceController.Update(workSpaceRect);
+        //}
     }
 }

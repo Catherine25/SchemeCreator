@@ -1,70 +1,72 @@
 ﻿using SchemeCreator.Data.Controllers;
-using SchemeCreator.UI;
 using System.Collections.Generic;
-using static SchemeCreator.Data.Constants;
+using System.Linq;
+using System.Numerics;
+using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.Data.Models
 {
     public class Scheme
     {
-        public FrameManager frameManager;
-        public LineController lineController = new LineController();
-        public GateController gateController = new GateController();
-        public DotController dotController = new DotController();
+        //public LineController lineController = new LineController();
+        //public GateController gateController = new GateController();
+        //public DotController dotController = new DotController();
 
-        //constructors
-        public Scheme() => frameManager = new FrameManager(this);
-        public bool IsAllConnected()
-        {
-            Stack<Gate> gates = new Stack<Gate>(gateController.Gates);
-            int wireCount = lineController.Wires.Count;
-            bool found = true;
+        //public bool IsAllConnected()
+        //{
+        //    Stack<GateView> gates = new Stack<GateView>(gateController.Gates);
+        //    List<Wire> wires = new List<Wire>(lineController.Wires);
 
-            while(gates.Count != 0 && found)
-            {
-                Gate gate = gates.Pop();
-                found = false;
+        //    bool found = true;
 
-                if (gate.Type == GateEnum.IN)
-                {
-                    for (int i = 0; i < wireCount; i++)
-                    {
-                        if (gate.WireConnects(lineController.Wires[i].Start))
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                else if (gate.Type == GateEnum.OUT)
-                {
-                    for (int i = 0; i < wireCount; i++)
-                    {
-                        if (gate.WireConnects(lineController.Wires[i].End))
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    int connections = gate.Inputs + gate.Outputs;
-                    for (int i = 0; i < wireCount; i++)
-                    {
-                        if (gate.WireConnects(lineController.Wires[i].Start))
-                            connections--;
-                        else if (gate.WireConnects(lineController.Wires[i].End))
-                            connections--;
-                    }
-                    if (connections <= 0)
-                        found = true;
-                }
-            }
+        //    if (AllExternalPortsConnect(Type.Input, wires))
+        //        return false;
 
-            if (gates.Count == 0)
-                return true;
-            else return false;
-        }
+        //    if (AllExternalPortsConnect(Type.Output, wires))
+        //        return false;
+
+        //    while (gates.Count != 0 && found)
+        //    {
+        //        GateView gate = gates.Pop();
+        //        found = false;
+
+        //        int connections = gate.InputCount + gate.OutputCount;
+                
+        //        foreach (var wire in wires)
+        //            if (gate.WireConnects(wire.Start) || gate.WireConnects(wire.End))
+        //                connections--;
+
+        //        if (connections <= 0)
+        //            found = true;
+        //    }
+
+        //    return gates.Count == 0;
+        //}
+
+        //private bool AllExternalPortsConnect(Type type, List<Wire> wires)
+        //{
+        //    IEnumerable<Vector3> wirePointsToCheck = type == Type.Input 
+        //        ? wires.Select(x => x.Start)
+        //        : wires.Select(x => x.End);
+            
+        //    Stack<ExternalPortView> externalPorts =
+        //        new Stack<ExternalPortView>(gateController.ExternalPorts.Where(x => x.Type == type));
+
+        //    bool found = true;
+
+        //    while (externalPorts.TryPop(out var externalPort) && found)
+        //    {
+        //        found = false;
+
+        //        foreach (Vector3 point in wirePointsToCheck)
+        //            if (externalPort.CenterPoint == point)
+        //            {
+        //                found = true;
+        //                break;
+        //            }
+        //    }
+
+        //    return found;
+        //}
     }
 }

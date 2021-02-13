@@ -1,89 +1,73 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Windows.Foundation;
-using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.Models;
-using SchemeCreator.Data.Models.Enums;
+using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.Data.Controllers
 {
     public class GateController
     {
-        public GateController() => Gates = new List<Gate>();
-
-        private IList<Gate> gates;
-
-        public IList<Gate> Gates
+        public GateController()
         {
-            get => gates;
-            set => gates = value;
+            Gates = new List<GateView>();
+            ExternalPorts = new List<ExternalPortView>();
         }
 
-        public Gate GetGateByBody(Button b)
-        {
-            foreach (Gate gate in Gates)
-                if (gate.ContainsBodyByMargin(b.Margin))
-                    return gate;
+        public IList<GateView> Gates;
+        public IList<ExternalPortView> ExternalPorts;
 
-            throw new System.Exception();
-        }
 
-        public Gate GetGateByWire(Wire w)
-        {
-            foreach (Gate gate in Gates)
-                if (gate.GetBodyByWirePart(w.Start) != null
-                    || gate.GetBodyByWirePart(w.End) != null)
-                    return gate;
-                else if ((gate.GetInOutByWirePart(w.Start) != null) ||
-                    gate.GetInOutByWirePart(w.End) != null)
-                    return gate;
+        //public GateView GetGateByBody(Button b)
+        //{
+        //    foreach (GateView gate in Gates)
+        //        if (gate.ContainsBodyByMargin(b.Margin))
+        //            return gate;
 
-            return null;
-        }
+        //    throw new System.Exception();
+        //}
 
-        public Gate GetGateByInOut(Port p, ConnectionTypeEnum type)
-        {
-            foreach (Gate gate in Gates)
-                if (gate.ContainsInOutByCenter(p.CenterPoint, type))
-                    return gate;
+        //public Gate GetGateByWire(Wire w)
+        //{
+        //    foreach (Gate gate in Gates)
+        //        if (gate.GetBodyByWirePart(w.Start) != null
+        //            || gate.GetBodyByWirePart(w.End) != null)
+        //            return gate;
+        //        else if ((gate.GetInOutByWirePart(w.Start) != null) ||
+        //            gate.GetInOutByWirePart(w.End) != null)
+        //            return gate;
 
-            throw new System.Exception();
-        }
+        //    return null;
+        //}
 
-        public IEnumerable<Gate> GetLogicGates() =>
-            gates.Where(gate => (!Constants.external.Contains(gate.Type)));
+        //public Gate GetGateByInOut(GatePortView p, ConnectionTypeEnum type)
+        //{
+        //    foreach (Gate gate in Gates)
+        //        if (gate.ContainsInOutByCenter(p.CenterPoint, type))
+        //            return gate;
 
-        public IEnumerable<Gate> GetExternalGates() =>
-            gates.Where(gate => Constants.external.Contains(gate.Type));
+        //    throw new System.Exception();
+        //}
 
-        public IEnumerable<Gate> GetExternalInputs() =>
-            gates.Where(x => x.Type == Constants.GateEnum.IN);
+        //public IEnumerable<Gate> GetLogicGates() =>
+        //    gates.Where(gate => (!Constants.external.Contains(gate.Type)));
 
-        public Gate GetFirstNotInitedGate() =>
-            GetExternalInputs().FirstOrDefault(x => x.Values[0] == null);
+        //public IEnumerable<Gate> GetExternalGates() =>
+        //    gates.Where(gate => Constants.external.Contains(gate.Type));
 
-        public Gate GetGateByWireStart(Point point) =>
-            gates.FirstOrDefault(
-                x => x.GetBodyByWirePart(point) != null
-                || x.GetInOutByWirePart(point) != null);
+        public IEnumerable<ExternalPortView> GetExternalPorts(PortType type) =>
+            ExternalPorts.Where(x => x.Type == type);
 
-        public Gate GetGateByWireEnd(Point point) =>
-            gates.FirstOrDefault(
-                gate => gate.GetBodyByWirePart(point) != null
-                || gate.GetInOutByWirePart(point) != null);
+        public ExternalPortView GetFirstNotInitedExternalPort() =>
+            GetExternalPorts(PortType.Input)
+                .FirstOrDefault(x => x.Value == null);
 
-        public void ClearValuesExcludingIN()
-        {
-            int gatesCount = gates.Count;
+        //public Gate GetGateByWireStart(Vector3 point) =>
+        //    gates.FirstOrDefault(
+        //        x => x.GetBodyByWirePart(point) != null
+        //        || x.GetInOutByWirePart(point) != null);
 
-            for (int i = 0; i < gatesCount; i++)
-                if (gates[i].Type != Constants.GateEnum.IN)
-                {
-                    int gateValuesCount = gates[i].Inputs;
-
-                    for (int j = 0; j < gateValuesCount; j++)
-                        gates[i].Values[j] = null;
-                }
-        }
+        //public Gate GetGateByWireEnd(Vector3 point) =>
+        //    gates.FirstOrDefault(
+        //        gate => gate.GetBodyByWirePart(point) != null
+        //        || gate.GetInOutByWirePart(point) != null);
     }
 }

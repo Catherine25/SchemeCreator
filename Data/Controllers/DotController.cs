@@ -1,43 +1,46 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.Extensions;
-using Windows.Foundation;
-using static SchemeCreator.Data.Constants;
-using Windows.UI.Xaml.Media;
 using SchemeCreator.Data.Services;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using System.Numerics;
+using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Controllers
 {
     public class DotController
     {
-        private List<Ellipse> dots;
+        //private List<(Ellipse, Vector2)> dots;
 
-        public List<Ellipse> Dots
-        {
-            get => dots;
-            set => dots = value;
-        }
+        //public List<(Ellipse, Vector2)> Dots
+        //{
+        //    get => dots;
+        //    set => dots = value;
+        //}
 
-        public DotController() => dots = new List<Ellipse>();
+        //public DotController() => dots = new List<(Ellipse, Vector2)>();
 
-        public void InitNet(Size actSize)
-        {
-            double stepW = actSize.Width / (netSize + 1),
-                stepH = actSize.Height / (netSize + 1);
+        //public void InitNet()
+        //{
+        //    for (int i = 1; i <= netSize; i++)
+        //        for (int j = 1; j <= netSize; j++)
+        //        {
+        //            Ellipse ellipse = new Ellipse
+        //            {
+        //                HorizontalAlignment = HorizontalAlignment.Center,
+        //                VerticalAlignment = VerticalAlignment.Center
+        //            };
 
-            for (int i = 1; i <= netSize; i++)
-                for (int j = 1; j <= netSize; j++)
-                {
-                    Ellipse ellipse = new Ellipse();
+        //            Grid.SetRow(ellipse, i - 1);
+        //            Grid.SetColumn(ellipse, j - 1);
 
-                    Colorer.SetFillByValue(ellipse, false);
+        //            Colorer.SetFillByValue(ellipse, false);
 
-                    ellipse.SetSizeAndCenterPoint(dotSize, new Point(stepW * i, stepH * j));
+        //            ellipse.SetSize(dotSize);
 
-                    ellipse.SetStandartAlingment();
-                 
-                    Dots.Add(ellipse);
-                }
-        }
+        //            Dots.Add((ellipse, new Vector2(i - 1, j - 1)));
+        //        }
+        //}
     }
 }

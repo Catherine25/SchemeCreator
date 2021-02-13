@@ -1,26 +1,37 @@
 ﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Models;
+using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data.Controllers
 {
-    public class LineController
-    {
-        //data
-        private List<Wire> wires;
+    //public struct WireConnection
+    //{
+    //    public Wire Wire;
 
-        public List<Wire> Wires
-        {
-            get => wires;
-            set => wires = value;
-        }
+    //    public Type StartObjectType;
+    //    public Type EndObjectType;
+        
+    //    public int StartMatrixIndex;
+    //    public int EndMatrixIndex;
+    //}
 
-        //constructor
-        public LineController() => wires = new List<Wire>();
+    //public class LineController
+    //{
+    //    //data
+    //    public List<Wire> Wires;
+    //    public List<WireConnection> WireConnections;
 
-        //methods
-        public Wire FindWireByLine(Line line) =>
-            wires.Find(x => x.Start == line.GetStartPoint() && x.End == line.GetEndPoint());
-    }
+    //    //constructor
+    //    public LineController()
+    //    {
+    //        Wires = new List<Wire>();
+    //        WireConnections = new List<WireConnection>();
+    //    }
+
+    //    //methods
+    //    public Wire FindWireByLine(Line line) =>
+    //        Wires.Find(x => x.Start == line.GetStartPoint() && x.End == line.GetEndPoint());
+    //}
 }

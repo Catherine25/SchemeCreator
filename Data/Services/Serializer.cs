@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
-using SchemeCreator.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SchemeCreator.Data.Models;
+using SchemeCreator.UI.Dynamic;
+using SchemeCreator.UI;
 
 namespace SchemeCreator.Data.Services
 {
@@ -21,7 +23,7 @@ namespace SchemeCreator.Data.Services
             serializeLineData = new List<string>();
         }
 
-        public static async Task Load(Scheme scheme)
+        public static async Task Load(SchemeView scheme)
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
 
@@ -31,8 +33,8 @@ namespace SchemeCreator.Data.Services
             if (gateFile == null)
                 await folder.CreateFileAsync(gatePath);
 
-            scheme.gateController.Gates.Clear();
-            scheme.gateController.Gates = JsonConvert.DeserializeObject<List<Gate>>(await FileIO.ReadTextAsync(gateFile));
+            scheme.Gates.Clear();
+            scheme.Gates = JsonConvert.DeserializeObject<List<GateView>>(await FileIO.ReadTextAsync(gateFile));
 
             //serialization of wires
             StorageFile lineFile = await folder.GetFileAsync(linePath);
@@ -40,11 +42,11 @@ namespace SchemeCreator.Data.Services
             if (lineFile == null)
                 await folder.CreateFileAsync(linePath);
 
-            scheme.lineController.Wires.Clear();
-            scheme.lineController.Wires = JsonConvert.DeserializeObject<List<Wire>>(await FileIO.ReadTextAsync(lineFile));
+            scheme.Wires.Clear();
+            scheme.Wires = JsonConvert.DeserializeObject<List<WireView>>(await FileIO.ReadTextAsync(lineFile));
         }
 
-        public static async Task Save(Scheme scheme)
+        public static async Task Save(SchemeView scheme)
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
 
@@ -52,13 +54,13 @@ namespace SchemeCreator.Data.Services
             StorageFile gateFile = await folder.CreateFileAsync(gatePath,
                                                 CreationCollisionOption.OpenIfExists);
 
-            await FileIO.WriteTextAsync(gateFile, JsonConvert.SerializeObject(scheme.gateController.Gates));
+            await FileIO.WriteTextAsync(gateFile, JsonConvert.SerializeObject(scheme.Gates));
 
             //serialization of wires
             StorageFile lineFile = await folder.CreateFileAsync(linePath,
                                               CreationCollisionOption.OpenIfExists);
 
-            await FileIO.WriteTextAsync(lineFile, JsonConvert.SerializeObject(scheme.lineController.Wires));
+            await FileIO.WriteTextAsync(lineFile, JsonConvert.SerializeObject(scheme.Wires));
         }
     }
 }

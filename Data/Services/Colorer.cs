@@ -38,6 +38,12 @@ namespace SchemeCreator.Data.Services
         private static SolidColorBrush InactiveBrush;
         private static SolidColorBrush UnknownBrush;
 
+        public static SolidColorBrush GetBrushByValue(bool? value) =>
+            value == true ? ActiveBrush : value == false ? InactiveBrush : UnknownBrush;
+
+        public static SolidColorBrush GetGateForegroundBrush() => ActiveBrush;
+        public static SolidColorBrush GetGateBackgroundBrush() => InactiveBrush;
+
         public static void SetFillByValue(Button button, bool? value)
         {
             if (value == true)
