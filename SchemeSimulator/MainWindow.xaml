@@ -1,0 +1,36 @@
+﻿<Window x:Class="SchemeSimulator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SchemeSimulator"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- for buttons-->
+            <RowDefinition Height="15*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="NewSchemeBt" Content="New Scheme" Grid.Column="0"/>
+            <Button x:Name="LoadSchemeBt" Content="Load Scheme" Grid.Column="1"/>
+            <Button x:Name="SaveSchemeBt" Content="Save Scheme" Grid.Column="2"/>
+            <Button x:Name="TraceSchemeBt" Content="Trace Scheme" Grid.Column="3"/>
+            <Button x:Name="WorkSchemeBt" Content="Work" Grid.Column="4"/>
+        </Grid>
+        <local:SchemeView x:Name="SchemeView" Grid.Row="1"/>
+    </Grid>
+</Window>
