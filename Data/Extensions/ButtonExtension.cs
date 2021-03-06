@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using System.Numerics;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -6,7 +7,7 @@ namespace SchemeCreator.Data.Extensions
 {
     public static class ButtonExtension
     {
-        public static void SetSizeAndCenter(this Button button, Size size, Point center)
+        public static void SetSizeAndCenter(this Button button, Size size, Vector3 center)
         {
             button.SetSize(size);
 

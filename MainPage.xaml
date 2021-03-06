@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SchemeCreator"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ui="using:SchemeCreator.UI"
     mc:Ignorable="d"
     x:Name="MainPageName"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -19,17 +19,25 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Background="DarkCyan" x:Name="NewBt" Content="New" Height="50" Width="50" Margin="10,0" />
-            <Button Background="DarkCyan" x:Name="LoadBt" Content="Load" Height="50" Width="60" Margin="70,0" />
-            <Button Background="DarkCyan" x:Name="SaveBt" Content="Save" Height="50" Width="50" Margin="140,0" />
-            <Button Background="DarkCyan" x:Name="NewElementBt" Content="New Element" Height="50" Width="110" Margin="200,0" />
-            <Button Background="DarkCyan" x:Name="NewLineBt" Content="New Line" Height="50" Width="80" Margin="320,0" />
-            <Button Background="DarkCyan" x:Name="DeleteLineBt" Content="Delete Line" Height="50" Width="100" Margin="410,0" />
-            <Button Background="DarkCyan" x:Name="ChangeValueBt" Content="Change Value" Height="50" Width="110" Margin="520,0" />
-            <Button Background="DarkCyan" x:Name="WorkBt" Content="Work" Height="50" Width="60" Margin="640,0" />
-            <Button Background="DarkCyan" x:Name="TraceBt" Content="Trace" Height="50" Width="60" Margin="710,0" />
-
-            <Grid x:Name="WorkSpace" Grid.Row="1" HorizontalAlignment="Stretch" Margin="2,0.333,-2,0" VerticalAlignment="Stretch" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="XNewSchemeBt" Content="New Scheme" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XLoadSchemeBt" Content="Load Scheme" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XSaveSchemeBt" Content="Save Scheme" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XTraceSchemeBt" Content="Trace Scheme" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XWorkSchemeBt" Content="Work" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XAddLineBt" Content="Add Line" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XChangeValueBt" Content="Change Value" Grid.Column="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
+            <ui:SchemeView x:Name="XScheme" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>
     </Frame>
 </Page>

@@ -11,7 +11,9 @@ namespace SchemeCreator.Data.Models
         public SmartGrid()
         {
             _grid = new Grid();
-            _grid.SetStandartAlighnment();
+            _grid.VerticalAlignment = VerticalAlignment.Center;
+            _grid.HorizontalAlignment = HorizontalAlignment.Center;
+            //_grid.SetStandartAlighnment();
         }
 
         public Rect Rect
@@ -32,5 +34,14 @@ namespace SchemeCreator.Data.Models
         public void AddToParent(MainPage parent) => parent.Content = _grid;
 
         private Grid _grid;
+
+        public void AddMatrix(int netSize)
+        {
+            for (int i = 0; i < netSize; i++)
+            {
+                _grid.RowDefinitions.Add(new RowDefinition());
+                _grid.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using SchemeCreator.Data.Models;
+﻿using SchemeCreator.UI.Dynamic;
 using System;
 using System.Collections.Generic;
 using static SchemeCreator.Data.Constants;
@@ -7,10 +7,8 @@ namespace SchemeCreator.Data.Services
 {
     static class GateWorkPatterns
     {
-        public static Dictionary<GateEnum, Action<Gate>> ActionByType =
-            new Dictionary<GateEnum, Action<Gate>> {
-                { GateEnum.IN, BufferWork },
-                { GateEnum.OUT, BufferWork },
+        public static Dictionary<GateEnum, Func<List<bool?>, List<bool?>>> ActionByType =
+            new Dictionary<GateEnum, Func<List<bool?>, List<bool?>>> {
                 { GateEnum.Buffer, BufferWork },
                 { GateEnum.NOT, NotWork },
                 { GateEnum.AND, AndWork },
@@ -21,52 +19,58 @@ namespace SchemeCreator.Data.Services
                 { GateEnum.XNOR, XnorWork }
             };
 
-        private static void BufferWork(Gate gate) =>
-            gate.Values[0] = gate.Values[0];
-        
-        private static void NotWork(Gate gate) =>
-            gate.Values[0] = !gate.Values[0];
-
-        private static void AndWork(Gate gate)
+        public static List<bool?> BufferWork(List<bool?> inputs) => inputs;
+        public static List<bool?> NotWork(List<bool?> inputs) => inputs;
+        public static List<bool?> AndWork(List<bool?> inputs)
         {
-            for (int i = 0; i < gate.Values.Count; i++)
-                gate.Values[0] &= gate.Values[i];
+            for (int i = 0; i < inputs.Count; i++)
+                inputs[0] &= inputs[i];
+            return inputs;
+        }
+        private static List<bool?> NandWork(List<bool?> inputs)
+        {
+            for (int i = 0; i < inputs.Count; i++)
+                inputs[0] &= inputs[i];
+
+            inputs[0] = !inputs[0];
+
+            return inputs;
         }
 
-        private static void NandWork(Gate gate)
+        private static List<bool?> OrWork(List<bool?> inputs)
         {
-            for (int i = 0; i < gate.Values.Count; i++)
-                gate.Values[0] &= gate.Values[i];
+            for (int i = 0; i < inputs.Count; i++)
+                inputs[0] |= inputs[i];
 
-            gate.Values[0] = !gate.Values[0];
+            return inputs;
         }
 
-        private static void OrWork(Gate gate)
+        private static List<bool?> NorWork(List<bool?> inputs)
         {
-            for (int i = 0; i < gate.Values.Count; i++)
-                gate.Values[0] |= gate.Values[i];
-        }
-
-        private static void NorWork(Gate gate)
-        {
-            for (int i = 0; i < gate.Values.Count; i++)
-                gate.Values[0] |= gate.Values[i];
+            for (int i = 0; i < inputs.Count; i++)
+                inputs[0] |= inputs[i];
                 
-            gate.Values[0] = !gate.Values[0];
+            inputs[0] = !inputs[0];
+
+            return inputs;
         }
 
-        private static void XorWork(Gate gate)
+        private static List<bool?> XorWork(List<bool?> inputs)
         {
-            for (int i = 0; i < gate.Values.Count; i++)
-                gate.Values[0] ^= gate.Values[i];
+            for (int i = 0; i < inputs.Count; i++)
+                inputs[0] ^= inputs[i];
+
+            return inputs;
         }
 
-        private static void XnorWork(Gate gate)
+        private static List<bool?> XnorWork(List<bool?> inputs)
         {
-            for (int i = 0; i < gate.Values.Count; i++)
-                gate.Values[0] ^= gate.Values[i];
+            for (int i = 0; i < inputs.Count; i++)
+                inputs[0] ^= inputs[i];
                 
-            gate.Values[0] = !gate.Values[0];
+            inputs[0] = !inputs[0];
+
+            return inputs;
         }
     }
 }

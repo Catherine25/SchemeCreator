@@ -1,104 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using static SchemeCreator.Data.Constants;
-using SchemeCreator.Data.Services;
-using System.Linq;
-using System.Diagnostics;
-using SchemeCreator.Data.Models;
+﻿//using System;
+//using System.Collections.Generic;
+//using Windows.Foundation;
+//using Windows.UI.Xaml;
+//using Windows.UI.Xaml.Controls;
+//using static SchemeCreator.Data.Constants;
+//using SchemeCreator.Data.Services;
+//using System.Linq;
+//using System.Diagnostics;
+//using SchemeCreator.Data.Models;
 
-namespace SchemeCreator.UI
-{
-    class MenuController
-    {
-        Dictionary<BtId, Button> buttons = new Dictionary<BtId, Button>();
-        StackPanel panel = new StackPanel();
+//namespace SchemeCreator.UI
+//{
+//    class MenuController
+//    {
+//        Dictionary<BtId, Button> buttons = new Dictionary<BtId, Button>();
+//        StackPanel panel = new StackPanel();
 
-        #region Events
+//        #region Events
 
-        public event Action NewSchemeBtClickEvent;
-        public event Action LoadSchemeBtClickEvent;
-        public event Action SaveSchemeBtClickEvent;
-        public event Action TraceSchemeBtClickEvent;
-        public event Action WorkSchemeBtClickEvent;
+//        public event Action NewSchemeBtClickEvent;
+//        public event Action LoadSchemeBtClickEvent;
+//        public event Action SaveSchemeBtClickEvent;
+//        public event Action TraceSchemeBtClickEvent;
+//        public event Action WorkSchemeBtClickEvent;
 
-        public event Action<BtId> ChangeModeEvent;
+//        public event Action<BtId> ChangeModeEvent;
 
-        #endregion
+//        #endregion
 
-        public MenuController()
-        {
-            panel.Orientation = Orientation.Horizontal;
-            panel.HorizontalAlignment = HorizontalAlignment.Left;
-            panel.VerticalAlignment = VerticalAlignment.Top;
-            Colorer.ColorGrid(panel);
+//        public MenuController()
+//        {
+//            panel.Orientation = Orientation.Horizontal;
+//            panel.HorizontalAlignment = HorizontalAlignment.Left;
+//            panel.VerticalAlignment = VerticalAlignment.Top;
+//            Colorer.ColorGrid(panel);
 
-            int counter = 0;
+//            int counter = 0;
 
-            CreateButton(BtId.newSchemeBt, ref counter);
-            buttons[BtId.newSchemeBt].Click += (object o, RoutedEventArgs e) => NewSchemeBtClickEvent();
+//            CreateButton(BtId.newSchemeBt, ref counter);
+//            buttons[BtId.newSchemeBt].Click += (object o, RoutedEventArgs e) => NewSchemeBtClickEvent();
 
-            CreateButton(BtId.loadSchemeBt, ref counter);
-            buttons[BtId.loadSchemeBt].Click += (object o, RoutedEventArgs e) => LoadSchemeBtClickEvent();
+//            CreateButton(BtId.loadSchemeBt, ref counter);
+//            buttons[BtId.loadSchemeBt].Click += (object o, RoutedEventArgs e) => LoadSchemeBtClickEvent();
 
-            CreateButton(BtId.saveSchemeBt, ref counter);
-            buttons[BtId.saveSchemeBt].Click += (object o, RoutedEventArgs e) => SaveSchemeBtClickEvent();
+//            CreateButton(BtId.saveSchemeBt, ref counter);
+//            buttons[BtId.saveSchemeBt].Click += (object o, RoutedEventArgs e) => SaveSchemeBtClickEvent();
 
-            CreateButton(BtId.traceSchemeBt, ref counter);
-            buttons[BtId.traceSchemeBt].Click += (object o, RoutedEventArgs e) => TraceSchemeBtClickEvent();
+//            CreateButton(BtId.traceSchemeBt, ref counter);
+//            buttons[BtId.traceSchemeBt].Click += (object o, RoutedEventArgs e) => TraceSchemeBtClickEvent();
 
-            CreateButton(BtId.workSchemeBt, ref counter);
-            buttons[BtId.workSchemeBt].Click += (object o, RoutedEventArgs e) => WorkSchemeBtClickEvent();
+//            CreateButton(BtId.workSchemeBt, ref counter);
+//            buttons[BtId.workSchemeBt].Click += (object o, RoutedEventArgs e) => WorkSchemeBtClickEvent();
 
-            CreateButton(BtId.addLineBt, ref counter);
-            buttons[BtId.addLineBt].Click += (object o, RoutedEventArgs e) => ChangeModeEvent(BtId.addLineBt);
+//            CreateButton(BtId.addLineBt, ref counter);
+//            buttons[BtId.addLineBt].Click += (object o, RoutedEventArgs e) => ChangeModeEvent(BtId.addLineBt);
 
-            CreateButton(BtId.changeValueBt, ref counter);
-            buttons[BtId.changeValueBt].Click += (object o, RoutedEventArgs e) => {
-                ChangeModeEvent(BtId.changeValueBt);
-                Colorer.ColorMenuButtonBorderByValue(o as Button, true); };
-        }
+//            CreateButton(BtId.changeValueBt, ref counter);
+//            buttons[BtId.changeValueBt].Click += (object o, RoutedEventArgs e) => {
+//                ChangeModeEvent(BtId.changeValueBt);
+//                Colorer.ColorMenuButtonBorderByValue(o as Button, true); };
+//        }
 
-        private void CreateButton(BtId id, ref int counter)
-        {
-            Button button = new Button { Content = btText[id] };
-            button.HorizontalAlignment = HorizontalAlignment.Stretch;
-            button.VerticalAlignment = VerticalAlignment.Stretch;
-
-            Colorer.ColorMenuButton(button);
-
-            buttons.Add(id, button);
-
-            counter++;
-
-            Grid.SetRow(button, 0);
-            Grid.SetColumn(button, counter);
-        }
-
-        #region Public methods
-
-        public void Update(Rect rect)
-        {
-            panel.Width = rect.Width;
-            panel.Height = rect.Height;
-
-            Debug.WriteLine($"Grid Width = {panel.Width}, Height = {panel.Height}");
-        }
-
-        public void SetParentGrid(SmartGrid parentGrid) => parentGrid.Add(panel);
-
-        public void Show() => buttons.Values.ToList().ForEach(b => panel.Children.Add(b));
-
-        public void Hide() => panel.Children.Clear();
         
-        public void InActivateModeButtons()
-        {
-            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.addLineBt] as Button, false);
-            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.changeValueBt] as Button, false);
-        }
 
-        #endregion
-    }
-}
+//        #region Public methods
+
+//        public void Update(Rect rect)
+//        {
+//            panel.Width = rect.Width;
+//            panel.Height = rect.Height;
+
+//            Debug.WriteLine($"Grid Width = {panel.Width}, Height = {panel.Height}");
+//        }
+
+//        public void SetParentGrid(Grid parentGrid) => parentGrid.Children.Add(panel);
+
+//        public void Show() => buttons.Values.ToList().ForEach(b => panel.Children.Add(b));
+
+//        public void Hide() => panel.Children.Clear();
+        
+//        public void InActivateModeButtons()
+//        {
+//            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.addLineBt] as Button, false);
+//            Colorer.ColorMenuButtonBorderByValue(buttons[BtId.changeValueBt] as Button, false);
+//        }
+
+//        #endregion
+//    }
+//}

@@ -2,6 +2,7 @@
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using System;
+using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -22,17 +23,17 @@ namespace SchemeCreator.Data.Models
             _ellipse.Tapped += (object o, TappedRoutedEventArgs e) => Tapped(this);
 
             _ellipse.PointerEntered += (object o, PointerRoutedEventArgs e) =>
-                SetCenterAndSize(CenterPoint, new Size(Size.Width * 2, Size.Height * 2));
+                _ellipse.CenterPoint = new Vector3(_ellipse.CenterPoint.X * 2, _ellipse.CenterPoint.Y *2, _ellipse.CenterPoint.Z);
+                //SetCenterAndSize(_ellipse.CenterPoint, new Size(Size.Width * 2, Size.Height * 2));
 
             _ellipse.PointerExited += (object o, PointerRoutedEventArgs e) =>
-                SetCenterAndSize(CenterPoint, new Size(Size.Width / 2, Size.Height / 2));
+                _ellipse.CenterPoint = new Vector3(_ellipse.CenterPoint.X / 2, _ellipse.CenterPoint.Y / 2, _ellipse.CenterPoint.Z);
+            //SetCenterAndSize(_ellipse.CenterPoint, new Size(Size.Width / 2, Size.Height / 2));
         }
 
         #region Fields
 
         public Size Size => _ellipse.GetSize();
-
-        public Point CenterPoint => _ellipse.GetCenterPoint();
 
         public bool? BooleanValue
         {
@@ -51,7 +52,9 @@ namespace SchemeCreator.Data.Models
 
         public void AddToParent(SmartGrid grid) => grid.Add(_ellipse);
 
-        public void SetCenterAndSize(Point? point = null, Size? size = null) => _ellipse.SetSizeAndCenterPoint(size, point);
+        public void SetSize(Size size) => _ellipse.SetSize(size);
+
+        //public void SetCenterAndSize(Vector3? point = null, Size? size = null) => _ellipse.SetSizeAndCenterPoint(size, point);
 
         public Action<SmartEllipse> Tapped;
     }
