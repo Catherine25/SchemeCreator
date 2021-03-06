@@ -61,6 +61,12 @@
     <Compile Include="ExternalPort.xaml.cs">
       <DependentUpon>ExternalPort.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GatePortView.xaml.cs">
+      <DependentUpon>GatePortView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GateView.xaml.cs">
+      <DependentUpon>GateView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewGateDialog.xaml.cs">
       <DependentUpon>NewGateDialog.xaml</DependentUpon>
     </Compile>
@@ -76,6 +82,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExternalPort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GatePortView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GateView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
