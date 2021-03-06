@@ -29,7 +29,7 @@ namespace SchemeCreator.Data.Services
             {
                 traced = false;
                 // transfer from wires to gates
-                foreach (WireView wire in scheme.Wires.Where(w => w.IsActive != null))
+                foreach (WireView wire in scheme.Wires.Where(w => w.IsActive != null)) //TODO exclude transfered
                 foreach (GateView gate in scheme.Gates.Where(g => g.WireConnects(wire.End)))
                 {
                     traced = true;
