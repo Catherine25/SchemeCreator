@@ -46,13 +46,16 @@ namespace SchemeCreator.UI.Dynamic
         public WireView()
         {
             InitializeComponent();
+
+            Grid.SetColumnSpan(XLine, Constants.netSize);
+            Grid.SetRowSpan(XLine, Constants.netSize);
             
             XLine.Fill = Colorer.GetBrushByValue(null);
             XLine.StrokeThickness = Constants.wireThickness;
             XLine.Tapped += (sender, e) => Tapped(this);
 
             XLine.PointerEntered += (sender, e) => XLine.StrokeThickness *= 2;
-            XLine.PointerExited += (sender, e) => XLine.StrokeThickness *= 2;
+            XLine.PointerExited += (sender, e) => XLine.StrokeThickness /= 2;
 
             XLine.Stroke = new SolidColorBrush(Colors.Wheat);
             XLine.Fill = new SolidColorBrush(Colors.Wheat);
