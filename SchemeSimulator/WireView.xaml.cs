@@ -29,12 +29,25 @@ namespace SchemeSimulator
         {
             InitializeComponent();
 
+            Line.MouseEnter += Line_MouseEnter;
+            Line.MouseLeave += Line_MouseLeave;
+
             Line.X1 = start.X;
             Line.Y1 = start.Y;
             Line.X2 = end.X;
             Line.Y2 = end.Y;
 
             _value = null;
+        }
+
+        private void Line_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Line.StrokeThickness /= 2;
+        }
+
+        private void Line_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Line.StrokeThickness *= 2;
         }
     }
 }
