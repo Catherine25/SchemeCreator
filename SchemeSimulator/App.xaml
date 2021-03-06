@@ -4,6 +4,32 @@
              xmlns:local="clr-namespace:SchemeSimulator"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="#000000"/>
+        </Style>
+        
+        <Style TargetType="Grid">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#222222"/>
+            <Setter Property="Foreground" Value="#dddddd"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="Ellipse">
+            <Setter Property="Fill" Value="#222222"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#dddddd"/>
+            <Setter Property="Foreground" Value="#222222"/>
+        </Style>
+
+        <!--<Style TargetType="ComboBox">
+            <Setter Property="Foreground" Value="#dddddd"/>
+            <Setter Property="Background" Value="#222222"/>
+        </Style>-->
     </Application.Resources>
 </Application>
