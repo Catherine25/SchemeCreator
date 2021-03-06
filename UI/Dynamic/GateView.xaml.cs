@@ -91,29 +91,26 @@ namespace SchemeCreator.UI.Dynamic
 
         private void CreatePorts(int inputs, int outputs)
         {
-            AppearanceSettings appearanceSettings = new AppearanceSettings
-                {Brush = Colorer.GetBrushByValue(null), Size = gatePortSize};
-            
-            CreateInputs(appearanceSettings, inputs);
-            CreateOutputs(appearanceSettings, outputs);
+            CreateInputs(inputs);
+            CreateOutputs(outputs);
         }
 
-        private void CreateInputs(AppearanceSettings appearanceSettings, int count)
+        private void CreateInputs(int count)
         {
             for (int i = 0; i < count; i++)
             {
                 XInputs.RowDefinitions.Add(new RowDefinition());
-                GatePortView port = new GatePortView(ConnectionTypeEnum.Input, i, appearanceSettings);
+                GatePortView port = new GatePortView(ConnectionTypeEnum.Input, i);
                 port.Tapped += (port) => GatePortTapped(port, this);
                 port.ValueChanged += newValue => { Work(); };
                 XInputs.Children.Add(port);
             }
         }
-        private void CreateOutputs(AppearanceSettings appearanceSettings, int count)
+        private void CreateOutputs(int count)
         {
             for (int i = 0; i < count; i++)
             {
-                GatePortView port = new GatePortView(ConnectionTypeEnum.Output, i, appearanceSettings);
+                GatePortView port = new GatePortView(ConnectionTypeEnum.Output, i);
                 port.Tapped += (port) => GatePortTapped(port, this);
                 XOutputs.Children.Add(port);
             }
