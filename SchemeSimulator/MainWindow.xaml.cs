@@ -9,6 +9,8 @@ namespace SchemeSimulator
         {
             InitializeComponent();
 
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+
             NewSchemeBt.Click += NewSchemeBt_Click;
             LoadSchemeBt.Click += LoadSchemeBt_Click;
             SaveSchemeBt.Click += SaveSchemeBt_Click;
