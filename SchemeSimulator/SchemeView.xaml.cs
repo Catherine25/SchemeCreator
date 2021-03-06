@@ -12,7 +12,7 @@ namespace SchemeSimulator
         public SchemeView()
         {
             InitializeComponent();
-
+         
             WireBuilder.WireReady += WireReady;
 
             for (int i = 0; i < ColumnsCount; i++)
@@ -21,6 +21,17 @@ namespace SchemeSimulator
             for (int j = 0; j < RowsCount; j++)
                 Grid.RowDefinitions.Add(new RowDefinition());
 
+            InitNet();
+        }
+
+        public void ClearScheme()
+        {
+            Grid.Children.Clear();
+            InitNet();
+        }
+
+        private void InitNet()
+        {
             for (int i = 0; i < ColumnsCount; i++)
                 for (int j = 0; j < RowsCount; j++)
                 {
