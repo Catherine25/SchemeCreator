@@ -3,9 +3,8 @@ using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -16,15 +15,13 @@ namespace SchemeCreator.UI.Dynamic
         /// </summary>
         public readonly ConnectionTypeEnum Type;
 
-        public AppearanceSettings AppearanceSettings { get; private set; }
-
         public bool? Value
         {
             get => _value;
             set
             {
                 _value = value;
-                AppearanceSettings.Brush = Colorer.GetBrushByValue(_value);
+                XEllipse.Fill = Colorer.GetBrushByValue(_value);
                 ValueChanged(_value);
             }
         }
@@ -38,13 +35,17 @@ namespace SchemeCreator.UI.Dynamic
 
         public GatePortView() => InitializeComponent();
 
-        public GatePortView(ConnectionTypeEnum connectionType, int index, AppearanceSettings appearanceSettings)
+        public GatePortView(ConnectionTypeEnum connectionType, int index)
         {
             Type = connectionType;
-            AppearanceSettings = appearanceSettings;
             Index = index;
 
             InitializeComponent();
+
+            XEllipse.Width = Constants.gatePortSize.Width;
+            XEllipse.Height = Constants.gatePortSize.Height;
+            Width = Constants.gatePortSize.Width;
+            Height = Constants.gatePortSize.Height;
 
             Grid.SetRow(this, index);
 
@@ -52,15 +53,9 @@ namespace SchemeCreator.UI.Dynamic
             //base.Tapped += (SmartEllipse e) => Tapped(this);
 
             XEllipse.Tapped += (sender, e) => Tapped(this);
-            XEllipse.PointerEntered += XEllipse_PointerEntered;
-            XEllipse.PointerExited += XEllipse_PointerExited;
+            XEllipse.PointerEntered += (sender, e) => XEllipse.IncreaseSize();
+            XEllipse.PointerExited += (sender, e) => XEllipse.DecreaseSize();
         }
-
-        private void XEllipse_PointerExited(object sender, PointerRoutedEventArgs e) =>
-            AppearanceSettings.Size = new Size(AppearanceSettings.Size.Width / 2, AppearanceSettings.Size.Height / 2);
-
-        private void XEllipse_PointerEntered(object sender, PointerRoutedEventArgs e) =>
-            AppearanceSettings.Size = new Size(AppearanceSettings.Size.Width * 2, AppearanceSettings.Size.Height * 2);
 
         public new Action<GatePortView> Tapped;
 
