@@ -5,20 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SchemeSimulator"
         mc:Ignorable="d"
-        Title="Choose new gate" Height="450" Width="800">
+        Title="Choose new gate" Height="450" Width="800" Background="#000000">
     <Grid Margin="50">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="3*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
-        <ComboBox x:Name="ItemsList" SelectedItem="In" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2">
+
+        <ComboBox x:Name="Inputs" Margin="10" SelectedIndex="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <ComboBoxItem>1</ComboBoxItem>
+            <ComboBoxItem>2</ComboBoxItem>
+            <ComboBoxItem>3</ComboBoxItem>
+            <ComboBoxItem>4</ComboBoxItem>
+            <ComboBoxItem>5</ComboBoxItem>
+            <ComboBoxItem>6</ComboBoxItem>
+            <ComboBoxItem>7</ComboBoxItem>
+            <ComboBoxItem>8</ComboBoxItem>
+        </ComboBox>
+
+        <ComboBox x:Name="ItemsList" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Grid.ColumnSpan="2" Margin="10" SelectedIndex="0">
             <ComboBoxItem>In</ComboBoxItem>
             <ComboBoxItem>Out</ComboBoxItem>
             <ComboBoxItem>And</ComboBoxItem>
@@ -28,8 +41,19 @@
             <ComboBoxItem>Xor</ComboBoxItem>
             <ComboBoxItem>Xnor</ComboBoxItem>
         </ComboBox>
-        
-        <Button x:Name="OkBt" Content="Ok" Grid.Row="2"/>
-        <Button x:Name="CloseBt" Content="Close" Grid.Row="2" Grid.Column="1"/>
+
+        <ComboBox x:Name="Outputs" Grid.Column="3" Margin="10" SelectedIndex="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <ComboBoxItem>1</ComboBoxItem>
+            <ComboBoxItem>2</ComboBoxItem>
+            <ComboBoxItem>3</ComboBoxItem>
+            <ComboBoxItem>4</ComboBoxItem>
+            <ComboBoxItem>5</ComboBoxItem>
+            <ComboBoxItem>6</ComboBoxItem>
+            <ComboBoxItem>7</ComboBoxItem>
+            <ComboBoxItem>8</ComboBoxItem>
+        </ComboBox>
+
+        <Button x:Name="OkBt" Content="Ok" Grid.Row="2" Grid.ColumnSpan="2" Margin="10"/>
+        <Button x:Name="CloseBt" Content="Close" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="10"/>
     </Grid>
 </Window>
