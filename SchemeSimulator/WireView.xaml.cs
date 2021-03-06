@@ -37,6 +37,8 @@ namespace SchemeSimulator
             Line.X2 = end.X;
             Line.Y2 = end.Y;
 
+            Panel.SetZIndex(this, -1);
+
             _value = null;
         }
 
