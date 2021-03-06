@@ -11,7 +11,7 @@ namespace SchemeSimulator
 
             Application.Current.MainWindow.WindowState = WindowState.Maximized;
 
-            NewSchemeBt.Click += NewSchemeBt_Click;
+            NewSchemeBt.Click += (sender, e) => SchemeView.ClearScheme();
             LoadSchemeBt.Click += LoadSchemeBt_Click;
             SaveSchemeBt.Click += SaveSchemeBt_Click;
             TraceSchemeBt.Click += TraceSchemeBt_Click;
@@ -20,8 +20,6 @@ namespace SchemeSimulator
             //todo: AddLineBt
             //todo: ChangeValueBt
         }
-
-        private void NewSchemeBt_Click(object sender, RoutedEventArgs e) => throw new NotImplementedException();
 
         private void LoadSchemeBt_Click(object sender, RoutedEventArgs e) => throw new NotImplementedException();
         
