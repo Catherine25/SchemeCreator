@@ -47,11 +47,34 @@ namespace SchemeSimulator
             if (window.ShowDialog() == true)
             {
                 var port = window.ExternalPort;
-                Grid.SetColumn(port, Grid.GetColumn(control));
-                Grid.SetRow(port, Grid.GetRow(control));
-                port.MouseDown += Port_MouseDown;
-                Grid.Children.Add(port);
+                if(port != null)
+                {
+                    Grid.SetColumn(port, Grid.GetColumn(control));
+                    Grid.SetRow(port, Grid.GetRow(control));
+                    port.MouseDown += Port_MouseDown;
+                    Grid.Children.Add(port);
+                }
+                else
+                {
+                    var gate = window.GateView;
+                    Grid.SetColumn(gate, Grid.GetColumn(control));
+                    Grid.SetRow(gate, Grid.GetRow(control));
+                    gate.MouseDown += Gate_MouseDown;
+                    gate.PortClicked += GatePortClicked;
+                    Grid.Children.Add(gate);
+                }
             }
+        }
+
+        private void GatePortClicked(GateView gate, GatePortView port)
+        {
+            var point = port.TransformToAncestor(Grid).Transform(new Point(port.ActualWidth / 2, port.ActualHeight / 2));
+            WireBuilder.AddPoint(point, !port.IsInput);
+        }
+
+        private void Gate_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         private void Port_MouseDown(object sender, MouseButtonEventArgs e)
