@@ -29,5 +29,11 @@ namespace SchemeCreator.Data.Extensions
 
         public static bool IsInited(this Point point) =>
             point.X != 0 && point.Y != 0;
+
+        public static void SetSize(this UserControl control, Size size)
+        {
+            control.Width = size.Width;
+            control.Height = size.Height;
+        }
     }
 }
