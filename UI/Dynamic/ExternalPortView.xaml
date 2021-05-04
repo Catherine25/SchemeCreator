@@ -9,5 +9,8 @@
     d:DesignHeight="300"
     d:DesignWidth="300">
 
-    <Ellipse x:Name="XEllipse"/>
+    <Grid>
+        <Ellipse x:Name="XEllipse"/>
+        <TextBlock x:Name="PortName" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10"/>
+    </Grid>
 </UserControl>

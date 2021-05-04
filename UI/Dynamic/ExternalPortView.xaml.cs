@@ -4,6 +4,7 @@ using SchemeCreator.Data.Services;
 using SchemeCreator.Data;
 using System.Numerics;
 using Windows.Foundation;
+using static SchemeCreator.Data.Extensions.ControlExtension;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -47,23 +48,24 @@ namespace SchemeCreator.UI.Dynamic
 
         public ExternalPortView() => InitializeComponent();
 
-        public Point Center => new Point(CenterPoint.X, CenterPoint.Y);
+        public Point Center => new(CenterPoint.X, CenterPoint.Y);
 
         public ExternalPortView(PortType type, Vector2 point)
         {
             InitializeComponent();
 
             Type = type;
-            
-            Width = Constants.externalPortSize.Width;
-            Height = Constants.externalPortSize.Height;
-            
+
+            PortName.Text = type == PortType.Input ? "In" : "Out";
+
+            this.SetSize(Constants.externalPortSize);
+
             Value = null;
             MatrixLocation = point;
 
             XEllipse.Tapped += (sender, args) => Tapped(this);
         }
 
-        public void SwitchMode() => Value = Value == true ? false : Value == false ? null : (bool?)true;
+        public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
     }
 }
