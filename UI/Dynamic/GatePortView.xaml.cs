@@ -35,6 +35,11 @@ namespace SchemeCreator.UI.Dynamic
 
         public GatePortView() => InitializeComponent();
 
+        /// <summary>
+        /// Creates <see cref="GatePortView"/> with chosen <see cref="ConnectionTypeEnum"/>, sets <see cref="Grid.RowProperty"/>.
+        /// </summary>
+        /// <param name="connectionType"></param>
+        /// <param name="index"></param>
         public GatePortView(ConnectionTypeEnum connectionType, int index)
         {
             Type = connectionType;
