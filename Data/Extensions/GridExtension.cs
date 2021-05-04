@@ -15,7 +15,8 @@ namespace SchemeCreator.Data.Extensions
             grid.Width = rect.Width;
             grid.Height = rect.Height;
         }
-        public static Rect GetRect(this Grid grid) => new Rect
+
+        public static Rect GetRect(this Grid grid) => new()
         {
             X = grid.Margin.Right,
             Y = grid.Margin.Top,
@@ -23,14 +24,34 @@ namespace SchemeCreator.Data.Extensions
             Height = grid.Height
         };
 
-        public static Size GetActualSize(this Grid grid) => new Size(grid.ActualWidth, grid.ActualHeight);
+        public static Size GetActualSize(this Grid grid) => new(grid.ActualWidth, grid.ActualHeight);
+
         public static void SetStandartAlighnment(this Grid grid)
         {
             grid.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Left;
             grid.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top;
         }
-        public static Point GetLeftTop(this Grid grid) =>
-            new Point(grid.Margin.Left, grid.Margin.Top);
 
+        public static Point GetLeftTop(this Grid grid) => new(grid.Margin.Left, grid.Margin.Top);
+
+        public static Size GetSize(this Grid grid) => new(grid.Width, grid.Height);
+
+        public static void SetSize(this Grid grid, int size)
+        {
+            grid.Width = size;
+            grid.Height = size;
+        }
+
+        public static void SetSize(this Grid grid, double w, double h)
+        {
+            grid.Width = w;
+            grid.Height = h;
+        }
+
+        public static void SetSize(this Grid grid, Size size)
+        {
+            grid.Width = size.Width;
+            grid.Height = size.Height;
+        }
     }
 }

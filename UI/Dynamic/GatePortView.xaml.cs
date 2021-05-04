@@ -5,6 +5,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data;
+using Windows.UI;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -35,6 +36,11 @@ namespace SchemeCreator.UI.Dynamic
 
         public GatePortView() => InitializeComponent();
 
+        /// <summary>
+        /// Creates <see cref="GatePortView"/> with chosen <see cref="ConnectionTypeEnum"/>, sets <see cref="Grid.RowProperty"/>.
+        /// </summary>
+        /// <param name="connectionType"></param>
+        /// <param name="index"></param>
         public GatePortView(ConnectionTypeEnum connectionType, int index)
         {
             Type = connectionType;
@@ -49,8 +55,7 @@ namespace SchemeCreator.UI.Dynamic
 
             Grid.SetRow(this, index);
 
-            //SetCenterAndSize(null, Constants.gatePortSize);
-            //base.Tapped += (SmartEllipse e) => Tapped(this);
+            Colorer.SetFillByValue(this.XEllipse, null);
 
             XEllipse.Tapped += (sender, e) => Tapped(this);
             XEllipse.PointerEntered += (sender, e) => XEllipse.IncreaseSize();

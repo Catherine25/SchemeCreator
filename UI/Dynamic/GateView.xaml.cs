@@ -10,6 +10,9 @@ using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
 using Windows.UI.Xaml;
+using SchemeCreator.Data;
+using SchemeCreator.Data.Extensions;
+using Windows.UI;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -73,6 +76,8 @@ namespace SchemeCreator.UI.Dynamic
             xBody.Width = logicGateSize.Width;
             xBody.Height = logicGateSize.Height;
 
+            XInputs.SetSize(gatePortSize.Width, logicGateSize.Height);
+
             CreatePorts(inputs, outputs);
         }
 
@@ -98,9 +103,11 @@ namespace SchemeCreator.UI.Dynamic
         private void CreateInputs(int count)
         {
             for (int i = 0; i < count; i++)
-            {
                 XInputs.RowDefinitions.Add(new RowDefinition());
-                GatePortView port = new GatePortView(ConnectionTypeEnum.Input, i);
+
+            for (int i = 0; i < count; i++)
+            {
+                GatePortView port = new(ConnectionTypeEnum.Input, i);
                 port.Tapped += (port) => GatePortTapped(port, this);
                 port.ValueChanged += newValue => { Work(); };
                 XInputs.Children.Add(port);
@@ -110,7 +117,7 @@ namespace SchemeCreator.UI.Dynamic
         {
             for (int i = 0; i < count; i++)
             {
-                GatePortView port = new GatePortView(ConnectionTypeEnum.Output, i);
+                GatePortView port = new(ConnectionTypeEnum.Output, i);
                 port.Tapped += (port) => GatePortTapped(port, this);
                 XOutputs.Children.Add(port);
             }
