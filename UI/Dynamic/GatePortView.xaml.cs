@@ -5,6 +5,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data;
+using Windows.UI;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -54,8 +55,7 @@ namespace SchemeCreator.UI.Dynamic
 
             Grid.SetRow(this, index);
 
-            //SetCenterAndSize(null, Constants.gatePortSize);
-            //base.Tapped += (SmartEllipse e) => Tapped(this);
+            Colorer.SetFillByValue(this.XEllipse, null);
 
             XEllipse.Tapped += (sender, e) => Tapped(this);
             XEllipse.PointerEntered += (sender, e) => XEllipse.IncreaseSize();
