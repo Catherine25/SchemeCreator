@@ -16,7 +16,7 @@ namespace SchemeCreator.Data.Services
                 "Ok"
             };
 
-            SetText(MessageTypes.exInsNotInited, exInsNotInited);
+            SetText(MessageTypes.ExInsNotInited, exInsNotInited);
 
             string[] gatesNotConnected = new string[4]
             {
@@ -26,7 +26,7 @@ namespace SchemeCreator.Data.Services
                 "Ok"
             };
 
-            SetText(MessageTypes.gatesNotConnected, gatesNotConnected);
+            SetText(MessageTypes.GatesNotConnected, gatesNotConnected);
 
             string[] functionIsNotSupportedInfo = new string[4]
             {
@@ -36,7 +36,7 @@ namespace SchemeCreator.Data.Services
                 "Ok"
             };
 
-            SetText(MessageTypes.functionIsNotSupported, functionIsNotSupportedInfo);
+            SetText(MessageTypes.FunctionIsNotSupported, functionIsNotSupportedInfo);
 
             string[] modeChanged = new string[4] //TODO: ADD MODE NAMES IN THE MESSAGE
             {
@@ -46,7 +46,7 @@ namespace SchemeCreator.Data.Services
                 "Ok"
             };
 
-            SetText(MessageTypes.modeChanged, modeChanged);
+            SetText(MessageTypes.ModeChanged, modeChanged);
 
             string[] newSchemeButtonClicked = new string[4]
             {
@@ -56,7 +56,7 @@ namespace SchemeCreator.Data.Services
                 "No"
             };
 
-            SetText(MessageTypes.newSchemeButtonClicked, newSchemeButtonClicked);
+            SetText(MessageTypes.NewSchemeButtonClicked, newSchemeButtonClicked);
 
             string[] visualizingFailed = new string[4]
             {
@@ -66,7 +66,7 @@ namespace SchemeCreator.Data.Services
                 "Ok"
             };
 
-            SetText(MessageTypes.visualizingFailed, visualizingFailed);
+            SetText(MessageTypes.VisualizingFailed, visualizingFailed);
         }
 
         public static string GetText(MessageTypes mt, MessageAttribute ma)
@@ -80,10 +80,10 @@ namespace SchemeCreator.Data.Services
         {
             string[] messageInfo = new string[4]
             {
-                GetText(mt, MessageAttribute.title),
-                GetText(mt, MessageAttribute.text),
-                GetText(mt, MessageAttribute.button1),
-                GetText(mt, MessageAttribute.button2)
+                GetText(mt, MessageAttribute.Title),
+                GetText(mt, MessageAttribute.Text),
+                GetText(mt, MessageAttribute.Button1),
+                GetText(mt, MessageAttribute.Button2)
             };
 
             return messageInfo;
@@ -94,10 +94,10 @@ namespace SchemeCreator.Data.Services
 
         private static void SetText(MessageTypes mt, string[] messageInfo)
         {
-            SetText(mt, MessageAttribute.title, messageInfo[0]);
-            SetText(mt, MessageAttribute.text, messageInfo[1]);
-            SetText(mt, MessageAttribute.button1, messageInfo[2]);
-            SetText(mt, MessageAttribute.button2, messageInfo[3]);
+            SetText(mt, MessageAttribute.Title, messageInfo[0]);
+            SetText(mt, MessageAttribute.Text, messageInfo[1]);
+            SetText(mt, MessageAttribute.Button1, messageInfo[2]);
+            SetText(mt, MessageAttribute.Button2, messageInfo[3]);
         }
 
         private static readonly IDictionary<Tuple<MessageTypes, MessageAttribute>, string> messagesText =
@@ -107,7 +107,7 @@ namespace SchemeCreator.Data.Services
         {
             string s = type.ToString();
 
-            if (!singleOutput.Contains(type))
+            if (!SingleOutput.Contains(type))
                 s += "\n" + inputs.ToString() + " in " + outputs.ToString();
 
             return s;

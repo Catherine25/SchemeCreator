@@ -149,7 +149,7 @@ namespace SchemeCreator.UI
                 };
 
                 tb.SetStandartAlignment();
-                tb.SetSizeAndCenter(traceTextSize, wire.CenterPoint);
+                tb.SetSizeAndCenter(TraceTextSize, wire.CenterPoint);
 
                 _grid.Children.Add(tb);
             };

@@ -87,7 +87,7 @@ namespace SchemeCreator.UI
         {
             inputs = (int)inputsComboBox.SelectedValue;
 
-            if (singleInput.Contains(gateType.Value))
+            if (SingleInput.Contains(gateType.Value))
                 inputsComboBox.SelectedValue = 1;
             else if ((int)inputsComboBox.SelectedValue == 1)
                 inputsComboBox.SelectedValue = 2;
@@ -100,7 +100,7 @@ namespace SchemeCreator.UI
                 gateType = type as GateEnum?;
                 isExternalInput = false;
 
-                if (singleInput.Contains(gateType.Value))
+                if (SingleInput.Contains(gateType.Value))
                     inputsComboBox.SelectedValue = 1;
                 else if ((int)inputsComboBox.SelectedValue == 1)
                     inputsComboBox.SelectedValue = 2;

@@ -47,11 +47,11 @@ namespace SchemeCreator.UI.Dynamic
         {
             InitializeComponent();
 
-            Grid.SetColumnSpan(XLine, Constants.netSize);
-            Grid.SetRowSpan(XLine, Constants.netSize);
+            Grid.SetColumnSpan(XLine, Constants.NetSize);
+            Grid.SetRowSpan(XLine, Constants.NetSize);
             
             XLine.Fill = Colorer.GetBrushByValue(null);
-            XLine.StrokeThickness = Constants.wireThickness;
+            XLine.StrokeThickness = Constants.WireThickness;
             XLine.Tapped += (sender, e) => Tapped(this);
 
             XLine.PointerEntered += (sender, e) => XLine.StrokeThickness *= 2;

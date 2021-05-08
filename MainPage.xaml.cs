@@ -43,7 +43,7 @@ namespace SchemeCreator
             XChangeValueBt.Background = ActiveBrush;
             XChangeValueBt.Foreground = InactiveBrush;
 
-            CurrentMode = ModeEnum.changeValueMode;
+            CurrentMode = ModeEnum.ChangeValueMode;
         }
 
         private void XAddLineBt_Click(object sender, RoutedEventArgs e)
@@ -54,7 +54,7 @@ namespace SchemeCreator
             XChangeValueBt.Background = InactiveBrush;
             XChangeValueBt.Foreground = ActiveBrush;
 
-            CurrentMode = ModeEnum.addLineMode;
+            CurrentMode = ModeEnum.AddLineMode;
         }
 
         private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
@@ -71,12 +71,12 @@ namespace SchemeCreator
 
             WorkAlgorithmResult Result = WorkAlgorithm.Visualize(XScheme, tracer.TraceHistory);
 
-            if (Result == WorkAlgorithmResult.exInsNotInited)
-                await new Message(MessageTypes.exInsNotInited).ShowAsync();
-            else if (Result == WorkAlgorithmResult.gatesNotConnected)
-                await new Message(MessageTypes.gatesNotConnected).ShowAsync();
-            else if (Result == WorkAlgorithmResult.schemeIsntCorrect)
-                await new Message(MessageTypes.visualizingFailed).ShowAsync();
+            if (Result == WorkAlgorithmResult.ExInsNotInited)
+                await new Message(MessageTypes.ExInsNotInited).ShowAsync();
+            else if (Result == WorkAlgorithmResult.GatesNotConnected)
+                await new Message(MessageTypes.GatesNotConnected).ShowAsync();
+            else if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
+                await new Message(MessageTypes.VisualizingFailed).ShowAsync();
         }
 
         private void XTraceSchemeBt_Click(object sender, RoutedEventArgs e)
@@ -95,7 +95,7 @@ namespace SchemeCreator
 
         private async void XNewSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialogResult result = await new Message(MessageTypes.newSchemeButtonClicked).ShowAsync();
+            ContentDialogResult result = await new Message(MessageTypes.NewSchemeButtonClicked).ShowAsync();
 
             if (result == ContentDialogResult.Primary)
                 XScheme = new SchemeView();

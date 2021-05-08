@@ -5,27 +5,27 @@ namespace SchemeCreator.Data
 {
     static public class Constants
     {
-        public static Size externalPortSize = new Size { Width = 25, Height = 25 };
-        public static Size logicGateSize = new Size { Width = 50, Height = 70 };
-        public static Size traceTextSize = new Size { Width = 50, Height = 30 };
-        public static Size dotSize = new Size { Width = 10, Height = 10 };
-        public static Size gatePortSize = new Size { Width = 10, Height = 10 };
-        public static double MarginBetweenPorts = logicGateSize.Width - gatePortSize.Width;
+        public static Size ExternalPortSize = new(25, 25);
+        public static Size LogicGateSize = new(50, 70);
+        public static Size TraceTextSize = new(50, 30);
+        public static Size DotSize = new(10, 10);
+        public static Size GatePortSize = new(10, 10);
+        public static double MarginBetweenPorts = LogicGateSize.Width - GatePortSize.Width;
 
-        public const int netSize = 8;
+        public const int NetSize = 8;
 
-        public const double offset = 10.0,
-            lineStartOffset = 5.0,
-            wireThickness = 5.0;
+        public const double Offset = 10.0;
+        public const double LineStartOffset = 10.0;
+        public const double WireThickness = 10.0;
 
-        public static SortedSet<GateEnum> singleInput = new SortedSet<GateEnum> {
+        public static SortedSet<GateEnum> SingleInput = new() {
             GateEnum.Buffer,
             GateEnum.NOT,
             //GateEnum.IN,
             //GateEnum.OUT
         };
 
-        public static SortedSet<GateEnum> singleOutput = new SortedSet<GateEnum> {
+        public static SortedSet<GateEnum> SingleOutput = new() {
             GateEnum.AND,
             GateEnum.Buffer,
             GateEnum.NAND,
@@ -43,7 +43,7 @@ namespace SchemeCreator.Data
         //    GateEnum.OUT
         //};
 
-        public static Dictionary<GateEnum, string> gateNames = new Dictionary<GateEnum, string> {
+        public static Dictionary<GateEnum, string> GateNames = new() {
             { GateEnum.AND, "AND" },
             { GateEnum.Buffer, "Buffer" },
             //{ GateEnum.IN, "Input" },
@@ -57,11 +57,11 @@ namespace SchemeCreator.Data
         };
 
         public enum GateEnum { /*IN, OUT,*/ Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
-        public enum ModeEnum { addGateMode, addLineMode, changeValueMode }
-        public enum FrameEnum { workspace, newGate }
-        public enum ComponentTypeEnum { externalPort, gate, wire }
-        public enum MessageTypes { exInsNotInited, gatesNotConnected, functionIsNotSupported, modeChanged, newSchemeButtonClicked, detailedView, createGate, visualizingFailed }
-        public enum MessageAttribute { title, text, button1, button2 }
-        public enum WorkAlgorithmResult { correct, exInsNotInited, gatesNotConnected, schemeIsntCorrect }
+        public enum ModeEnum { AddGateMode, AddLineMode, ChangeValueMode }
+        public enum FrameEnum { Workspace, NewGate }
+        public enum ComponentTypeEnum { ExternalPort, Gate, Wire }
+        public enum MessageTypes { ExInsNotInited, GatesNotConnected, FunctionIsNotSupported, ModeChanged, NewSchemeButtonClicked, DetailedView, CreateGate, VisualizingFailed }
+        public enum MessageAttribute { Title, Text, Button1, Button2 }
+        public enum WorkAlgorithmResult { Correct, ExInsNotInited, GatesNotConnected, SchemeIsntCorrect }
     }
 }

@@ -48,10 +48,10 @@ namespace SchemeCreator.UI.Dynamic
 
             InitializeComponent();
 
-            XEllipse.Width = Constants.gatePortSize.Width;
-            XEllipse.Height = Constants.gatePortSize.Height;
-            Width = Constants.gatePortSize.Width;
-            Height = Constants.gatePortSize.Height;
+            XEllipse.Width = Constants.GatePortSize.Width;
+            XEllipse.Height = Constants.GatePortSize.Height;
+            Width = Constants.GatePortSize.Width;
+            Height = Constants.GatePortSize.Height;
 
             Grid.SetRow(this, index);
 

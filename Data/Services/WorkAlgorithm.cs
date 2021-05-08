@@ -14,10 +14,10 @@ namespace SchemeCreator.Data.Services
             Debug.WriteLine("\n" + "[Method] Ver6");
 
             if (scheme.GetFirstNotInitedExternalPort() != null)
-                return WorkAlgorithmResult.exInsNotInited;
+                return WorkAlgorithmResult.ExInsNotInited;
 
             if (!scheme.IsAllConnected())
-                return WorkAlgorithmResult.gatesNotConnected;
+                return WorkAlgorithmResult.GatesNotConnected;
 
             // transfer from input ports to wires
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))
@@ -47,14 +47,14 @@ namespace SchemeCreator.Data.Services
             }
 
             if (!traced)
-                return WorkAlgorithmResult.schemeIsntCorrect;
+                return WorkAlgorithmResult.SchemeIsntCorrect;
 
             // transfer from wires to output ports
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Output))
             foreach (WireView wire in scheme.Wires.Where(w => w.End == port.Center))
                 wire.IsActive = port.Value;
 
-            return WorkAlgorithmResult.correct;
+            return WorkAlgorithmResult.Correct;
         }
 
         //public static WorkAlgorithmResult Visualize(Scheme scheme)

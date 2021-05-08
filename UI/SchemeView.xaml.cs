@@ -55,7 +55,7 @@ namespace SchemeCreator.UI
             Gates = new List<GateView>();
             ExternalPorts = new List<ExternalPortView>();
 
-            InitGrid(Constants.netSize, Constants.netSize);
+            InitGrid(Constants.NetSize, Constants.NetSize);
         }
 
         
@@ -145,8 +145,8 @@ namespace SchemeCreator.UI
                     {
                         HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                         VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
-                        Width = Constants.dotSize.Width,
-                        Height = Constants.dotSize.Height
+                        Width = Constants.DotSize.Width,
+                        Height = Constants.DotSize.Height
                     };
 
                     Grid.SetRow(ellipse, i - 1);
@@ -188,7 +188,7 @@ namespace SchemeCreator.UI
 
         private void ExternalPortTapped(ExternalPortView externalPort)
         {
-            if (MainPage.CurrentMode == Constants.ModeEnum.addLineMode)
+            if (MainPage.CurrentMode == Constants.ModeEnum.AddLineMode)
                 WireBuilder.SetPoint(externalPort.Type == PortType.Input, externalPort.GetCenterRelativeTo(XSchemeGrid));
             else
                 externalPort.SwitchMode();
@@ -231,8 +231,8 @@ namespace SchemeCreator.UI
         {
             WriteLine("AddToView");
             
-            Grid.SetColumnSpan(wire, Constants.netSize);
-            Grid.SetRowSpan(wire, Constants.netSize);
+            Grid.SetColumnSpan(wire, Constants.NetSize);
+            Grid.SetRowSpan(wire, Constants.NetSize);
 
             Wires.Add(wire);
             XSchemeGrid.Children.Add(wire);

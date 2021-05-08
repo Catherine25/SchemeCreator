@@ -60,23 +60,23 @@ namespace SchemeCreator.UI.Dynamic
             InputCount = inputs;
             OutputCount = outputs;
             MatrixLocation = point;
-            Text = gateNames[type];
+            Text = GateNames[type];
 
             ForegroundBrush = Colorer.GetGateForegroundBrush();
             BackgroundBrush = Colorer.GetGateBackgroundBrush();
 
-            GateBodySize = logicGateSize;
-            PortSize = gatePortSize;
+            GateBodySize = LogicGateSize;
+            PortSize = GatePortSize;
 
             PortsMargin = new GridLength(MarginBetweenPorts);
 
             InitializeComponent();
 
             xBody.Tapped += (sender, args) => GateBodyTapped(FindName("xBody") as GateBodyView, this);
-            xBody.Width = logicGateSize.Width;
-            xBody.Height = logicGateSize.Height;
+            xBody.Width = LogicGateSize.Width;
+            xBody.Height = LogicGateSize.Height;
 
-            XInputs.SetSize(gatePortSize.Width, logicGateSize.Height);
+            XInputs.SetSize(GatePortSize.Width, LogicGateSize.Height);
 
             CreatePorts(inputs, outputs);
         }

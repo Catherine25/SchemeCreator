@@ -12,7 +12,7 @@ namespace SchemeCreator.UI.Dynamic
         public GateBodyView(GateEnum gateEnum)
         {
             InitializeComponent();
-            Text = gateNames[gateEnum];
+            Text = GateNames[gateEnum];
         }
     }
 }

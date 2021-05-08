@@ -65,8 +65,8 @@ namespace SchemeCreator.Data.Services
         {
             TraceExternalInputs(scheme);
 
-            while (scheme.Gates.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.gate)
-                   || scheme.Wires.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.wire))
+            while (scheme.Gates.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Gate)
+                   || scheme.Wires.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Wire))
             {
                 bool somethingTraced = false;
 
@@ -260,7 +260,7 @@ namespace SchemeCreator.Data.Services
             foreach (ExternalPortView externalPortView in externalPortViews)
                 TraceHistory.Add(new HistoryComponent
                 {
-                    Type = Constants.ComponentTypeEnum.externalPort,
+                    Type = Constants.ComponentTypeEnum.ExternalPort,
                     TracedObject = externalPortView
                 });
         }
@@ -268,11 +268,11 @@ namespace SchemeCreator.Data.Services
         private bool TraceGates(SchemeView scheme)
         {
             var tracedWires = TraceHistory
-                .Where(x => x.Type == Constants.ComponentTypeEnum.wire)
+                .Where(x => x.Type == Constants.ComponentTypeEnum.Wire)
                 .Select(x => x.TracedObject as WireView);
 
             var tracedGates = TraceHistory
-                .Where(x => x.Type == Constants.ComponentTypeEnum.gate)
+                .Where(x => x.Type == Constants.ComponentTypeEnum.Gate)
                 .Select(x => x.TracedObject as GateView);
 
             var notTracedGates = scheme.Gates
@@ -289,7 +289,7 @@ namespace SchemeCreator.Data.Services
             foreach (GateView gateView in gatesToTrace)
                 TraceHistory.Add(new HistoryComponent
                 {
-                    Type = Constants.ComponentTypeEnum.gate,
+                    Type = Constants.ComponentTypeEnum.Gate,
                     TracedObject = gateView
                 });
 
@@ -299,7 +299,7 @@ namespace SchemeCreator.Data.Services
         private bool TraceWires(SchemeView scheme)
         {
             var tracedGates = TraceHistory
-                .Where(x => x.Type == Constants.ComponentTypeEnum.gate)
+                .Where(x => x.Type == Constants.ComponentTypeEnum.Gate)
                 .Select(x => x.TracedObject as GateView);
 
             var wiresToTrace = scheme.Wires
@@ -312,7 +312,7 @@ namespace SchemeCreator.Data.Services
             foreach (WireView wire in wiresToTrace)
                 TraceHistory.Add(new HistoryComponent
                 {
-                    Type = Constants.ComponentTypeEnum.wire,
+                    Type = Constants.ComponentTypeEnum.Wire,
                     TracedObject = wire
                 });
 
@@ -325,7 +325,7 @@ namespace SchemeCreator.Data.Services
             foreach (ExternalPortView externalPortView in externalPortViews)
                 TraceHistory.Add(new HistoryComponent
                 {
-                    Type = Constants.ComponentTypeEnum.externalPort,
+                    Type = Constants.ComponentTypeEnum.ExternalPort,
                     TracedObject = externalPortView
                 });
         }

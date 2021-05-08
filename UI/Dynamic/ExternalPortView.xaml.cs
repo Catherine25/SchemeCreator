@@ -42,6 +42,7 @@ namespace SchemeCreator.UI.Dynamic
                 Grid.SetRow(this, (int)_matrixIndex.Y);
             }
         }
+
         private Vector2 _matrixIndex;
 
         public new Action<ExternalPortView> Tapped;
@@ -58,7 +59,7 @@ namespace SchemeCreator.UI.Dynamic
 
             PortName.Text = type == PortType.Input ? "In" : "Out";
 
-            this.SetSize(Constants.externalPortSize);
+            this.SetSize(Constants.ExternalPortSize);
 
             Value = null;
             MatrixLocation = point;
