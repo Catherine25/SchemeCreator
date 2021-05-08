@@ -21,7 +21,8 @@
             <Button x:Name="xBody" Content="{x:Bind Text}"
                     Foreground="{x:Bind ForegroundBrush}"
                     Background="{x:Bind BackgroundBrush}"
-                    Grid.Column="1"/>
+                    Grid.Column="1"
+                    FontSize="10"/>
             <Grid x:Name="XOutputs" Grid.Column="2"/>
         </Grid>
     </Grid>
