@@ -58,8 +58,6 @@ namespace SchemeCreator.UI
             InitGrid(Constants.NetSize, Constants.NetSize);
         }
 
-        
-
         private void Wire_Tapped(WireView wire)
         {
             Wires.Remove(wire);
@@ -237,6 +235,24 @@ namespace SchemeCreator.UI
             Wires.Add(wire);
             XSchemeGrid.Children.Add(wire);
             wire.Tapped += Wire_Tapped;
+        }
+
+        public void Clear() => XSchemeGrid.Children.Clear();
+        public void Recreate()
+        {
+            Clear();
+
+            InitializeComponent();
+
+            WireBuilder = new WireBuilder();
+            WireBuilder.WireReady = (wire) => AddToView(wire);
+
+            Dots = new List<Ellipse>();
+            Wires = new List<WireView>();
+            Gates = new List<GateView>();
+            ExternalPorts = new List<ExternalPortView>();
+
+            InitGrid(Constants.NetSize, Constants.NetSize);
         }
     }
 }
