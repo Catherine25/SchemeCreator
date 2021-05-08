@@ -14,27 +14,6 @@ using static System.Diagnostics.Debug;
 
 namespace SchemeCreator.UI
 {
-    public class WireBuilder
-    {
-        public Action<WireView> WireReady;
-
-        public void SetPoint(bool isStart, Point point)
-        {
-            if(isStart)
-                _wire.Start = point;
-            else
-                _wire.End = point;
-
-            if (_wire.Start.IsInited() && _wire.End.IsInited())
-            {
-                WireReady(_wire);
-                _wire = new WireView();
-            }
-        }
-
-        private WireView _wire = new WireView();
-    }
-
     public sealed partial class SchemeView : UserControl
     {
         private WireBuilder WireBuilder;
@@ -237,22 +216,25 @@ namespace SchemeCreator.UI
             wire.Tapped += Wire_Tapped;
         }
 
-        public void Clear() => XSchemeGrid.Children.Clear();
+        public void Clear()
+        {
+            var toRemove = XSchemeGrid.Children.Where(x => !(x is Ellipse));
+
+            while(toRemove.Any())
+                XSchemeGrid.Children.Remove(toRemove.Take(1).First());
+        }
+
         public void Recreate()
         {
             Clear();
 
-            InitializeComponent();
-
-            WireBuilder = new WireBuilder();
+            WireBuilder = new();
             WireBuilder.WireReady = (wire) => AddToView(wire);
 
             Dots = new List<Ellipse>();
             Wires = new List<WireView>();
             Gates = new List<GateView>();
             ExternalPorts = new List<ExternalPortView>();
-
-            InitGrid(Constants.NetSize, Constants.NetSize);
         }
     }
 }

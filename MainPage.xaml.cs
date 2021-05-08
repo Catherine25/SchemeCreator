@@ -98,10 +98,7 @@ namespace SchemeCreator
             ContentDialogResult result = await new Message(MessageTypes.NewSchemeButtonClicked).ShowAsync();
 
             if (result == ContentDialogResult.Primary)
-            {
                 XScheme.Clear();
-                XScheme = new SchemeView();
-            }
         }
 
         #endregion
