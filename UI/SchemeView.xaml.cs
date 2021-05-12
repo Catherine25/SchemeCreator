@@ -179,7 +179,9 @@ namespace SchemeCreator.UI
 
         private void GateBodyTapped(GateBodyView arg1, GateView arg2)
         {
-            throw new NotImplementedException();
+            XSchemeGrid.Children.Remove(arg1);
+            XSchemeGrid.Children.Remove(arg2);
+            Gates.Remove(arg2);
         }
 
         public ExternalPortView GetFirstNotInitedExternalPort() =>
