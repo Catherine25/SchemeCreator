@@ -65,6 +65,7 @@ namespace SchemeCreator.UI.Dynamic
             MatrixLocation = point;
 
             XEllipse.Tapped += (sender, args) => Tapped(this);
+            PortName.Tapped += (sender, args) => Tapped(this);
         }
 
         public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
