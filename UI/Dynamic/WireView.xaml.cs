@@ -47,9 +47,24 @@ namespace SchemeCreator.UI.Dynamic
         {
             InitializeComponent();
 
+            InitLine();
+        }
+
+        public WireView(Point start, Point end)
+        {
+            InitializeComponent();
+
+            InitLine();
+
+            Start = start;
+            End = end;
+        }
+
+        public void InitLine()
+        {
             Grid.SetColumnSpan(XLine, Constants.NetSize);
             Grid.SetRowSpan(XLine, Constants.NetSize);
-            
+
             XLine.Fill = Colorer.GetBrushByValue(null);
             XLine.StrokeThickness = Constants.WireThickness;
             XLine.Tapped += (sender, e) => Tapped(this);

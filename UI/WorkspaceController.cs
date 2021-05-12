@@ -6,9 +6,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.Controllers;
 using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Models;
 using SchemeCreator.UI.Dynamic;
 using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Services;
 
 namespace SchemeCreator.UI
 {

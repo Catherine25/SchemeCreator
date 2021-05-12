@@ -6,6 +6,10 @@ using Windows.Storage;
 using SchemeCreator.Data.Models;
 using SchemeCreator.UI.Dynamic;
 using SchemeCreator.UI;
+using Windows.Foundation;
+using static SchemeCreator.Data.Constants;
+using System.Numerics;
+using System.Linq;
 
 namespace SchemeCreator.Data.Services
 {
@@ -27,14 +31,17 @@ namespace SchemeCreator.Data.Services
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
 
+            scheme.Recreate();
+
             //serialization of gates
             StorageFile gateFile = await folder.GetFileAsync(gatePath);
 
             if (gateFile == null)
                 await folder.CreateFileAsync(gatePath);
 
-            scheme.Gates.Clear();
-            scheme.Gates = JsonConvert.DeserializeObject<List<GateView>>(await FileIO.ReadTextAsync(gateFile));
+            var gates = JsonConvert.DeserializeObject<List<Gate>>(await FileIO.ReadTextAsync(gateFile));
+            var gatesToAdd = new List<GateView>(gates.Select(g => new GateView(g.Type, g.Location, g.Inputs, g.Outputs)));
+            gatesToAdd.ForEach(g => scheme.AddToView(g));
 
             //serialization of wires
             StorageFile lineFile = await folder.GetFileAsync(linePath);
@@ -42,8 +49,9 @@ namespace SchemeCreator.Data.Services
             if (lineFile == null)
                 await folder.CreateFileAsync(linePath);
 
-            scheme.Wires.Clear();
-            scheme.Wires = JsonConvert.DeserializeObject<List<WireView>>(await FileIO.ReadTextAsync(lineFile));
+            var wires = JsonConvert.DeserializeObject<List<Wire>>(await FileIO.ReadTextAsync(lineFile));
+            var wiresToAdd = new List<WireView>(wires.Select(w => new WireView(w.Start, w.End)));
+            wiresToAdd.ForEach(w => scheme.AddToView(w));
         }
 
         public static async Task Save(SchemeView scheme)
@@ -51,16 +59,42 @@ namespace SchemeCreator.Data.Services
             StorageFolder folder = ApplicationData.Current.LocalFolder;
 
             //serialization of gates
-            StorageFile gateFile = await folder.CreateFileAsync(gatePath,
-                                                CreationCollisionOption.OpenIfExists);
+            StorageFile gateFile = await folder.CreateFileAsync(gatePath, CreationCollisionOption.OpenIfExists);
 
-            await FileIO.WriteTextAsync(gateFile, JsonConvert.SerializeObject(scheme.Gates));
+            await FileIO.WriteTextAsync(gateFile, JsonConvert.SerializeObject(scheme.Gates.Select(g => new Gate(g))));
 
             //serialization of wires
-            StorageFile lineFile = await folder.CreateFileAsync(linePath,
-                                              CreationCollisionOption.OpenIfExists);
+            StorageFile lineFile = await folder.CreateFileAsync(linePath, CreationCollisionOption.OpenIfExists);
 
-            await FileIO.WriteTextAsync(lineFile, JsonConvert.SerializeObject(scheme.Wires));
+            await FileIO.WriteTextAsync(lineFile, JsonConvert.SerializeObject(scheme.Wires.Select(w => new Wire(w))));
+        }
+
+        public struct Gate
+        {
+            public Vector2 Location;
+            public GateEnum Type;
+            public int Inputs;
+            public int Outputs;
+
+            public Gate(GateView view)
+            {
+                Location = view.MatrixLocation;
+                Type = view.Type;
+                Inputs = view.InputCount;
+                Outputs = view.OutputCount;
+            }
+        }
+
+        public struct Wire
+        {
+            public Point Start;
+            public Point End;
+
+            public Wire(WireView view)
+            {
+                Start = view.Start;
+                End = view.End;
+            }
         }
     }
 }

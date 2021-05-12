@@ -187,6 +187,7 @@
     <Compile Include="UI\SchemeView.xaml.cs">
       <DependentUpon>SchemeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\Services\WireBuilder.cs" />
     <Compile Include="UI\WorkspaceController.cs" />
   </ItemGroup>
   <ItemGroup>

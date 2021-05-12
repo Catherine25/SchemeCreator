@@ -17,10 +17,10 @@ namespace SchemeCreator.UI
     public sealed partial class SchemeView : UserControl
     {
         private WireBuilder WireBuilder;
-        public List<Ellipse> Dots;
-        public List<WireView> Wires;
-        public IList<GateView> Gates;
-        public IList<ExternalPortView> ExternalPorts;
+        public List<Ellipse> Dots { get; private set; }
+        public List<WireView> Wires { get; private set; }
+        public IList<GateView> Gates { get; private set; }
+        public IList<ExternalPortView> ExternalPorts { get; private set; }
 
         public SchemeView()
         {
@@ -189,7 +189,7 @@ namespace SchemeCreator.UI
         public IEnumerable<ExternalPortView> GetExternalPorts(PortType type) =>
             ExternalPorts.Where(x => x.Type == type);
 
-        private void AddToView(GateView gate)
+        public void AddToView(GateView gate)
         {
             gate.GateBodyTapped += GateBodyTapped;
             gate.GatePortTapped += GatePortTapped;
@@ -197,14 +197,14 @@ namespace SchemeCreator.UI
             Gates.Add(gate);
         }
 
-        private void AddToView(ExternalPortView port)
+        public void AddToView(ExternalPortView port)
         {
             port.Tapped += ExternalPortTapped;
             XSchemeGrid.Children.Add(port);
             ExternalPorts.Add(port);
         }
 
-        private void AddToView(WireView wire)
+        public void AddToView(WireView wire)
         {
             WriteLine("AddToView");
             
