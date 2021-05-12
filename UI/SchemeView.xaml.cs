@@ -129,8 +129,8 @@ namespace SchemeCreator.UI
                     Grid.SetRow(ellipse, i - 1);
                     Grid.SetColumn(ellipse, j - 1);
 
-                    ellipse.PointerEntered += (sender, args) => ellipse.IncreaseSize();
-                    ellipse.PointerExited += (sender, args) => ellipse.DecreaseSize();
+                    ellipse.PointerEntered += (sender, args) => ellipse.Activate();
+                    ellipse.PointerExited += (sender, args) => ellipse.Deactivate();
                     ellipse.Tapped += (sender, args) => DotTappedEventAsync(sender as Ellipse);
 
                     Colorer.SetFillByValue(ellipse, false);

@@ -22,7 +22,7 @@ namespace SchemeCreator.UI.Dynamic
             set
             {
                 _value = value;
-                XEllipse.Fill = Colorer.GetBrushByValue(_value);
+                Colorer.SetFillByValue(XEllipse, null);
                 ValueChanged(_value);
             }
         }
@@ -58,8 +58,8 @@ namespace SchemeCreator.UI.Dynamic
             Colorer.SetFillByValue(this.XEllipse, null);
 
             XEllipse.Tapped += (sender, e) => Tapped(this);
-            XEllipse.PointerEntered += (sender, e) => XEllipse.IncreaseSize();
-            XEllipse.PointerExited += (sender, e) => XEllipse.DecreaseSize();
+            XEllipse.PointerEntered += (sender, e) => XEllipse.Activate();
+            XEllipse.PointerExited += (sender, e) => XEllipse.Deactivate();
         }
 
         public new Action<GatePortView> Tapped;
