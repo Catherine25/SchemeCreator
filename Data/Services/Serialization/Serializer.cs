@@ -11,9 +11,9 @@ using static SchemeCreator.Data.Constants;
 using System.Numerics;
 using System.Linq;
 
-namespace SchemeCreator.Data.Services
+namespace SchemeCreator.Data.Services.Serialization
 {
-    static class Serializer
+    static partial class Serializer
     {
         public const string gatePath = "gateData.txt";
         public const string linePath = "lineData.txt";
@@ -67,34 +67,6 @@ namespace SchemeCreator.Data.Services
             StorageFile lineFile = await folder.CreateFileAsync(linePath, CreationCollisionOption.OpenIfExists);
 
             await FileIO.WriteTextAsync(lineFile, JsonConvert.SerializeObject(scheme.Wires.Select(w => new Wire(w))));
-        }
-
-        public struct Gate
-        {
-            public Vector2 Location;
-            public GateEnum Type;
-            public int Inputs;
-            public int Outputs;
-
-            public Gate(GateView view)
-            {
-                Location = view.MatrixLocation;
-                Type = view.Type;
-                Inputs = view.InputCount;
-                Outputs = view.OutputCount;
-            }
-        }
-
-        public struct Wire
-        {
-            public Point Start;
-            public Point End;
-
-            public Wire(WireView view)
-            {
-                Start = view.Start;
-                End = view.End;
-            }
         }
     }
 }
