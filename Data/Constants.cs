@@ -8,7 +8,7 @@ namespace SchemeCreator.Data
         public static Size ExternalPortSize = new(25, 25);
         public static Size LogicGateSize = new(50, 70);
         public static Size TraceTextSize = new(50, 30);
-        public static Size DotSize = new(10, 10);
+        public static Size DotSize = new(15, 15);
         public static Size GatePortSize = new(10, 10);
         public static double MarginBetweenPorts = LogicGateSize.Width - GatePortSize.Width;
 
