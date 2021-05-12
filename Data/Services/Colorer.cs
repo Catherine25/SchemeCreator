@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -71,6 +72,7 @@ namespace SchemeCreator.Data.Services
                 ellipse.Fill = InactiveBrush;
             else
                 ellipse.Fill = UnknownBrush;
+            ellipse.Stroke = GetBrushByValue(value);
         }
 
         public static void SetFillByValue(Line line, bool? value)
@@ -102,5 +104,8 @@ namespace SchemeCreator.Data.Services
 
         public static void ColorMenuButtonBorderByValue(Button button, bool value) =>
             button.BorderBrush = value ? ActiveBrush : InactiveBrush;
+
+        public static Brush ActivatedColor = new SolidColorBrush(Colors.White);
+        public static Brush DeactivatedColor = new SolidColorBrush(Colors.Transparent);
     }
 }
