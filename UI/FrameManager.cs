@@ -186,63 +186,66 @@ namespace SchemeCreator.UI
             }
             else
             {
-                ConnectionPair newPair = new ConnectionPair();
+                throw new NotImplementedException();
 
-                if (isStart)
-                {
-                    newPair.Start = new Connection {externalPort = port};
-                    newPair.Value = value;
-                }
-                else
-                    newPair.End = new Connection {externalPort = port};
+                //ConnectionPair newPair = new ConnectionPair();
+
+                //if (isStart)
+                //{
+                //    newPair.Start = new ConnectionPair { externalPort = port};
+                //    newPair.Value = value;
+                //}
+                //else
+                //    newPair.End = new ConnectionPair { externalPort = port};
                 
-                connections.Push(newPair);
+                //connections.Push(newPair);
             }
         }
         private void TryCreate(GateView gate, GatePortView gatePort, bool isStart, bool? value = null)
         {
-            if (connections.TryPop(out ConnectionPair pair))
-            {
-                if (pair.Start != null && pair.End != null)
-                    connections.Push(pair);
+            throw new NotImplementedException();
+            //if (connections.TryPop(out ConnectionPair pair))
+            //{
+            //    if (pair.Start != null && pair.End != null)
+            //        connections.Push(pair);
 
-                if (isStart)
-                {
-                    pair.Start.Clear();
-                    pair.Start.gate = gate;
-                    pair.Start.port = gatePort;
-                    pair.Start.port.Value = value;
-                }
-                else
-                {
-                    pair.End.Clear();
-                    pair.End.gate = gate;
-                    pair.End.port = gatePort;
-                }
-            }
-            else
-            {
-                ConnectionPair newPair = new ConnectionPair();
+            //    if (isStart)
+            //    {
+            //        pair.Start.Clear();
+            //        pair.Start.gate = gate;
+            //        pair.Start.port = gatePort;
+            //        pair.Start.port.Value = value;
+            //    }
+            //    else
+            //    {
+            //        pair.End.Clear();
+            //        pair.End.gate = gate;
+            //        pair.End.port = gatePort;
+            //    }
+            //}
+            //else
+            //{
+            //    ConnectionPair newPair = new ConnectionPair();
 
-                if (isStart)
-                {
-                    newPair.Start = new Connection
-                    {
-                        gate = gate,
-                        port = gatePort
-                    };
+            //    if (isStart)
+            //    {
+            //        newPair.Start = new Connection
+            //        {
+            //            gate = gate,
+            //            port = gatePort
+            //        };
 
-                    newPair.Value = value;
-                }
-                else
-                    newPair.End = new Connection
-                    {
-                        gate = gate,
-                        port = gatePort
-                    };
+            //        newPair.Value = value;
+            //    }
+            //    else
+            //        newPair.End = new Connection
+            //        {
+            //            gate = gate,
+            //            port = gatePort
+            //        };
 
-                connections.Push(newPair);
-            }
+            //    connections.Push(newPair);
+            //}
         }
 
         public FrameEnum GetActiveFrame() => currentFrame;

@@ -61,8 +61,12 @@ namespace SchemeCreator.Data.Services
         //    }
         //}
 
+        // TODO refactor
         public void Trace(SchemeView scheme)
         {
+            if(!AnyComponentsToTrace(scheme))
+                throw new NotImplementedException();
+
             TraceExternalInputs(scheme);
 
             while (scheme.Gates.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Gate)
@@ -77,6 +81,14 @@ namespace SchemeCreator.Data.Services
             }
 
             TraceExternalOutputs(scheme);
+        }
+
+        private bool AnyComponentsToTrace(SchemeView scheme)
+        {
+            return scheme.ExternalPorts.Any(x => x.Type == PortType.Input)
+                && scheme.ExternalPorts.Any(x => x.Type == PortType.Output)
+                && scheme.Gates.Any()
+                && scheme.Wires.Any();
         }
 
         ///<summary> Returns not traced components count </summary>

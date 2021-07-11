@@ -137,6 +137,7 @@
     <Compile Include="Data\Extensions\LineExtension.cs" />
     <Compile Include="Data\Interfaces\IGridChild.cs" />
     <Compile Include="Data\Interfaces\IIdHolder.cs" />
+    <Compile Include="Data\Interfaces\IValueHolder.cs" />
     <Compile Include="Data\Models\AppearanceSettings.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
     <Compile Include="Data\Models\ExternalPort.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
     <Compile Include="Data\Models\Wire.cs" />
+    <Compile Include="Data\Services\Tracer_2.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

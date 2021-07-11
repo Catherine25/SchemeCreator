@@ -5,6 +5,7 @@ using SchemeCreator.Data;
 using System.Numerics;
 using Windows.Foundation;
 using static SchemeCreator.Data.Extensions.ControlExtension;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -14,7 +15,7 @@ namespace SchemeCreator.UI.Dynamic
         Output
     }
 
-    public sealed partial class ExternalPortView : UserControl
+    public sealed partial class ExternalPortView : UserControl, IValueHolder
     {
         public PortType Type;
 
@@ -25,10 +26,12 @@ namespace SchemeCreator.UI.Dynamic
             {
                 _value = value;
                 XEllipse.Fill = Colorer.GetBrushByValue(value);
+                ValueChanged?.Invoke(_value);
             }
         }
-
         private bool? _value;
+        public Action<bool?> ValueChanged { get; set; }
+
         public Vector2 MatrixLocation
         {
             get

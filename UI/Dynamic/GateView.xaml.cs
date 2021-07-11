@@ -6,13 +6,10 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
 using Windows.UI.Xaml;
-using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
-using Windows.UI;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -128,7 +125,7 @@ namespace SchemeCreator.UI.Dynamic
             XInputs.Children
                 .Select(x => x as GatePortView)
                 .FirstOrDefault(x => x.Center == wire.End)
-                .Value = wire.IsActive;
+                .Value = wire.Value;
         }
 
         public void Reset()

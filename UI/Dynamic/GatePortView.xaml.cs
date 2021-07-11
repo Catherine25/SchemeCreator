@@ -5,11 +5,11 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data;
-using Windows.UI;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
-    public sealed partial class GatePortView : UserControl
+    public sealed partial class GatePortView : UserControl, IValueHolder
     {
         /// <summary>
         /// Defines the Port's type - Input or Output
@@ -23,16 +23,15 @@ namespace SchemeCreator.UI.Dynamic
             {
                 _value = value;
                 Colorer.SetFillByValue(XEllipse, null);
-                ValueChanged(_value);
+                ValueChanged?.Invoke(_value);
             }
         }
         private bool? _value;
+        public Action<bool?> ValueChanged { get; set; }
 
         public readonly int Index;
 
         public Point Center { get => CenterPoint.TransformToPoint(); }
-
-        public Action<bool?> ValueChanged;
 
         public GatePortView() => InitializeComponent();
 
