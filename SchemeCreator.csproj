@@ -157,7 +157,6 @@
     <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
     <Compile Include="Data\Models\Wire.cs" />
-    <Compile Include="Data\Services\Tracer_2.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -181,6 +180,18 @@
       <DependentUpon>WireView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FrameManager.cs" />
+    <Compile Include="UI\Layers\DotLayer.xaml.cs">
+      <DependentUpon>DotLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Layers\ExternalPortsLayer.xaml.cs">
+      <DependentUpon>ExternalPortsLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Layers\GateLayer.xaml.cs">
+      <DependentUpon>GateLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Layers\WireLayer.xaml.cs">
+      <DependentUpon>WireLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\MenuController.cs" />
     <Compile Include="UI\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
@@ -200,7 +211,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ChangeLog\Next Release.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -236,6 +246,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Dynamic\WireView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Layers\DotLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Layers\ExternalPortsLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Layers\GateLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Layers\WireLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

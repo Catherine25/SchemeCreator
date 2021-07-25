@@ -27,10 +27,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public Vector2 MatrixLocation
         {
-            get
-            {
-                return _matrixIndex;
-            }
+            get => _matrixIndex;
             set
             {
                 _matrixIndex = value;

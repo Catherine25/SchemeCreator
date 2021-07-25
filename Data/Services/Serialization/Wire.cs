@@ -3,18 +3,17 @@ using Windows.Foundation;
 
 namespace SchemeCreator.Data.Services.Serialization
 {
-    static partial class Serializer
+    public class WireDto
     {
-        public struct Wire
-        {
-            public Point Start;
-            public Point End;
+        public Point Start;
+        public Point End;
 
-            public Wire(WireView view)
-            {
-                Start = view.Start;
-                End = view.End;
-            }
+        public WireDto() {}
+
+        public WireDto(WireView view)
+        {
+            Start = view.Start;
+            End = view.End;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace SchemeCreator.Data
         public static double MarginBetweenPorts = LogicGateSize.Width - GatePortSize.Width;
 
         public const int NetSize = 8;
+        public static readonly Size GridSize = new Size(8, 8);
 
         public const double Offset = 10.0;
         public const double LineStartOffset = 10.0;

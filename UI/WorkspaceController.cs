@@ -2,12 +2,10 @@
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 using SchemeCreator.Data.Controllers;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.UI.Dynamic;
-using static SchemeCreator.Data.Constants;
 using SchemeCreator.Data.Services;
 
 namespace SchemeCreator.UI
@@ -118,42 +116,42 @@ namespace SchemeCreator.UI
             //}
         }
 
-        public void ShowLines(SchemeView scheme)
-        {
-            for (int i = 0; i < scheme.Wires.Count; i++)
-            {
-                WireView line = scheme.Wires[i];
-                line.PointerEntered += Line_PointerEntered;
-                line.PointerExited += Line_PointerExited;
-                _grid.Children.Add(line);
-            }
-        }
+        // public void ShowLines(SchemeView scheme)
+        // {
+        //     for (int i = 0; i < scheme.Wires.Count; i++)
+        //     {
+        //         WireView line = scheme.Wires[i];
+        //         line.PointerEntered += Line_PointerEntered;
+        //         line.PointerExited += Line_PointerExited;
+        //         _grid.Children.Add(line);
+        //     }
+        // }
 
-        private void Line_PointerExited(object sender, PointerRoutedEventArgs e) =>
-            (sender as Line).StrokeThickness /= 2;
+        // private void Line_PointerExited(object sender, PointerRoutedEventArgs e) =>
+        //     (sender as Line).StrokeThickness /= 2;
 
-        private void Line_PointerEntered(object sender, PointerRoutedEventArgs e) =>
-            (sender as Line).StrokeThickness *= 2;
+        // private void Line_PointerEntered(object sender, PointerRoutedEventArgs e) =>
+        //     (sender as Line).StrokeThickness *= 2;
 
-        public void ShowWireTraceIndexes(int[] tracedWireIndexes, SchemeView scheme)
-        {
-            int wireCount = scheme.Wires.Count;
+        // public void ShowWireTraceIndexes(int[] tracedWireIndexes, SchemeView scheme)
+        // {
+        //     int wireCount = scheme.Wires.Count;
 
-            for (int i = 0; i < wireCount; i++)
-            {
-                WireView wire = scheme.Wires[i];
+        //     for (int i = 0; i < wireCount; i++)
+        //     {
+        //         WireView wire = scheme.Wires[i];
 
-                Button tb = new Button
-                {
-                    Content = tracedWireIndexes[i].ToString()
-                };
+        //         Button tb = new Button
+        //         {
+        //             Content = tracedWireIndexes[i].ToString()
+        //         };
 
-                tb.SetStandartAlignment();
-                tb.SetSizeAndCenter(TraceTextSize, wire.CenterPoint);
+        //         tb.SetStandartAlignment();
+        //         tb.SetSizeAndCenter(TraceTextSize, wire.CenterPoint);
 
-                _grid.Children.Add(tb);
-            };
-        }
+        //         _grid.Children.Add(tb);
+        //     };
+        // }
 
         //public void ShowAll(ref Scheme scheme)
         //{
@@ -162,17 +160,17 @@ namespace SchemeCreator.UI
         //    ShowLines(ref scheme.lineController);
         //}
 
-        public void AddMatrix(ref Grid grid, int netSize)
-        {
-            for (int i = 0; i < netSize; i++)
-            {
-                grid.RowDefinitions.Add(new RowDefinition());
-                grid.ColumnDefinitions.Add(new ColumnDefinition());
-            }
-        }
+        // public void AddMatrix(ref Grid grid, int netSize)
+        // {
+        //     for (int i = 0; i < netSize; i++)
+        //     {
+        //         grid.RowDefinitions.Add(new RowDefinition());
+        //         grid.ColumnDefinitions.Add(new ColumnDefinition());
+        //     }
+        // }
 
-        public void DotTapped(Ellipse ellipse, Vector2 position) =>
-            DotTappedEvent(ellipse, position);
+        // public void DotTapped(Ellipse ellipse, Vector2 position) =>
+        //     DotTappedEvent(ellipse, position);
 
         #region Events
 

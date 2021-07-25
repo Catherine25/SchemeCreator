@@ -2,6 +2,7 @@
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI;
 using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -60,10 +61,10 @@ namespace SchemeCreator
 
         private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            int gateCount = XScheme.Gates.Count;
-            int wireCount = XScheme.Wires.Count;
+            int gateCount = XScheme.Gates.Count();
+            int wireCount = XScheme.Wires.Count();
 
-            Tracer tracer = new Tracer();
+            Tracer tracer = new();
 
             //tracer.Trace(XScheme.Gates, XScheme.Wires);
 

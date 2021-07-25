@@ -69,8 +69,8 @@ namespace SchemeCreator.Data.Services
 
             TraceExternalInputs(scheme);
 
-            while (scheme.Gates.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Gate)
-                   || scheme.Wires.Count != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Wire))
+            while (scheme.Gates.Count() != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Gate)
+                   || scheme.Wires.Count() != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Wire))
             {
                 bool somethingTraced = false;
 

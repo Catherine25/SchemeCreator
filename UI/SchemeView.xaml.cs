@@ -1,7 +1,8 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Services;
+using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI.Dynamic;
+using SchemeCreator.UI.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,44 +11,26 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 
-using static System.Diagnostics.Debug;
-
 namespace SchemeCreator.UI
 {
     public sealed partial class SchemeView : UserControl
     {
-        private WireBuilder WireBuilder;
-        public List<Ellipse> Dots { get; private set; }
-        public List<WireView> Wires { get; private set; }
-        public IList<GateView> Gates { get; private set; }
-        public IList<ExternalPortView> ExternalPorts { get; private set; }
-
         public SchemeView()
         {
             InitializeComponent();
+            GateLayer.GatePortTapped += GatePortTapped;
+            ExternalPortsLayer.ExternalPortTapped += ExternalPortTapped;
+            DotLayer.DotTapped += DotTappedEventAsync;
 
-            WireBuilder = new WireBuilder();
-            WireBuilder.WireReady = (wire) => AddToView(wire);
-
-            Dots = new List<Ellipse>();
-            Wires = new List<WireView>();
-            Gates = new List<GateView>();
-            ExternalPorts = new List<ExternalPortView>();
-
-            InitGrid(Constants.NetSize, Constants.NetSize);
+            DotLayer.InitGrid(Constants.GridSize);
         }
 
-        private void Wire_Tapped(WireView wire)
-        {
-            Wires.Remove(wire);
-            XSchemeGrid.Children.Remove(wire);
-        }
-
+        public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
         public bool IsAllConnected()
         {
-            Stack<GateView> gates = new Stack<GateView>(Gates);
-            List<WireView> wires = new List<WireView>(Wires);
+            var gates = new Stack<GateView>(GateLayer.Gates);
+            var wires = new List<WireView>(WireLayer.Wires);
 
             bool found = true;
 
@@ -75,14 +58,21 @@ namespace SchemeCreator.UI
             return gates.Count == 0;
         }
 
+        public IEnumerable<GateView> Gates { get => GateLayer.Gates; }
+        public IEnumerable<WireView> Wires { get => WireLayer.Wires; }
+        public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.ExternalPorts; }
+        
+        public void AddToView(GateView g) => GateLayer.AddToView(g);
+        public void AddToView(WireView w) => WireLayer.AddToView(w);
+
         private bool AllExternalPortsConnect(PortType type, List<WireView> wires)
         {
             IEnumerable<Point> wirePointsToCheck = type == PortType.Input
                 ? wires.Select(x => x.Start)
                 : wires.Select(x => x.End);
 
-            Stack<ExternalPortView> externalPorts =
-                new Stack<ExternalPortView>(ExternalPorts.Where(x => x.Type == type));
+            var allExternalPorts = ExternalPortsLayer.ExternalPorts;
+            var externalPorts = new Stack<ExternalPortView>(allExternalPorts.Where(x => x.Type == type));
 
             bool found = true;
 
@@ -107,117 +97,6 @@ namespace SchemeCreator.UI
         //        gate.Reset();
         //}
 
-        public void InitGrid(int wCount, int hCount)
-        {
-            for (int i = 1; i <= wCount; i++)
-                XSchemeGrid.ColumnDefinitions.Add(new ColumnDefinition());
-
-            for (int j = 1; j <= hCount; j++)
-                XSchemeGrid.RowDefinitions.Add(new RowDefinition());
-
-            for (int i = 1; i <= wCount; i++)
-                for (int j = 1; j <= hCount; j++)
-                {
-                    Ellipse ellipse = new Ellipse
-                    {
-                        HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
-                        VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
-                        Width = Constants.DotSize.Width,
-                        Height = Constants.DotSize.Height
-                    };
-
-                    Grid.SetRow(ellipse, i - 1);
-                    Grid.SetColumn(ellipse, j - 1);
-
-                    ellipse.PointerEntered += (sender, args) => ellipse.Activate();
-                    ellipse.PointerExited += (sender, args) => ellipse.Deactivate();
-                    ellipse.Tapped += (sender, args) => DotTappedEventAsync(sender as Ellipse);
-
-                    Colorer.SetFillByValue(ellipse, false);
-
-                    Dots.Add(ellipse);
-                    XSchemeGrid.Children.Add(ellipse);
-                }
-        }
-
-        private async void DotTappedEventAsync(Ellipse e)
-        {
-            NewGateDialog msg = new NewGateDialog();
-
-            await msg.ShowAsync();
-
-            if (msg.gateType != null)
-            {
-                Vector2 location = new Vector2(Grid.GetColumn(e), Grid.GetRow(e));
-
-                if(msg.Gate != null)
-                {
-                    msg.Gate.MatrixLocation = location;
-                    AddToView(msg.Gate);
-                }
-                else if(msg.ExternalPort != null)
-                {
-                    msg.ExternalPort.MatrixLocation = location;
-                    AddToView(msg.ExternalPort);
-                }
-            }
-        }
-
-        private void ExternalPortTapped(ExternalPortView externalPort)
-        {
-            if (MainPage.CurrentMode == Constants.ModeEnum.AddLineMode)
-                WireBuilder.SetPoint(externalPort.Type == PortType.Input, externalPort.GetCenterRelativeTo(XSchemeGrid));
-            else
-                externalPort.SwitchMode();
-        }
-
-        private void GatePortTapped(GatePortView arg1, GateView arg2)
-        {
-            WriteLine("GatePortTapped");
-            WireBuilder.SetPoint(arg1.Type != Data.Models.Enums.ConnectionTypeEnum.Input, arg1.GetCenterRelativeTo(XSchemeGrid));
-        }
-
-        private void GateBodyTapped(GateBodyView arg1, GateView arg2)
-        {
-            XSchemeGrid.Children.Remove(arg1);
-            XSchemeGrid.Children.Remove(arg2);
-            Gates.Remove(arg2);
-        }
-
-        public ExternalPortView GetFirstNotInitedExternalPort() =>
-            GetExternalPorts(PortType.Input)
-                .FirstOrDefault(x => x.Value == null);
-
-        public IEnumerable<ExternalPortView> GetExternalPorts(PortType type) =>
-            ExternalPorts.Where(x => x.Type == type);
-
-        public void AddToView(GateView gate)
-        {
-            gate.GateBodyTapped += GateBodyTapped;
-            gate.GatePortTapped += GatePortTapped;
-            XSchemeGrid.Children.Add(gate);
-            Gates.Add(gate);
-        }
-
-        public void AddToView(ExternalPortView port)
-        {
-            port.Tapped += ExternalPortTapped;
-            XSchemeGrid.Children.Add(port);
-            ExternalPorts.Add(port);
-        }
-
-        public void AddToView(WireView wire)
-        {
-            WriteLine("AddToView");
-            
-            Grid.SetColumnSpan(wire, Constants.NetSize);
-            Grid.SetRowSpan(wire, Constants.NetSize);
-
-            Wires.Add(wire);
-            XSchemeGrid.Children.Add(wire);
-            wire.Tapped += Wire_Tapped;
-        }
-
         public void Clear()
         {
             var toRemove = XSchemeGrid.Children.Where(x => !(x is Ellipse));
@@ -226,17 +105,58 @@ namespace SchemeCreator.UI
                 XSchemeGrid.Children.Remove(toRemove.Take(1).First());
         }
 
+        private void ExternalPortTapped(ExternalPortView externalPort)
+        {
+            if (MainPage.CurrentMode == Constants.ModeEnum.AddLineMode)
+                WireLayer.WireBuilder.SetPoint(externalPort.Type == PortType.Input, externalPort.GetCenterRelativeTo(XSchemeGrid));
+            else
+                externalPort.SwitchMode();
+        }
+
+        private void GatePortTapped(GatePortView arg1, GateView arg2) =>
+            WireLayer.WireBuilder.SetPoint(arg1.Type != Data.Models.Enums.ConnectionTypeEnum.Input, arg1.GetCenterRelativeTo(XSchemeGrid));
+
+        private async void DotTappedEventAsync(Ellipse e)
+        {
+            var msg = new NewGateDialog();
+
+            await msg.ShowAsync();
+
+            if (msg.gateType != null)
+            {
+                var location = new Vector2(Grid.GetColumn(e), Grid.GetRow(e));
+
+                if(msg.Gate != null)
+                {
+                    msg.Gate.MatrixLocation = location;
+                    GateLayer.AddToView(msg.Gate);
+                }
+                else if(msg.ExternalPort != null)
+                {
+                    msg.ExternalPort.MatrixLocation = location;
+                    ExternalPortsLayer.AddToView(msg.ExternalPort);
+                }
+            }
+        }
+
         public void Recreate()
         {
             Clear();
 
-            WireBuilder = new();
-            WireBuilder.WireReady = (wire) => AddToView(wire);
+            // WireBuilder = new();
+            // WireBuilder.WireReady = (wire) => AddToView(wire);
 
-            Dots = new List<Ellipse>();
-            Wires = new List<WireView>();
-            Gates = new List<GateView>();
-            ExternalPorts = new List<ExternalPortView>();
+            // Wires = new List<WireView>();
+            // Gates = new List<GateView>();
+            // ExternalPorts = new List<ExternalPortView>();
+        }
+
+        public (IEnumerable<GateDto>, IEnumerable<WireDto>) PrepareForSerialization() 
+        {
+            var gateDtos = GateLayer.Gates.Select(gate => new GateDto(gate));
+            var wireDtos = WireLayer.Wires.Select(wire => new WireDto(wire));
+
+            return(gateDtos, wireDtos);
         }
     }
 }
