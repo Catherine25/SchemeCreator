@@ -5,6 +5,7 @@ using SchemeCreator.Data;
 using System.Numerics;
 using Windows.Foundation;
 using static SchemeCreator.Data.Extensions.ControlExtension;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -14,7 +15,7 @@ namespace SchemeCreator.UI.Dynamic
         Output
     }
 
-    public sealed partial class ExternalPortView : UserControl
+    public sealed partial class ExternalPortView : UserControl, IValueHolder
     {
         public PortType Type;
 
@@ -25,10 +26,12 @@ namespace SchemeCreator.UI.Dynamic
             {
                 _value = value;
                 XEllipse.Fill = Colorer.GetBrushByValue(value);
+                ValueChanged?.Invoke(_value);
             }
         }
-
         private bool? _value;
+        public Action<bool?> ValueChanged { get; set; }
+
         public Vector2 MatrixLocation
         {
             get
@@ -42,6 +45,7 @@ namespace SchemeCreator.UI.Dynamic
                 Grid.SetRow(this, (int)_matrixIndex.Y);
             }
         }
+
         private Vector2 _matrixIndex;
 
         public new Action<ExternalPortView> Tapped;
@@ -58,12 +62,15 @@ namespace SchemeCreator.UI.Dynamic
 
             PortName.Text = type == PortType.Input ? "In" : "Out";
 
-            this.SetSize(Constants.externalPortSize);
+            this.SetSize(Constants.ExternalPortSize);
 
             Value = null;
             MatrixLocation = point;
 
             XEllipse.Tapped += (sender, args) => Tapped(this);
+            PortName.Tapped += (sender, args) => Tapped(this);
+            XEllipse.RightTapped += (sender, args) => SwitchMode();
+            PortName.RightTapped += (sender, args) => SwitchMode();
         }
 
         public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;

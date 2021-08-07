@@ -1,4 +1,5 @@
 ﻿using SchemeCreator.Data;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
@@ -8,11 +9,11 @@ using Windows.UI.Xaml.Media;
 
 namespace SchemeCreator.UI.Dynamic
 {
-    public sealed partial class WireView : UserControl
+    public sealed partial class WireView : UserControl, IValueHolder
     {
         public Point Start
         {
-            get => new Point(XLine.X1, XLine.Y1);
+            get => new(XLine.X1, XLine.Y1);
             set
             {
                 XLine.X1 = value.X;
@@ -22,7 +23,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public Point End
         {
-            get => new Point(XLine.X2, XLine.Y2);
+            get => new(XLine.X2, XLine.Y2);
             set
             {
                 XLine.X2 = value.X;
@@ -32,26 +33,42 @@ namespace SchemeCreator.UI.Dynamic
 
         public new Action<WireView> Tapped;
 
-        public bool? IsActive
+        public bool? Value
         {
-            get => _isActive;
+            get => _value;
             set
             {
-                _isActive = value;
-                XLine.Fill = Colorer.GetBrushByValue(_isActive);
+                _value = value;
+                XLine.Fill = Colorer.GetBrushByValue(_value);
             }
         }
-        private bool? _isActive;
+        private bool? _value;
+        public Action<bool?> ValueChanged { get; set; }
 
         public WireView()
         {
             InitializeComponent();
 
-            Grid.SetColumnSpan(XLine, Constants.netSize);
-            Grid.SetRowSpan(XLine, Constants.netSize);
-            
+            InitLine();
+        }
+
+        public WireView(Point start, Point end)
+        {
+            InitializeComponent();
+
+            InitLine();
+
+            Start = start;
+            End = end;
+        }
+
+        public void InitLine()
+        {
+            Grid.SetColumnSpan(XLine, Constants.NetSize);
+            Grid.SetRowSpan(XLine, Constants.NetSize);
+
             XLine.Fill = Colorer.GetBrushByValue(null);
-            XLine.StrokeThickness = Constants.wireThickness;
+            XLine.StrokeThickness = Constants.WireThickness;
             XLine.Tapped += (sender, e) => Tapped(this);
 
             XLine.PointerEntered += (sender, e) => XLine.StrokeThickness *= 2;

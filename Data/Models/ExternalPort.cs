@@ -4,8 +4,7 @@
     {
         public ExternalPort()
         {
-            //SetCenterAndSize(null, Constants.externalPortSize);
-            SetSize(Constants.externalPortSize);
+            SetSize(Constants.ExternalPortSize);
             BooleanValue = null;
         }
     }

@@ -2,12 +2,18 @@
     x:Class="SchemeCreator.UI.SchemeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SchemeCreator.UI"
+    xmlns:local="using:SchemeCreator.UI.Layers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:layers="using:SchemeCreator.UI.Layers"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid x:Name="XSchemeGrid"/>
+    <Grid>
+        <Grid x:Name="XSchemeGrid"/>
+        <local:DotLayer x:Name="DotLayer"></local:DotLayer>
+        <local:ExternalPortsLayer x:Name="ExternalPortsLayer"></local:ExternalPortsLayer>
+        <local:GateLayer x:Name="GateLayer"></local:GateLayer>
+        <local:WireLayer x:Name="WireLayer"></local:WireLayer>
+    </Grid>
 </UserControl>

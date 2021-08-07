@@ -24,11 +24,9 @@ namespace SchemeCreator.Data.Models
 
             _ellipse.PointerEntered += (object o, PointerRoutedEventArgs e) =>
                 _ellipse.CenterPoint = new Vector3(_ellipse.CenterPoint.X * 2, _ellipse.CenterPoint.Y *2, _ellipse.CenterPoint.Z);
-                //SetCenterAndSize(_ellipse.CenterPoint, new Size(Size.Width * 2, Size.Height * 2));
 
             _ellipse.PointerExited += (object o, PointerRoutedEventArgs e) =>
                 _ellipse.CenterPoint = new Vector3(_ellipse.CenterPoint.X / 2, _ellipse.CenterPoint.Y / 2, _ellipse.CenterPoint.Z);
-            //SetCenterAndSize(_ellipse.CenterPoint, new Size(Size.Width / 2, Size.Height / 2));
         }
 
         #region Fields
@@ -53,8 +51,6 @@ namespace SchemeCreator.Data.Models
         public void AddToParent(SmartGrid grid) => grid.Add(_ellipse);
 
         public void SetSize(Size size) => _ellipse.SetSize(size);
-
-        //public void SetCenterAndSize(Vector3? point = null, Size? size = null) => _ellipse.SetSizeAndCenterPoint(size, point);
 
         public Action<SmartEllipse> Tapped;
     }

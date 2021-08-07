@@ -5,11 +5,11 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data;
-using Windows.UI;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
-    public sealed partial class GatePortView : UserControl
+    public sealed partial class GatePortView : UserControl, IValueHolder
     {
         /// <summary>
         /// Defines the Port's type - Input or Output
@@ -22,17 +22,16 @@ namespace SchemeCreator.UI.Dynamic
             set
             {
                 _value = value;
-                XEllipse.Fill = Colorer.GetBrushByValue(_value);
-                ValueChanged(_value);
+                Colorer.SetFillByValue(XEllipse, null);
+                ValueChanged?.Invoke(_value);
             }
         }
         private bool? _value;
+        public Action<bool?> ValueChanged { get; set; }
 
         public readonly int Index;
 
         public Point Center { get => CenterPoint.TransformToPoint(); }
-
-        public Action<bool?> ValueChanged;
 
         public GatePortView() => InitializeComponent();
 
@@ -48,18 +47,18 @@ namespace SchemeCreator.UI.Dynamic
 
             InitializeComponent();
 
-            XEllipse.Width = Constants.gatePortSize.Width;
-            XEllipse.Height = Constants.gatePortSize.Height;
-            Width = Constants.gatePortSize.Width;
-            Height = Constants.gatePortSize.Height;
+            XEllipse.Width = Constants.GatePortSize.Width;
+            XEllipse.Height = Constants.GatePortSize.Height;
+            Width = Constants.GatePortSize.Width;
+            Height = Constants.GatePortSize.Height;
 
             Grid.SetRow(this, index);
 
             Colorer.SetFillByValue(this.XEllipse, null);
 
             XEllipse.Tapped += (sender, e) => Tapped(this);
-            XEllipse.PointerEntered += (sender, e) => XEllipse.IncreaseSize();
-            XEllipse.PointerExited += (sender, e) => XEllipse.DecreaseSize();
+            XEllipse.PointerEntered += (sender, e) => XEllipse.Activate();
+            XEllipse.PointerExited += (sender, e) => XEllipse.Deactivate();
         }
 
         public new Action<GatePortView> Tapped;

@@ -13,14 +13,13 @@ namespace SchemeCreator.Data.Extensions
         public static Point GetCenterRelativeTo(this UserControl childElement, UIElement parentElement)
         {
             Point point = GetLeftTopRelativeTo(childElement, parentElement);
-            
+
             point.X += childElement.ActualWidth / 2;
             point.Y += childElement.ActualHeight / 2;
 
             return point;
         }
 
-        //todo: check Z
         public static Vector3 TransformToVector3(this Point point) =>
             new Vector3((float)point.X, (float)point.Y, 1);
 

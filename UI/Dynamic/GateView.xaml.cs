@@ -6,13 +6,10 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using SchemeCreator.Data.Models;
 using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
 using Windows.UI.Xaml;
-using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
-using Windows.UI;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -30,10 +27,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public Vector2 MatrixLocation
         {
-            get
-            {
-                return _matrixIndex;
-            }
+            get => _matrixIndex;
             set
             {
                 _matrixIndex = value;
@@ -60,23 +54,23 @@ namespace SchemeCreator.UI.Dynamic
             InputCount = inputs;
             OutputCount = outputs;
             MatrixLocation = point;
-            Text = gateNames[type];
+            Text = GateNames[type];
 
             ForegroundBrush = Colorer.GetGateForegroundBrush();
             BackgroundBrush = Colorer.GetGateBackgroundBrush();
 
-            GateBodySize = logicGateSize;
-            PortSize = gatePortSize;
+            GateBodySize = LogicGateSize;
+            PortSize = GatePortSize;
 
             PortsMargin = new GridLength(MarginBetweenPorts);
 
             InitializeComponent();
 
             xBody.Tapped += (sender, args) => GateBodyTapped(FindName("xBody") as GateBodyView, this);
-            xBody.Width = logicGateSize.Width;
-            xBody.Height = logicGateSize.Height;
+            xBody.Width = LogicGateSize.Width;
+            xBody.Height = LogicGateSize.Height;
 
-            XInputs.SetSize(gatePortSize.Width, logicGateSize.Height);
+            XInputs.SetSize(GatePortSize.Width, LogicGateSize.Height);
 
             CreatePorts(inputs, outputs);
         }
@@ -128,7 +122,7 @@ namespace SchemeCreator.UI.Dynamic
             XInputs.Children
                 .Select(x => x as GatePortView)
                 .FirstOrDefault(x => x.Center == wire.End)
-                .Value = wire.IsActive;
+                .Value = wire.Value;
         }
 
         public void Reset()

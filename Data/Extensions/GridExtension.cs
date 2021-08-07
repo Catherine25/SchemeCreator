@@ -53,5 +53,14 @@ namespace SchemeCreator.Data.Extensions
             grid.Width = size.Width;
             grid.Height = size.Height;
         }
+
+        public static void InitGridColumnsAndRows(this Grid grid, Size size)
+        {
+            for (int i = 1; i <= size.Width; i++)
+                grid.ColumnDefinitions.Add(new ColumnDefinition());
+
+            for (int j = 1; j <= size.Height; j++)
+                grid.RowDefinitions.Add(new RowDefinition());
+        }
     }
 }
