@@ -13,7 +13,6 @@ namespace SchemeCreator.Data.Models
             _grid = new Grid();
             _grid.VerticalAlignment = VerticalAlignment.Center;
             _grid.HorizontalAlignment = HorizontalAlignment.Center;
-            //_grid.SetStandartAlighnment();
         }
 
         public Rect Rect

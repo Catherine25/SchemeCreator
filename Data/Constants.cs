@@ -22,8 +22,6 @@ namespace SchemeCreator.Data
         public static SortedSet<GateEnum> SingleInput = new() {
             GateEnum.Buffer,
             GateEnum.NOT,
-            //GateEnum.IN,
-            //GateEnum.OUT
         };
 
         public static SortedSet<GateEnum> SingleOutput = new() {
@@ -35,29 +33,20 @@ namespace SchemeCreator.Data
             GateEnum.OR,
             GateEnum.XNOR,
             GateEnum.XOR,
-            //GateEnum.IN,
-            //GateEnum.OUT
         };
-
-        //public static SortedSet<GateEnum> external = new SortedSet<GateEnum> {
-        //    GateEnum.IN,
-        //    GateEnum.OUT
-        //};
 
         public static Dictionary<GateEnum, string> GateNames = new() {
             { GateEnum.AND, "AND" },
             { GateEnum.Buffer, "Buffer" },
-            //{ GateEnum.IN, "Input" },
             { GateEnum.NAND, "NAND" },
             { GateEnum.NOR, "NOR" },
             { GateEnum.NOT, "NOT" },
             { GateEnum.OR, "OR" },
-            //{ GateEnum.OUT, "Output" },
             { GateEnum.XNOR, "XNOR" },
             { GateEnum.XOR, "XOR" }
         };
 
-        public enum GateEnum { /*IN, OUT,*/ Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
+        public enum GateEnum { Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
         public enum ModeEnum { AddGateMode, AddLineMode, ChangeValueMode }
         public enum FrameEnum { Workspace, NewGate }
         public enum ComponentTypeEnum { ExternalPort, Gate, Wire }

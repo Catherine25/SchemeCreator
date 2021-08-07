@@ -38,7 +38,7 @@ namespace SchemeCreator.Data.Services
 
             SetText(MessageTypes.FunctionIsNotSupported, functionIsNotSupportedInfo);
 
-            string[] modeChanged = new string[4] //TODO: ADD MODE NAMES IN THE MESSAGE
+            string[] modeChanged = new string[4]
             {
                 "Info",
                 "Current mode changed",
