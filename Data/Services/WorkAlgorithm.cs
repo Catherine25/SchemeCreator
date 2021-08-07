@@ -18,8 +18,9 @@ namespace SchemeCreator.Data.Services
             if (scheme.GetFirstNotInitedExternalPort() != null)
                 return WorkAlgorithmResult.ExInsNotInited;
 
-            if (!scheme.IsAllConnected())
-                return WorkAlgorithmResult.GatesNotConnected;
+            // todo
+            //if (!scheme.IsAllConnected())
+                //return WorkAlgorithmResult.GatesNotConnected;
 
             // transfer from input ports to wires
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))
@@ -68,8 +69,9 @@ namespace SchemeCreator.Data.Services
             if (scheme.GetFirstNotInitedExternalPort() != null)
                 return WorkAlgorithmResult.ExInsNotInited;
 
-            if (!scheme.IsAllConnected())
-                return WorkAlgorithmResult.GatesNotConnected;
+            // todo
+            //if (!scheme.IsAllConnected())
+                //return WorkAlgorithmResult.GatesNotConnected;
 
             // transfer from input ports to wires
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))

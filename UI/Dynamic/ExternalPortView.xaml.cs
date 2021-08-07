@@ -69,6 +69,8 @@ namespace SchemeCreator.UI.Dynamic
 
             XEllipse.Tapped += (sender, args) => Tapped(this);
             PortName.Tapped += (sender, args) => Tapped(this);
+            XEllipse.RightTapped += (sender, args) => SwitchMode();
+            PortName.RightTapped += (sender, args) => SwitchMode();
         }
 
         public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;

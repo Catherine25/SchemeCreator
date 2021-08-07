@@ -27,7 +27,7 @@ namespace SchemeCreator.UI
 
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
-        public bool IsAllConnected()
+        public bool ValidateScheme()
         {
             var gates = new Stack<GateView>(GateLayer.Gates);
             var wires = new List<WireView>(WireLayer.Wires);
@@ -105,13 +105,8 @@ namespace SchemeCreator.UI
                 XSchemeGrid.Children.Remove(toRemove.Take(1).First());
         }
 
-        private void ExternalPortTapped(ExternalPortView externalPort)
-        {
-            if (MainPage.CurrentMode == Constants.ModeEnum.AddLineMode)
-                WireLayer.WireBuilder.SetPoint(externalPort.Type == PortType.Input, externalPort.GetCenterRelativeTo(XSchemeGrid));
-            else
-                externalPort.SwitchMode();
-        }
+        private void ExternalPortTapped(ExternalPortView externalPort) =>
+            WireLayer.WireBuilder.SetPoint(externalPort.Type == PortType.Input, externalPort.GetCenterRelativeTo(XSchemeGrid));
 
         private void GatePortTapped(GatePortView arg1, GateView arg2) =>
             WireLayer.WireBuilder.SetPoint(arg1.Type != Data.Models.Enums.ConnectionTypeEnum.Input, arg1.GetCenterRelativeTo(XSchemeGrid));
