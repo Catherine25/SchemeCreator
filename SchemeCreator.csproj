@@ -140,7 +140,6 @@
     <Compile Include="Data\Models\AppearanceSettings.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
     <Compile Include="Data\Models\ExternalPort.cs" />
-    <Compile Include="Data\Controllers\GateController.cs" />
     <Compile Include="Data\Interfaces\IResizable.cs" />
     <Compile Include="Data\Models\SmartEllipse.cs" />
     <Compile Include="Data\Models\SmartGrid.cs" />

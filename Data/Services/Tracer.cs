@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SchemeCreator.Data.Controllers;
-using SchemeCreator.Data.Models;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
 using PortType = SchemeCreator.UI.Dynamic.PortType;
