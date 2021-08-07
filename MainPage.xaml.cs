@@ -16,8 +16,6 @@ namespace SchemeCreator
         private Brush InactiveBrush;
         private Brush UnknownBrush;
 
-        public static ModeEnum CurrentMode;
-
         public MainPage()
         {
             InitializeComponent();
@@ -31,33 +29,9 @@ namespace SchemeCreator
             XSaveSchemeBt.Click += XSaveSchemeBt_Click;
             XTraceSchemeBt.Click += XTraceSchemeBt_Click;
             XWorkSchemeBt.Click += XWorkSchemeBt_Click;
-            XAddLineBt.Click += XAddLineBt_Click;
-            XChangeValueBt.Click += XChangeValueBt_Click;
         }
 
         #region Menu
-
-        private void XChangeValueBt_Click(object sender, RoutedEventArgs e)
-        {
-            XAddLineBt.Background = InactiveBrush;
-            XAddLineBt.Foreground = ActiveBrush;
-
-            XChangeValueBt.Background = ActiveBrush;
-            XChangeValueBt.Foreground = InactiveBrush;
-
-            CurrentMode = ModeEnum.ChangeValueMode;
-        }
-
-        private void XAddLineBt_Click(object sender, RoutedEventArgs e)
-        {
-            XAddLineBt.Background = ActiveBrush;
-            XAddLineBt.Foreground = InactiveBrush;
-            
-            XChangeValueBt.Background = InactiveBrush;
-            XChangeValueBt.Foreground = ActiveBrush;
-
-            CurrentMode = ModeEnum.AddLineMode;
-        }
 
         private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
         {
