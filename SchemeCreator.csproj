@@ -129,7 +129,6 @@
     </Compile>
     <Compile Include="Data\Connection.cs" />
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="Data\Controllers\DotController.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\ControlExtension.cs" />
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
@@ -141,11 +140,7 @@
     <Compile Include="Data\Models\AppearanceSettings.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
     <Compile Include="Data\Models\ExternalPort.cs" />
-    <Compile Include="Data\Models\Gate.cs" />
     <Compile Include="Data\Controllers\GateController.cs" />
-    <Compile Include="Data\Controllers\LineController.cs" />
-    <Compile Include="Data\Models\GateBody.cs" />
-    <Compile Include="Data\Models\Port.cs" />
     <Compile Include="Data\Interfaces\IResizable.cs" />
     <Compile Include="Data\Models\SmartEllipse.cs" />
     <Compile Include="Data\Models\SmartGrid.cs" />
@@ -156,13 +151,11 @@
     <Compile Include="Data\Services\Serialization\Wire.cs" />
     <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
-    <Compile Include="Data\Models\Wire.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\Models\Scheme.cs" />
     <Compile Include="UI\Dynamic\ExternalPortView.xaml.cs">
       <DependentUpon>ExternalPortView.xaml</DependentUpon>
     </Compile>
@@ -178,7 +171,6 @@
     <Compile Include="UI\Dynamic\WireView.xaml.cs">
       <DependentUpon>WireView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\FrameManager.cs" />
     <Compile Include="UI\Layers\DotLayer.xaml.cs">
       <DependentUpon>DotLayer.xaml</DependentUpon>
     </Compile>
@@ -191,7 +183,6 @@
     <Compile Include="UI\Layers\WireLayer.xaml.cs">
       <DependentUpon>WireLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\MenuController.cs" />
     <Compile Include="UI\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
@@ -202,7 +193,6 @@
       <DependentUpon>SchemeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Services\WireBuilder.cs" />
-    <Compile Include="UI\WorkspaceController.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
