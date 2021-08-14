@@ -38,16 +38,6 @@ namespace SchemeCreator.Data.Services
 
             SetText(MessageTypes.FunctionIsNotSupported, functionIsNotSupportedInfo);
 
-            string[] modeChanged = new string[4]
-            {
-                "Info",
-                "Current mode changed",
-                "",
-                "Ok"
-            };
-
-            SetText(MessageTypes.ModeChanged, modeChanged);
-
             string[] newSchemeButtonClicked = new string[4]
             {
                 "Do you want to create new scheme?",
