@@ -19,11 +19,14 @@ namespace SchemeCreator.UI
         {
             InitializeComponent();
             GateLayer.GatePortTapped += GatePortTapped;
+            GateLayer.RemoveWiresByGateRequest += RemoveWiresByGate;
             ExternalPortsLayer.ExternalPortTapped += ExternalPortTapped;
             DotLayer.DotTapped += DotTappedEventAsync;
 
             DotLayer.InitGrid(Constants.GridSize);
         }
+
+        private void RemoveWiresByGate(GateView gate) => WireLayer.RemoveWiresByGate(gate);
 
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
@@ -48,7 +51,7 @@ namespace SchemeCreator.UI
                 int connections = gate.InputCount + gate.OutputCount;
 
                 foreach (var wire in wires)
-                    if (gate.WireConnects(wire.Start) || gate.WireConnects(wire.End))
+                    if (gate.WirePartConnects(wire.Start) || gate.WirePartConnects(wire.End))
                         connections--;
 
                 if (connections <= 0)

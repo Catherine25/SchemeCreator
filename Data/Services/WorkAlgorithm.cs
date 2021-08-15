@@ -33,7 +33,7 @@ namespace SchemeCreator.Data.Services
                 traced = false;
                 // transfer from wires to gates
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null)) //TODO exclude transfered
-                foreach (GateView gate in scheme.Gates.Where(g => g.WireConnects(wire.End)))
+                foreach (GateView gate in scheme.Gates.Where(g => g.WirePartConnects(wire.End)))
                 {
                     traced = true;
                     gate.SetInputValueFromWire(wire);
@@ -42,7 +42,7 @@ namespace SchemeCreator.Data.Services
                 // transfer from gates that are ready to wires
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null))
                 foreach (GateView gate in scheme.Gates.Where(g =>
-                    g.WireConnects(wire.Start) && g.AreOutputsReady))
+                    g.WirePartConnects(wire.Start) && g.AreOutputsReady))
                 {
                     gate.SetInputValueFromWire(wire);
                     traced = true;
@@ -82,7 +82,7 @@ namespace SchemeCreator.Data.Services
                 traced = false;
                 // transfer from wires to gates
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null)) //TODO exclude transfered
-                foreach (GateView gate in scheme.Gates.Where(g => g.WireConnects(wire.End)))
+                foreach (GateView gate in scheme.Gates.Where(g => g.WirePartConnects(wire.End)))
                 {
                     traced = true;
                     gate.SetInputValueFromWire(wire);
@@ -91,7 +91,7 @@ namespace SchemeCreator.Data.Services
                 // transfer from gates that are ready to wires
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null))
                 foreach (GateView gate in scheme.Gates.Where(g =>
-                    g.WireConnects(wire.Start) && g.AreOutputsReady))
+                    g.WirePartConnects(wire.Start) && g.AreOutputsReady))
                 {
                     gate.SetInputValueFromWire(wire);
                     traced = true;

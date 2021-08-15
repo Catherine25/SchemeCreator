@@ -67,7 +67,7 @@ namespace SchemeCreator.Data.Services
 
             var gatesToTrace = notTracedGates
                 .Where(gate => tracedWires
-                    .Any(wire => gate.WireConnects(wire.End)));
+                    .Any(wire => gate.WirePartConnects(wire.End)));
 
             if (gatesToTrace.Count() != 0)
                 return false;
@@ -90,7 +90,7 @@ namespace SchemeCreator.Data.Services
 
             var wiresToTrace = scheme.Wires
                 .Where(w => tracedGates
-                    .Any(g => g.WireConnects(w.Start)));
+                    .Any(g => g.WirePartConnects(w.Start)));
 
             if(wiresToTrace.Count() == 0)
                 return false;

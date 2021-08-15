@@ -135,7 +135,6 @@
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
     <Compile Include="Data\Interfaces\IGridChild.cs" />
-    <Compile Include="Data\Interfaces\IIdHolder.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
     <Compile Include="Data\Models\AppearanceSettings.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
