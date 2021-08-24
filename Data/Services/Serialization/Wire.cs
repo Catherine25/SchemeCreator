@@ -1,19 +1,14 @@
+using SchemeCreator.Data.Models;
 using SchemeCreator.UI.Dynamic;
-using Windows.Foundation;
 
 namespace SchemeCreator.Data.Services.Serialization
 {
     public class WireDto
     {
-        public Point Start;
-        public Point End;
+        public WireConnection Connection;
 
         public WireDto() {}
 
-        public WireDto(WireView view)
-        {
-            Start = view.Start;
-            End = view.End;
-        }
+        public WireDto(WireView view) => Connection = view.Connection;
     }
 }

@@ -127,7 +127,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\Connection.cs" />
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\ControlExtension.cs" />
@@ -137,6 +136,7 @@
     <Compile Include="Data\Interfaces\IGridChild.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
     <Compile Include="Data\Models\AppearanceSettings.cs" />
+    <Compile Include="Data\Models\WireConnection.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
     <Compile Include="Data\Models\ExternalPort.cs" />
     <Compile Include="Data\Interfaces\IResizable.cs" />
@@ -150,6 +150,8 @@
     <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />
+    <Compile Include="Data\Services\History\HistoryService.cs" />
+    <Compile Include="Data\Services\History\HistoryComponent.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

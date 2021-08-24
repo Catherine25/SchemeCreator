@@ -2,33 +2,26 @@
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using System;
-using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class WireView : UserControl, IValueHolder
     {
-        public Point Start
-        {
-            get => new(XLine.X1, XLine.Y1);
-            set
-            {
-                XLine.X1 = value.X;
-                XLine.Y1 = value.Y;
-            }
-        }
+        public WireConnection Connection => connection;
+        private WireConnection connection;
 
-        public Point End
+        public void SetConnection(WireConnection con)
         {
-            get => new(XLine.X2, XLine.Y2);
-            set
-            {
-                XLine.X2 = value.X;
-                XLine.Y2 = value.Y;
-            }
+            connection = con;
+
+            XLine.X1 = con.StartPoint.X;
+            XLine.Y1 = con.StartPoint.Y;
+            XLine.X2 = con.EndPoint.X;
+            XLine.Y2 = con.EndPoint.Y;
         }
 
         public new Action<WireView> Tapped;
@@ -50,16 +43,17 @@ namespace SchemeCreator.UI.Dynamic
             InitializeComponent();
 
             InitLine();
+
+            SetConnection(new());
         }
 
-        public WireView(Point start, Point end)
+        public WireView(WireConnection connection)
         {
             InitializeComponent();
 
             InitLine();
 
-            Start = start;
-            End = end;
+            this.connection = connection;
         }
 
         public void InitLine()

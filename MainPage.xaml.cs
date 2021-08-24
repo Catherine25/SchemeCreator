@@ -40,12 +40,12 @@ namespace SchemeCreator
 
             Tracer tracer = new();
 
-            //tracer.Trace(XScheme.Gates, XScheme.Wires);
+            tracer.Trace(XScheme, out var result);
 
             foreach (UI.Dynamic.GateView gate in XScheme.Gates)
                 gate.Reset();
 
-            WorkAlgorithmResult Result = WorkAlgorithm.Visualize(XScheme, tracer.TraceHistory);
+            WorkAlgorithmResult Result = WorkAlgorithm.Visualize(XScheme, result);
 
             if (Result == WorkAlgorithmResult.ExInsNotInited)
                 await new Message(MessageTypes.ExInsNotInited).ShowAsync();
@@ -59,7 +59,7 @@ namespace SchemeCreator
         {
             Tracer tracer = new Tracer();
 
-            tracer.Trace(XScheme);
+            tracer.Trace(XScheme, out var result);
 
             //TODO
             //XScheme.ShowTracings(tracer.TraceHistory);

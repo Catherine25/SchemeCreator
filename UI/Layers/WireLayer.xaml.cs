@@ -36,7 +36,8 @@ namespace SchemeCreator.UI.Layers
 
         public void RemoveWiresByGate(GateView gate)
         {
-            var wiresToRemove = Wires.Where(wire => gate.WireConnects(wire));
+            // ToList() is needed to remove wires correctly
+            var wiresToRemove = Wires.Where(wire => gate.WireConnects(wire)).ToList();
 
             foreach (var wire in wiresToRemove)
                 Grid.Children.Remove(wire);

@@ -120,7 +120,7 @@ namespace SchemeCreator.UI.Dynamic
         {
             XInputs.Children
                 .Select(x => x as GatePortView)
-                .FirstOrDefault(x => x.Center == wire.End)
+                .FirstOrDefault(x => x.Center == wire.Connection.EndPoint)
                 .Value = wire.Value;
         }
 
@@ -138,6 +138,7 @@ namespace SchemeCreator.UI.Dynamic
             return inputs.Any(i => i.Center == point) || outputs.Any(i => i.Center == point);
         }
 
-        public bool WireConnects(WireView wire) => WirePartConnects(wire.Start) || WirePartConnects(wire.End);
+        public bool WireConnects(WireView wire) =>
+            (this.MatrixLocation == wire.Connection.MatrixStart) || (this.MatrixLocation == wire.Connection.MatrixEnd);
     }
 }
