@@ -46,7 +46,7 @@ namespace SchemeCreator.Data.Services.Serialization
                 await folder.CreateFileAsync(linePath);
 
             var wires = JsonConvert.DeserializeObject<List<WireDto>>(await FileIO.ReadTextAsync(lineFile));
-            var wiresToAdd = new List<WireView>(wires.Select(w => new WireView(w.Start, w.End)));
+            var wiresToAdd = new List<WireView>(wires.Select(w => new WireView(w.Connection)));
             wiresToAdd.ForEach(w => scheme.AddToView(w));
         }
 

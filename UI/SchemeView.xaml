@@ -12,8 +12,8 @@
     <Grid>
         <Grid x:Name="XSchemeGrid"/>
         <local:DotLayer x:Name="DotLayer"></local:DotLayer>
+        <local:WireLayer x:Name="WireLayer"></local:WireLayer>
         <local:ExternalPortsLayer x:Name="ExternalPortsLayer"></local:ExternalPortsLayer>
         <local:GateLayer x:Name="GateLayer"></local:GateLayer>
-        <local:WireLayer x:Name="WireLayer"></local:WireLayer>
     </Grid>
 </UserControl>

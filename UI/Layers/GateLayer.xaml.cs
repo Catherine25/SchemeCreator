@@ -11,7 +11,8 @@ namespace SchemeCreator.UI.Layers
     public sealed partial class GateLayer : UserControl
     {
         public event Action<GatePortView, GateView> GatePortTapped;
-        public event Action<GateBodyView, GateView> GateBodyTapped;
+        //public event Action<GateBodyView, GateView> GateBodyTapped;
+        public event Action<GateView> RemoveWiresByGateRequest;
 
         public IList<GateView> Gates { get => Grid.Children.Select(e => e as GateView).ToList(); }
         private void SetGates(List<GateView> gates) => gates.ForEach(g => Grid.Children.Add(g));
@@ -24,7 +25,6 @@ namespace SchemeCreator.UI.Layers
 
         public void AddToView(GateView gate)
         {
-            // gate.GateBodyTapped += (gateBody, gate) => GateBodyTapped(gateBody, gate);
             gate.GateBodyTapped += (gateBody, gate) => DeleteGate(gateBody, gate);
             gate.GatePortTapped += (gatePort, gate) => GatePortTapped(gatePort, gate);
             Grid.Children.Add(gate);
@@ -34,8 +34,7 @@ namespace SchemeCreator.UI.Layers
         private void DeleteGate(GateBodyView gateBody, GateView gate)
         {
             Grid.Children.Remove(gate);
-            // check gateBody is removed itself
-            // Grid.Children.Remove(gateBody);
+            RemoveWiresByGateRequest(gate);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SchemeCreator.Data.Interfaces;
+using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
 using static SchemeCreator.Data.Constants;
@@ -11,7 +12,7 @@ namespace SchemeCreator.Data.Services
 {
     static class WorkAlgorithm
     {
-        public static WorkAlgorithmResult Visualize(SchemeView scheme, List<HistoryComponent> traceHistory)
+        public static WorkAlgorithmResult Visualize(SchemeView scheme, IEnumerable<HistoryComponent> traceHistory)
         {
             Debug.WriteLine("\n" + "[Method] Ver6");
 
@@ -24,7 +25,7 @@ namespace SchemeCreator.Data.Services
 
             // transfer from input ports to wires
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))
-            foreach (WireView wire in scheme.Wires.Where(w => w.Start == port.Center))
+            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.StartPoint == port.Center))
                 wire.Value = port.Value;
 
             bool traced = true;
@@ -33,7 +34,7 @@ namespace SchemeCreator.Data.Services
                 traced = false;
                 // transfer from wires to gates
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null)) //TODO exclude transfered
-                foreach (GateView gate in scheme.Gates.Where(g => g.WireConnects(wire.End)))
+                foreach (GateView gate in scheme.Gates.Where(g => g.WirePartConnects(wire.Connection.EndPoint)))
                 {
                     traced = true;
                     gate.SetInputValueFromWire(wire);
@@ -42,7 +43,7 @@ namespace SchemeCreator.Data.Services
                 // transfer from gates that are ready to wires
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null))
                 foreach (GateView gate in scheme.Gates.Where(g =>
-                    g.WireConnects(wire.Start) && g.AreOutputsReady))
+                    g.WirePartConnects(wire.Connection.StartPoint) && g.AreOutputsReady))
                 {
                     gate.SetInputValueFromWire(wire);
                     traced = true;
@@ -54,7 +55,7 @@ namespace SchemeCreator.Data.Services
 
             // transfer from wires to output ports
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Output))
-            foreach (WireView wire in scheme.Wires.Where(w => w.End == port.Center))
+            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.EndPoint == port.Center))
                 wire.Value = port.Value;
 
             return WorkAlgorithmResult.Correct;
@@ -73,7 +74,7 @@ namespace SchemeCreator.Data.Services
 
             // transfer from input ports to wires
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))
-            foreach (WireView wire in scheme.Wires.Where(w => w.Start == port.Center))
+            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.StartPoint == port.Center))
                 wire.Value = port.Value;
 
             bool traced = true;
@@ -82,7 +83,7 @@ namespace SchemeCreator.Data.Services
                 traced = false;
                 // transfer from wires to gates
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null)) //TODO exclude transfered
-                foreach (GateView gate in scheme.Gates.Where(g => g.WireConnects(wire.End)))
+                foreach (GateView gate in scheme.Gates.Where(g => g.WirePartConnects(wire.Connection.EndPoint)))
                 {
                     traced = true;
                     gate.SetInputValueFromWire(wire);
@@ -91,7 +92,7 @@ namespace SchemeCreator.Data.Services
                 // transfer from gates that are ready to wires
                 foreach (WireView wire in scheme.Wires.Where(w => w.Value != null))
                 foreach (GateView gate in scheme.Gates.Where(g =>
-                    g.WireConnects(wire.Start) && g.AreOutputsReady))
+                    g.WirePartConnects(wire.Connection.StartPoint) && g.AreOutputsReady))
                 {
                     gate.SetInputValueFromWire(wire);
                     traced = true;
@@ -103,7 +104,7 @@ namespace SchemeCreator.Data.Services
 
             // transfer from wires to output ports
             foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Output))
-            foreach (WireView wire in scheme.Wires.Where(w => w.End == port.Center))
+            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.EndPoint == port.Center))
                 wire.Value = port.Value;
 
             return WorkAlgorithmResult.Correct;
@@ -133,12 +134,12 @@ namespace SchemeCreator.Data.Services
         
         public bool Connects(ExternalPortView port, WireView w)
         {
-            return port.Center == w.Start || port.Center == w.End;
+            return port.Center == w.Connection.StartPoint || port.Center == w.Connection.EndPoint;
         }
 
         public bool Connects(GatePortView port, WireView w)
         {
-            return port.Center == w.Start || port.Center == w.End;
+            return port.Center == w.Connection.StartPoint || port.Center == w.Connection.EndPoint;
         }
     }
 

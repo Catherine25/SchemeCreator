@@ -1,7 +1,9 @@
-﻿using SchemeCreator.Data.Extensions;
+﻿using System.Numerics;
+using SchemeCreator.Data.Extensions;
 using SchemeCreator.UI.Dynamic;
 using System;
 using Windows.Foundation;
+using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.Data.Services
 {
@@ -9,14 +11,26 @@ namespace SchemeCreator.Data.Services
     {
         public Action<WireView> WireReady;
 
-        public void SetPoint(bool isStart, Point point)
+        public void SetPoint(bool isStart, Point point, Vector2 location, int? port = null)
         {
-            if(isStart)
-                _wire.Start = point;
-            else
-                _wire.End = point;
+            WireConnection con = _wire.Connection;
 
-            if (_wire.Start.IsInited() && _wire.End.IsInited())
+            if(isStart)
+            {
+                con.StartPoint = point;
+                con.MatrixStart = location;
+                con.StartPort = port;
+                _wire.SetConnection(con);
+            }
+            else
+            {
+                con.EndPoint = point;
+                con.MatrixEnd = location;
+                con.EndPort = port;
+                _wire.SetConnection(con);
+            }
+
+            if (_wire.Connection.StartPoint.IsInited() && _wire.Connection.EndPoint.IsInited())
             {
                 WireReady(_wire);
                 _wire = new WireView();

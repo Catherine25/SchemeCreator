@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
 using PortType = SchemeCreator.UI.Dynamic.PortType;
@@ -9,98 +10,94 @@ namespace SchemeCreator.Data.Services
 {
     public class Tracer
     {
-        public List<HistoryComponent> TraceHistory = new List<HistoryComponent>();
+        private HistoryService service;
 
-        public void Trace(SchemeView scheme)
+        public Tracer()
         {
-            if(!AnyComponentsToTrace(scheme))
+            service = new HistoryService();
+        }
+
+        public void Trace(SchemeView scheme, out IEnumerable<HistoryComponent> result)
+        {
+            (int gates, int wires) total = (scheme.Gates.Count(), scheme.Wires.Count());
+
+            if (!AnyComponentsToTrace(scheme))
                 throw new NotImplementedException();
 
             TraceExternalInputs(scheme);
 
-            while (scheme.Gates.Count() != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Gate)
-                   || scheme.Wires.Count() != TraceHistory.Count(x => x.Type == Constants.ComponentTypeEnum.Wire))
+            while (!AllGatesAndWiresTraced(total))
             {
                 bool somethingTraced = false;
 
                 somethingTraced = TraceWires(scheme) || TraceGates(scheme);
-                
-                if(!somethingTraced)
+
+                if (!somethingTraced)
                     throw new Exception();
             }
 
             TraceExternalOutputs(scheme);
+
+            result = service.TraceHistory;
         }
 
-        private bool AnyComponentsToTrace(SchemeView scheme)
-        {
-            return scheme.ExternalPorts.Any(x => x.Type == PortType.Input)
-                && scheme.ExternalPorts.Any(x => x.Type == PortType.Output)
-                && scheme.Gates.Any()
-                && scheme.Wires.Any();
-        }
+        private bool AllGatesAndWiresTraced((int gates, int wires) total) =>
+            total.gates == service.Count(nameof(GateView)) && total.wires == service.Count(nameof(WireView));
+
+        private bool AnyComponentsToTrace(SchemeView scheme) =>
+            scheme.ExternalPorts.Any() && scheme.Gates.Any() && scheme.Wires.Any();
 
         private void TraceExternalInputs(SchemeView scheme)
         {
             var externalPortViews = scheme.ExternalPorts.Where(x => x.Type == PortType.Input);
             foreach (ExternalPortView externalPortView in externalPortViews)
-                TraceHistory.Add(new HistoryComponent
-                {
-                    Type = Constants.ComponentTypeEnum.ExternalPort,
-                    TracedObject = externalPortView
-                });
+                service.TraceHistory.Add(new HistoryComponent(nameof(ExternalPortView)));
         }
 
         private bool TraceGates(SchemeView scheme)
         {
-            var tracedWires = TraceHistory
-                .Where(x => x.Type == Constants.ComponentTypeEnum.Wire)
+            var tracedWires = service.GetAll(nameof(WireView))
                 .Select(x => x.TracedObject as WireView);
 
-            var tracedGates = TraceHistory
-                .Where(x => x.Type == Constants.ComponentTypeEnum.Gate)
+            var tracedGates = service.GetAll(nameof(GateView))
                 .Select(x => x.TracedObject as GateView);
 
-            var notTracedGates = scheme.Gates
-                .Where(x => tracedGates
-                    .Any(t => t.CenterPoint != x.CenterPoint));
+            var notTracedGates = scheme.Gates.Except(tracedGates);
 
             var gatesToTrace = notTracedGates
                 .Where(gate => tracedWires
-                    .Any(wire => gate.WireConnects(wire.End)));
+                    .Any(wire => gate.WirePartConnects(wire.Connection.EndPoint)));
 
             if (gatesToTrace.Count() != 0)
                 return false;
 
             foreach (GateView gateView in gatesToTrace)
-                TraceHistory.Add(new HistoryComponent
-                {
-                    Type = Constants.ComponentTypeEnum.Gate,
-                    TracedObject = gateView
-                });
+                service.TraceHistory.Add(new HistoryComponent(gateView));
 
             return true;
         }
 
         private bool TraceWires(SchemeView scheme)
         {
-            var tracedGates = TraceHistory
-                .Where(x => x.Type == Constants.ComponentTypeEnum.Gate)
+            var exPorts = scheme.ExternalPorts.Where(p => p.Type == PortType.Input);
+
+            var tracedGates = service.GetAll(nameof(GateView))
                 .Select(x => x.TracedObject as GateView);
 
-            var wiresToTrace = scheme.Wires
-                .Where(w => tracedGates
-                    .Any(g => g.WireConnects(w.Start)));
+            var tracedWires = service.GetAll(nameof(WireView))
+                .Select(x => x.TracedObject as WireView);
 
-            if(wiresToTrace.Count() == 0)
+            //check by point OR by matrix location or external point
+            var wiresToTrace = scheme.Wires
+                .Except(tracedWires)
+                .Where(w => tracedGates.Any(g => g.WirePartConnects(w.Connection.StartPoint))
+                || exPorts.Any(p => p.MatrixLocation == w.Connection.MatrixStart));
+
+            if (wiresToTrace.Count() == 0)
                 return false;
 
             foreach (WireView wire in wiresToTrace)
-                TraceHistory.Add(new HistoryComponent
-                {
-                    Type = Constants.ComponentTypeEnum.Wire,
-                    TracedObject = wire
-                });
+                service.TraceHistory.Add(new HistoryComponent(wire));
 
             return true;
         }
@@ -109,17 +106,7 @@ namespace SchemeCreator.Data.Services
         {
             var externalPortViews = scheme.ExternalPorts.Where(x => x.Type == PortType.Output);
             foreach (ExternalPortView externalPortView in externalPortViews)
-                TraceHistory.Add(new HistoryComponent
-                {
-                    Type = Constants.ComponentTypeEnum.ExternalPort,
-                    TracedObject = externalPortView
-                });
+                service.TraceHistory.Add(new HistoryComponent(externalPortView));
         }
-    }
-
-    public class HistoryComponent
-    {
-        public Constants.ComponentTypeEnum Type;
-        public object TracedObject;
     }
 }

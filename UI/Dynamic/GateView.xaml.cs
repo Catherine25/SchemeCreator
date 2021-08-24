@@ -15,13 +15,11 @@ namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class GateView : UserControl
     {
+        public Guid Guid { get; set; } = new Guid();
         public readonly GateEnum Type;
-
         public readonly string Text;
-
         public readonly Size GateBodySize;
         public readonly GridLength PortsMargin;
-
         public readonly Size PortSize;
         private GridLength PortWidth => new GridLength(PortSize.Width);
 
@@ -50,6 +48,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public GateView(GateEnum type, Vector2 point, int inputs = 0, int outputs = 0)
         {
+            Guid = new Guid();
             Type = type;
             InputCount = inputs;
             OutputCount = outputs;
@@ -121,7 +120,7 @@ namespace SchemeCreator.UI.Dynamic
         {
             XInputs.Children
                 .Select(x => x as GatePortView)
-                .FirstOrDefault(x => x.Center == wire.End)
+                .FirstOrDefault(x => x.Center == wire.Connection.EndPoint)
                 .Value = wire.Value;
         }
 
@@ -131,87 +130,7 @@ namespace SchemeCreator.UI.Dynamic
                 (child as GatePortView).Value = null;
         }
 
-        // public Vector3 GetLeftTop()
-        // {
-        //     if(external.Contains(Type))
-        //     {
-        //         return new Vector3
-        //         {
-        //             X = (float)(MatrixIndex.X - externalGateSize.Width / 2),
-        //             Y = (float)(MatrixIndex.Y - externalGateSize.Height / 2)
-        //         };
-        //     }
-        //     else
-        //     {
-        //         return new Vector3
-        //         {
-        //             X = (float)(MatrixIndex.X - logicGateSize.Width / 2),
-        //             Y = (float)(MatrixIndex.Y - logicGateSize.Height / 2)
-        //         };
-        //     }
-
-        // }
-
-        // public GateBody DrawBody() => new GateBody(this);
-
-        // public List<GatePortView> DrawPorts(ConnectionTypeEnum type)
-        // {
-        //     if(type == ConnectionTypeEnum.Both)
-        //     {
-        //         var items = DrawPorts(ConnectionTypeEnum.Input);
-        //         items.AddRange(DrawPorts(ConnectionTypeEnum.Output));
-        //         return items;
-        //     }
-        //     else
-        //     {
-        //         List<GatePortView> ports = new List<GatePortView>();
-        //         int length = type == ConnectionTypeEnum.Input ? Inputs : Outputs;
-
-        //         for (int i = 0; i < length; i++)
-        //         {
-        //             GatePortView port = new GatePortView(type);
-
-        //             Vector3 center =
-        //                 type == ConnectionTypeEnum.Input
-        //                 ? new Vector3(GetLeftTop().X, (float)(GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1))), 0)
-        //                 : new Vector3((float)(GetLeftTop().X + logicGateSize.Width), (float)(GetLeftTop().Y + (logicGateSize.Height / (length + 1) * (i + 1))), 0);
-
-        //             port.CenterPoint = center;
-
-        //             port.Value = Values[i];
-
-        //             ports.Add(port);
-        //         }
-
-        //         return ports;
-        //     }            
-        // }
-
-        // public bool ContainsInOutByCenter(Vector3 center, ConnectionTypeEnum type) =>
-        //     DrawPorts(type).Exists(x => x.CenterPoint == center);
-
-        // public bool ContainsBodyByMargin(Thickness t) =>
-        //     DrawBody().ContainsBodyByMargin(t);
-
-        // public int GetIndexOfInOutByCenter(Vector3 center, ConnectionTypeEnum type) =>
-        //     DrawPorts(type).FindIndex(x => x.CenterPoint == center);
-
-        // public GateBody GetBodyByWirePart(Vector3 p)
-        // {
-        //     if (Type == GateEnum.IN || Type == GateEnum.OUT)
-        //         if (p == MatrixIndex)
-        //             return DrawBody();
-
-        //     return null;
-        // }
-
-        // public GatePortView GetInOutByWirePart(Vector3 p)
-        // {
-        //     var items = DrawPorts(ConnectionTypeEnum.Both);
-        //     return items.FirstOrDefault(i => i.CenterPoint == p);
-        // }
-
-        public bool WireConnects(Point point)
+        public bool WirePartConnects(Point point)
         {
             var inputs = XInputs.Children.Select(i => i as GatePortView);
             var outputs = XOutputs.Children.Select(i => i as GatePortView);
@@ -219,16 +138,7 @@ namespace SchemeCreator.UI.Dynamic
             return inputs.Any(i => i.Center == point) || outputs.Any(i => i.Center == point);
         }
 
-        // public int FirstFreeValueBoxIndex()
-        // {
-        //     for (int i = 0; i < Inputs; i++)
-        //         if (Values[i] == null)
-        //             return i;
-
-        //     return -1;
-        // }
-
-        // public void AddToParent(SmartGrid parent) =>
-        //     DrawBody().AddToParent(parent);
+        public bool WireConnects(WireView wire) =>
+            (this.MatrixLocation == wire.Connection.MatrixStart) || (this.MatrixLocation == wire.Connection.MatrixEnd);
     }
 }

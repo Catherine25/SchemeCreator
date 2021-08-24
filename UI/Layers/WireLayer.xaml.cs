@@ -2,6 +2,7 @@
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dynamic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
@@ -33,10 +34,17 @@ namespace SchemeCreator.UI.Layers
             Grid.Children.Remove(wire);
         }
 
+        public void RemoveWiresByGate(GateView gate)
+        {
+            // ToList() is needed to remove wires correctly
+            var wiresToRemove = Wires.Where(wire => gate.WireConnects(wire)).ToList();
+
+            foreach (var wire in wiresToRemove)
+                Grid.Children.Remove(wire);
+        }
+
         public void AddToView(WireView wire)
         {
-            //System.Diagnostics.Debug.WriteLine("AddToView");
-            
             Grid.SetColumnSpan(wire, Constants.NetSize);
             Grid.SetRowSpan(wire, Constants.NetSize);
 

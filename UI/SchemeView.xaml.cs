@@ -19,11 +19,14 @@ namespace SchemeCreator.UI
         {
             InitializeComponent();
             GateLayer.GatePortTapped += GatePortTapped;
+            GateLayer.RemoveWiresByGateRequest += RemoveWiresByGate;
             ExternalPortsLayer.ExternalPortTapped += ExternalPortTapped;
             DotLayer.DotTapped += DotTappedEventAsync;
 
             DotLayer.InitGrid(Constants.GridSize);
         }
+
+        private void RemoveWiresByGate(GateView gate) => WireLayer.RemoveWiresByGate(gate);
 
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
@@ -48,7 +51,7 @@ namespace SchemeCreator.UI
                 int connections = gate.InputCount + gate.OutputCount;
 
                 foreach (var wire in wires)
-                    if (gate.WireConnects(wire.Start) || gate.WireConnects(wire.End))
+                    if (gate.WirePartConnects(wire.Connection.StartPoint) || gate.WirePartConnects(wire.Connection.EndPoint))
                         connections--;
 
                 if (connections <= 0)
@@ -68,8 +71,8 @@ namespace SchemeCreator.UI
         private bool AllExternalPortsConnect(PortType type, List<WireView> wires)
         {
             IEnumerable<Point> wirePointsToCheck = type == PortType.Input
-                ? wires.Select(x => x.Start)
-                : wires.Select(x => x.End);
+                ? wires.Select(x => x.Connection.StartPoint)
+                : wires.Select(x => x.Connection.EndPoint);
 
             var allExternalPorts = ExternalPortsLayer.ExternalPorts;
             var externalPorts = new Stack<ExternalPortView>(allExternalPorts.Where(x => x.Type == type));
@@ -106,10 +109,16 @@ namespace SchemeCreator.UI
         }
 
         private void ExternalPortTapped(ExternalPortView externalPort) =>
-            WireLayer.WireBuilder.SetPoint(externalPort.Type == PortType.Input, externalPort.GetCenterRelativeTo(XSchemeGrid));
+            WireLayer.WireBuilder.SetPoint(
+                externalPort.Type == PortType.Input,
+                externalPort.GetCenterRelativeTo(XSchemeGrid),
+                externalPort.MatrixLocation);
 
         private void GatePortTapped(GatePortView arg1, GateView arg2) =>
-            WireLayer.WireBuilder.SetPoint(arg1.Type != Data.Models.Enums.ConnectionTypeEnum.Input, arg1.GetCenterRelativeTo(XSchemeGrid));
+            WireLayer.WireBuilder.SetPoint(
+                arg1.Type != Data.Models.Enums.ConnectionTypeEnum.Input,
+                arg1.GetCenterRelativeTo(XSchemeGrid),
+                arg2.MatrixLocation);
 
         private async void DotTappedEventAsync(Ellipse e)
         {
