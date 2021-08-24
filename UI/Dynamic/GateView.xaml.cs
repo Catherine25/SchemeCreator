@@ -41,17 +41,15 @@ namespace SchemeCreator.UI.Dynamic
         public Action<GateBodyView, GateView> GateBodyTapped;
         public Action<GatePortView, GateView> GatePortTapped;
 
-        public int InputCount;
-        public int OutputCount;
+        public IEnumerable<GatePortView> Inputs { get => XInputs.Children.Select(p => p as GatePortView); }
+        public IEnumerable<GatePortView> Outputs { get => XOutputs.Children.Select(p => p as GatePortView); }
 
-        public bool AreOutputsReady => XOutputs.Children.Any(x => ((GatePortView) x).Value != null);
+        public bool AreOutputsReady => Outputs.Any(p => p.Value != null);
 
         public GateView(GateEnum type, Vector2 point, int inputs = 0, int outputs = 0)
         {
             Guid = new Guid();
             Type = type;
-            InputCount = inputs;
-            OutputCount = outputs;
             MatrixLocation = point;
             Text = GateNames[type];
 
@@ -76,15 +74,13 @@ namespace SchemeCreator.UI.Dynamic
 
         public void Work()
         {
-            List<bool?> values =
-                GateWorkPatterns.ActionByType[Type](XInputs.Children
-                    .Select(x => ((GatePortView) x).Value)
-                    .ToList());
+            List<bool?> initialValues = Inputs.Select(p => p.Value).ToList();
+            List<bool?> resultValues = GateWorkPatterns.ActionByType[Type](initialValues);
 
-            var outPorts = XOutputs.Children.Select(o => o as GatePortView).ToList();
-            
+            var outPorts = Outputs.ToList();
+
             for (int i = 0; i < outPorts.Count; i++)
-                outPorts[i].Value = values[i];
+                outPorts[i].Value = resultValues[i];
         }
 
         private void CreatePorts(int inputs, int outputs)
@@ -106,6 +102,7 @@ namespace SchemeCreator.UI.Dynamic
                 XInputs.Children.Add(port);
             }
         }
+
         private void CreateOutputs(int count)
         {
             for (int i = 0; i < count; i++)
@@ -116,29 +113,19 @@ namespace SchemeCreator.UI.Dynamic
             }
         }
 
-        public void SetInputValueFromWire(WireView wire)
-        {
-            XInputs.Children
-                .Select(x => x as GatePortView)
-                .FirstOrDefault(x => x.Center == wire.Connection.EndPoint)
-                .Value = wire.Value;
-        }
+        public void SetInputValueFromWire(WireView wire) =>
+            Inputs.FirstOrDefault(x => x.Center == wire.Connection.EndPoint).Value = wire.Value;
 
         public void Reset()
         {
-            foreach (var child in XInputs.Children)
-                (child as GatePortView).Value = null;
+            foreach (var child in Inputs)
+                child.Value = null;
         }
 
-        public bool WirePartConnects(Point point)
-        {
-            var inputs = XInputs.Children.Select(i => i as GatePortView);
-            var outputs = XOutputs.Children.Select(i => i as GatePortView);
-
-            return inputs.Any(i => i.Center == point) || outputs.Any(i => i.Center == point);
-        }
+        public bool WirePartConnects(Point point) =>
+            Inputs.Any(i => i.Center == point) || Outputs.Any(i => i.Center == point);
 
         public bool WireConnects(WireView wire) =>
-            (this.MatrixLocation == wire.Connection.MatrixStart) || (this.MatrixLocation == wire.Connection.MatrixEnd);
+            (MatrixLocation == wire.Connection.MatrixStart) || (MatrixLocation == wire.Connection.MatrixEnd);
     }
 }

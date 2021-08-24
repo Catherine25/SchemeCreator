@@ -48,7 +48,7 @@ namespace SchemeCreator.UI
                 GateView gate = gates.Pop();
                 found = false;
 
-                int connections = gate.InputCount + gate.OutputCount;
+                int connections = gate.Inputs.Count() + gate.Outputs.Count();
 
                 foreach (var wire in wires)
                     if (gate.WirePartConnects(wire.Connection.StartPoint) || gate.WirePartConnects(wire.Connection.EndPoint))

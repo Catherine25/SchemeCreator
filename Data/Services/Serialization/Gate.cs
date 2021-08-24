@@ -1,4 +1,5 @@
 using SchemeCreator.UI.Dynamic;
+using System.Linq;
 using System.Numerics;
 using static SchemeCreator.Data.Constants;
 
@@ -12,12 +13,13 @@ namespace SchemeCreator.Data.Services.Serialization
         public int Outputs;
 
         public GateDto() { }
+
         public GateDto(GateView view)
         {
             Location = view.MatrixLocation;
             Type = view.Type;
-            Inputs = view.InputCount;
-            Outputs = view.OutputCount;
+            Inputs = view.Inputs.Count();
+            Outputs = view.Outputs.Count();
         }
     }
 }
