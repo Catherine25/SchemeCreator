@@ -1,6 +1,7 @@
 ﻿using SchemeCreator.Data.Services;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI;
+using SchemeCreator.UI.Dynamic;
 using System;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -35,14 +36,11 @@ namespace SchemeCreator
 
         private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            int gateCount = XScheme.Gates.Count();
-            int wireCount = XScheme.Wires.Count();
+            Tracer tracer = new(XScheme);
 
-            Tracer tracer = new();
+            var result = tracer.Run();
 
-            tracer.Trace(XScheme, out var result);
-
-            foreach (UI.Dynamic.GateView gate in XScheme.Gates)
+            foreach (GateView gate in XScheme.Gates)
                 gate.Reset();
 
             WorkAlgorithmResult Result = WorkAlgorithm.Visualize(XScheme, result);
@@ -57,9 +55,9 @@ namespace SchemeCreator
 
         private void XTraceSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new Tracer();
+            Tracer tracer = new(XScheme);
 
-            tracer.Trace(XScheme, out var result);
+            var result = tracer.Run();
 
             //TODO
             //XScheme.ShowTracings(tracer.TraceHistory);

@@ -10,6 +10,7 @@ using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
 using Windows.UI.Xaml;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.UI.Dynamic
 {
@@ -124,6 +125,12 @@ namespace SchemeCreator.UI.Dynamic
 
         public bool WirePartConnects(Point point) =>
             Inputs.Any(i => i.Center == point) || Outputs.Any(i => i.Center == point);
+
+        public bool WireStartConnects(WireConnection c) =>
+            (MatrixLocation == c.MatrixStart) && (c.StartPort == null || Outputs.Any(i => i.Index == c.StartPort));
+
+        public bool WireEndConnects(WireConnection c) =>
+            (MatrixLocation == c.MatrixEnd) && (c.EndPort == null || Inputs.Any(i => i.Index == c.EndPort));
 
         public bool WireConnects(WireView wire) =>
             (MatrixLocation == wire.Connection.MatrixStart) || (MatrixLocation == wire.Connection.MatrixEnd);

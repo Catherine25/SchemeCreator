@@ -57,6 +57,16 @@ namespace SchemeCreator.Data.Services
             };
 
             SetText(MessageTypes.VisualizingFailed, visualizingFailed);
+
+            string[] nothingToTrace = new string[4]
+            {
+                "There's nothing to trace in the scheme",
+                "",
+                "",
+                "Ok"
+            };
+
+            SetText(MessageTypes.NothingToTrace, nothingToTrace);
         }
 
         public static string GetText(MessageTypes mt, MessageAttribute ma)
