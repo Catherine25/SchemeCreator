@@ -1,5 +1,6 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Services.History;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI.Dynamic;
 using SchemeCreator.UI.Layers;
@@ -162,5 +163,8 @@ namespace SchemeCreator.UI
 
             return(gateDtos, wireDtos);
         }
+
+        public void ShowTracings(IEnumerable<HistoryComponent> historyComponents) =>
+            TraceLayer.ShowTracings(historyComponents);
     }
 }

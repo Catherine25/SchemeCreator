@@ -59,8 +59,7 @@ namespace SchemeCreator
 
             var result = tracer.Run();
 
-            //TODO
-            //XScheme.ShowTracings(tracer.TraceHistory);
+            XScheme.ShowTracings(result);
         }
 
         private async void XSaveSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(XScheme);

@@ -180,6 +180,9 @@
     <Compile Include="UI\Layers\GateLayer.xaml.cs">
       <DependentUpon>GateLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Layers\TraceLayer.xaml.cs">
+      <DependentUpon>TraceLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Layers\WireLayer.xaml.cs">
       <DependentUpon>WireLayer.xaml</DependentUpon>
     </Compile>
@@ -247,6 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Layers\GateLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Layers\TraceLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
