@@ -144,10 +144,12 @@
     <Compile Include="Data\Models\SmartGrid.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
     <Compile Include="Data\Services\GateWorkPatterns.cs" />
+    <Compile Include="Data\Services\MessageData.cs" />
+    <Compile Include="Data\Services\Messages.cs" />
+    <Compile Include="Data\Services\SchemeValidator.cs" />
     <Compile Include="Data\Services\Serialization\Gate.cs" />
     <Compile Include="Data\Services\Serialization\Serializer.cs" />
     <Compile Include="Data\Services\Serialization\Wire.cs" />
-    <Compile Include="Data\Services\TextController.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />
     <Compile Include="Data\Services\History\HistoryService.cs" />

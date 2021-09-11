@@ -41,7 +41,7 @@ namespace SchemeCreator.Data.Services
             // check if there is nothing to trace
             if ((total.exPorts == 0 || total.gates == 0) && total.wires == 0)
             {
-                new Message(Constants.MessageTypes.NothingToTrace).ShowAsync();
+                new Message(Messages.NothingToTrace).ShowAsync();
                 return null;
             }
 

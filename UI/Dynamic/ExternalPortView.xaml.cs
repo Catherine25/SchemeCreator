@@ -74,5 +74,8 @@ namespace SchemeCreator.UI.Dynamic
         }
 
         public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
+
+        public bool WireStartConnects(WireView wire) => wire.Connection.MatrixStart == MatrixLocation;
+        public bool WireEndConnects(WireView wire) => wire.Connection.MatrixEnd == MatrixLocation;
     }
 }

@@ -16,7 +16,6 @@ namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class GateView : UserControl
     {
-        public Guid Guid { get; set; } = new Guid();
         public readonly GateEnum Type;
         public readonly string Text;
         public readonly Size GateBodySize;
@@ -49,7 +48,6 @@ namespace SchemeCreator.UI.Dynamic
 
         public GateView(GateEnum type, Vector2 point, int inputs = 0, int outputs = 0)
         {
-            Guid = new Guid();
             Type = type;
             MatrixLocation = point;
             Text = GateNames[type];
@@ -115,16 +113,16 @@ namespace SchemeCreator.UI.Dynamic
         }
 
         public void SetInputValueFromWire(WireView wire) =>
-            Inputs.FirstOrDefault(x => x.Center == wire.Connection.EndPoint).Value = wire.Value;
+            Inputs.First(i => i.Index == wire.Connection.EndPort).Value = wire.Value;
+
+        public void SetOutputValueToWire(WireView wire) =>
+            wire.Value = Outputs.First(o => o.Index == wire.Connection.StartPort).Value;
 
         public void Reset()
         {
             foreach (var child in Inputs)
                 child.Value = null;
         }
-
-        public bool WirePartConnects(Point point) =>
-            Inputs.Any(i => i.Center == point) || Outputs.Any(i => i.Center == point);
 
         public bool WireStartConnects(WireConnection c) =>
             (MatrixLocation == c.MatrixStart) && (c.StartPort == null || Outputs.Any(i => i.Index == c.StartPort));

@@ -1,9 +1,7 @@
 ﻿using SchemeCreator.Data.Services;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI;
-using SchemeCreator.UI.Dynamic;
 using System;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -36,21 +34,22 @@ namespace SchemeCreator
 
         private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new(XScheme);
+            var validationResult = SchemeValidator.ValidateAsync(XScheme);
 
-            var result = tracer.Run();
+            if (!validationResult)
+                return;
 
-            foreach (GateView gate in XScheme.Gates)
-                gate.Reset();
+            // reset all components at first
+            XScheme.Reset();
 
-            WorkAlgorithmResult Result = WorkAlgorithm.Visualize(XScheme, result);
+            var Result = WorkAlgorithm.Visualize(XScheme);
 
-            if (Result == WorkAlgorithmResult.ExInsNotInited)
-                await new Message(MessageTypes.ExInsNotInited).ShowAsync();
-            else if (Result == WorkAlgorithmResult.GatesNotConnected)
-                await new Message(MessageTypes.GatesNotConnected).ShowAsync();
-            else if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
-                await new Message(MessageTypes.VisualizingFailed).ShowAsync();
+            // todo
+            //if (Result == WorkAlgorithmResult.GatesNotConnected)
+            //    await new Message(MessageTypes.GatesNotConnected).ShowAsync();
+            //else
+            if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
+                await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 
         private void XTraceSchemeBt_Click(object sender, RoutedEventArgs e)
@@ -68,7 +67,7 @@ namespace SchemeCreator
 
         private async void XNewSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialogResult result = await new Message(MessageTypes.NewSchemeButtonClicked).ShowAsync();
+            var result = await new Message(Messages.CreateNew).ShowAsync();
 
             if (result == ContentDialogResult.Primary)
                 XScheme.Clear();

@@ -22,7 +22,8 @@ namespace SchemeCreator.UI.Dynamic
             set
             {
                 _value = value;
-                Colorer.SetFillByValue(XEllipse, null);
+                XEllipse.Fill = Colorer.GetBrushByValue(value);
+                XEllipse.Stroke = Colorer.GetBrushByValue(value);
                 ValueChanged?.Invoke(_value);
             }
         }
@@ -62,7 +63,5 @@ namespace SchemeCreator.UI.Dynamic
         }
 
         public new Action<GatePortView> Tapped;
-
-        //public void AddToParent(SmartGrid grid) => grid.Add(this);
     }
 }
