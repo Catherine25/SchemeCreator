@@ -32,10 +32,6 @@ namespace SchemeCreator.Data.Services
                return false;
             }
 
-            // todo
-            //if (!scheme.IsAllConnected())
-            //return WorkAlgorithmResult.GatesNotConnected;
-
             return true;
         }
 

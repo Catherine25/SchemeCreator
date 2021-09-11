@@ -44,10 +44,6 @@ namespace SchemeCreator
 
             var Result = WorkAlgorithm.Visualize(XScheme);
 
-            // todo
-            //if (Result == WorkAlgorithmResult.GatesNotConnected)
-            //    await new Message(MessageTypes.GatesNotConnected).ShowAsync();
-            //else
             if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
                 await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }

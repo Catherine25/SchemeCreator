@@ -16,9 +16,6 @@ namespace SchemeSimulator
             SaveSchemeBt.Click += SaveSchemeBt_Click;
             TraceSchemeBt.Click += TraceSchemeBt_Click;
             WorkSchemeBt.Click += WorkSchemeBt_Click;
-            
-            //todo: AddLineBt
-            //todo: ChangeValueBt
         }
 
         private void LoadSchemeBt_Click(object sender, RoutedEventArgs e) => throw new NotImplementedException();

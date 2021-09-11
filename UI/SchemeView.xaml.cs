@@ -120,18 +120,7 @@ namespace SchemeCreator.UI
             }
         }
 
-        public void Recreate()
-        {
-            Clear();
-
-            // todo
-            // WireBuilder = new();
-            // WireBuilder.WireReady = (wire) => AddToView(wire);
-
-            // Wires = new List<WireView>();
-            // Gates = new List<GateView>();
-            // ExternalPorts = new List<ExternalPortView>();
-        }
+        public void Recreate() => Clear();
 
         public (IEnumerable<GateDto>, IEnumerable<WireDto>) PrepareForSerialization() 
         {
