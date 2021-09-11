@@ -64,7 +64,6 @@ namespace SchemeCreator.Data.Services
                 anyTraced = wiresTraced || gatesTraced;
 
                 if (!anyTraced)
-                    // TODO handle
                     throw new Exception("Tracing error!");
             }
 
