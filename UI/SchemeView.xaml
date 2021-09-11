@@ -15,5 +15,6 @@
         <local:WireLayer x:Name="WireLayer"></local:WireLayer>
         <local:ExternalPortsLayer x:Name="ExternalPortsLayer"></local:ExternalPortsLayer>
         <local:GateLayer x:Name="GateLayer"></local:GateLayer>
+        <local:TraceLayer x:Name="TraceLayer"></local:TraceLayer>
     </Grid>
 </UserControl>

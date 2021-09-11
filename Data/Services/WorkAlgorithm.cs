@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using SchemeCreator.Data.Interfaces;
-using SchemeCreator.Data.Services.History;
+﻿using System.Linq;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
 using static SchemeCreator.Data.Constants;
@@ -12,150 +7,97 @@ namespace SchemeCreator.Data.Services
 {
     static class WorkAlgorithm
     {
-        public static WorkAlgorithmResult Visualize(SchemeView scheme, IEnumerable<HistoryComponent> traceHistory)
+        public static WorkAlgorithmResult Visualize(SchemeView scheme)
         {
-            Debug.WriteLine("\n" + "[Method] Ver6");
-
-            if (scheme.GetFirstNotInitedExternalPort() != null)
-                return WorkAlgorithmResult.ExInsNotInited;
-
-            // todo
-            //if (!scheme.IsAllConnected())
-                //return WorkAlgorithmResult.GatesNotConnected;
-
-            // transfer from input ports to wires
-            foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))
-            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.StartPoint == port.Center))
-                wire.Value = port.Value;
+            TransferFromExternalInputsToWires(scheme);
 
             bool traced = true;
             while (scheme.Gates.Any(g => !g.AreOutputsReady) && traced)
             {
                 traced = false;
-                // transfer from wires to gates
-                foreach (WireView wire in scheme.Wires.Where(w => w.Value != null)) //TODO exclude transfered
-                foreach (GateView gate in scheme.Gates.Where(g => g.WirePartConnects(wire.Connection.EndPoint)))
-                {
-                    traced = true;
-                    gate.SetInputValueFromWire(wire);
-                }
+
+                // transfer from wires to gates, then make gates work
+                traced = TransferFromWiresToGates(scheme);
 
                 // transfer from gates that are ready to wires
-                foreach (WireView wire in scheme.Wires.Where(w => w.Value != null))
-                foreach (GateView gate in scheme.Gates.Where(g =>
-                    g.WirePartConnects(wire.Connection.StartPoint) && g.AreOutputsReady))
-                {
-                    gate.SetInputValueFromWire(wire);
-                    traced = true;
-                }
+                traced = TransferFromGatesToWires(scheme);
+
+                // handle scheme errors
+                if (!traced)
+                    return WorkAlgorithmResult.SchemeIsntCorrect;
             }
 
-            if (!traced)
-                return WorkAlgorithmResult.SchemeIsntCorrect;
-
             // transfer from wires to output ports
-            foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Output))
-            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.EndPoint == port.Center))
-                wire.Value = port.Value;
+            TransferFromWiresToExternalOutputs(scheme);
 
             return WorkAlgorithmResult.Correct;
         }
 
-        public static WorkAlgorithmResult Visualize_7(SchemeView scheme)
+        private static void TransferFromExternalInputsToWires(SchemeView scheme)
         {
-            Debug.WriteLine("[Method] Ver7");
+            var externalInputs = scheme.ExternalPorts.Where(p => p.Type == PortType.Input);
 
-            if (scheme.GetFirstNotInitedExternalPort() != null)
-                return WorkAlgorithmResult.ExInsNotInited;
-
-            // todo
-            //if (!scheme.IsAllConnected())
-                //return WorkAlgorithmResult.GatesNotConnected;
-
-            // transfer from input ports to wires
-            foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Input))
-            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.StartPoint == port.Center))
-                wire.Value = port.Value;
-
-            bool traced = true;
-            while (scheme.Gates.Any(g => !g.AreOutputsReady) && traced)
+            foreach (ExternalPortView port in externalInputs)
             {
-                traced = false;
-                // transfer from wires to gates
-                foreach (WireView wire in scheme.Wires.Where(w => w.Value != null)) //TODO exclude transfered
-                foreach (GateView gate in scheme.Gates.Where(g => g.WirePartConnects(wire.Connection.EndPoint)))
+                var connectedWires = scheme.Wires.Where(w => port.WireStartConnects(w));
+
+                foreach (WireView wire in connectedWires)
+                    wire.Value = port.Value;
+            }
+        }
+
+        private static bool TransferFromWiresToGates(SchemeView scheme)
+        {
+            bool traced = false;
+
+            var initedWires = scheme.Wires.Where(w => w.Value != null);
+
+            foreach (WireView wire in initedWires)
+            {
+                var connectedGates = scheme.Gates.Where(g => g.WireEndConnects(wire.Connection));
+
+                foreach (GateView gate in connectedGates)
                 {
                     traced = true;
                     gate.SetInputValueFromWire(wire);
+                    gate.Work();
                 }
+            }
 
-                // transfer from gates that are ready to wires
-                foreach (WireView wire in scheme.Wires.Where(w => w.Value != null))
-                foreach (GateView gate in scheme.Gates.Where(g =>
-                    g.WirePartConnects(wire.Connection.StartPoint) && g.AreOutputsReady))
+            return traced;
+        }
+
+        private static bool TransferFromGatesToWires(SchemeView scheme)
+        {
+            bool traced = false;
+
+            var notInitedWires = scheme.Wires.Where(w => w.Value == null);
+
+            foreach (WireView wire in notInitedWires)
+            {
+                var connectedGates = scheme.Gates.Where(g => g.WireStartConnects(wire.Connection) && g.AreOutputsReady);
+
+                foreach (GateView gate in connectedGates)
                 {
-                    gate.SetInputValueFromWire(wire);
+                    gate.SetOutputValueToWire(wire);
                     traced = true;
                 }
             }
 
-            if (!traced)
-                return WorkAlgorithmResult.SchemeIsntCorrect;
-
-            // transfer from wires to output ports
-            foreach (ExternalPortView port in scheme.ExternalPorts.Where(p => p.Type == PortType.Output))
-            foreach (WireView wire in scheme.Wires.Where(w => w.Connection.EndPoint == port.Center))
-                wire.Value = port.Value;
-
-            return WorkAlgorithmResult.Correct;
+            return traced;
         }
-    }
 
-    public class Connector
-    {
-        private SchemeView schemeView;
-        
-        public Connector(SchemeView schemeView)
+        private static void TransferFromWiresToExternalOutputs(SchemeView scheme)
         {
-            this.schemeView = schemeView;
+            var externalOutputs = scheme.ExternalPorts.Where(p => p.Type == PortType.Output);
+
+            foreach (ExternalPortView port in externalOutputs)
+            {
+                var connectedWires = scheme.Wires.Where(w => w.Connection.MatrixEnd == port.MatrixLocation);
+
+                foreach (WireView wire in connectedWires)
+                    port.Value = wire.Value;
+            }
         }
-
-        public void ConnectExternalInputsToWires()
-        {
-            var inputs = schemeView.ExternalPorts.Where(ports => ports.Type == PortType.Input);
-            var wires = schemeView.Wires;
-            var connections = new List<Connection>();
-
-            foreach (var input in inputs) 
-                foreach (var wire in wires)
-                    if (Connects(input, wire))        
-                        connections.Add(new Connection(input, wire));
-        }
-        
-        public bool Connects(ExternalPortView port, WireView w)
-        {
-            return port.Center == w.Connection.StartPoint || port.Center == w.Connection.EndPoint;
-        }
-
-        public bool Connects(GatePortView port, WireView w)
-        {
-            return port.Center == w.Connection.StartPoint || port.Center == w.Connection.EndPoint;
-        }
-    }
-
-    public struct Connection
-    {
-        public Connection(IValueHolder source, IValueHolder destination)
-        {
-            Source = source;
-            Destination = destination;
-
-            source.ValueChanged += ValueChanged;
-        }
-
-        private void ValueChanged(bool? obj) => Destination = Source;
-
-        public IValueHolder Source;
-        public IValueHolder Destination;
     }
 }

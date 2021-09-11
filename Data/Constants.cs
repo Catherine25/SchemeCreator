@@ -49,7 +49,7 @@ namespace SchemeCreator.Data
         public enum GateEnum { Buffer, NOT, AND, NAND, OR, NOR, XOR, XNOR };
         public enum FrameEnum { Workspace, NewGate }
         public enum ComponentTypeEnum { ExternalPort, Gate, Wire }
-        public enum MessageTypes { ExInsNotInited, GatesNotConnected, FunctionIsNotSupported, NewSchemeButtonClicked, DetailedView, CreateGate, VisualizingFailed }
+        public enum MessageTypes { NothingToTrace, ExInsNotInited, GatesNotConnected, FunctionIsNotSupported, NewSchemeButtonClicked, DetailedView, CreateGate, VisualizingFailed }
         public enum MessageAttribute { Title, Text, Button1, Button2 }
         public enum WorkAlgorithmResult { Correct, ExInsNotInited, GatesNotConnected, SchemeIsntCorrect }
     }

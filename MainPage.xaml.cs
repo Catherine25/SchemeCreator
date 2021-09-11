@@ -2,7 +2,6 @@
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI;
 using System;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -35,34 +34,31 @@ namespace SchemeCreator
 
         private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            int gateCount = XScheme.Gates.Count();
-            int wireCount = XScheme.Wires.Count();
+            var validationResult = SchemeValidator.ValidateAsync(XScheme);
 
-            Tracer tracer = new();
+            if (!validationResult)
+                return;
 
-            tracer.Trace(XScheme, out var result);
+            // reset all components at first
+            XScheme.Reset();
 
-            foreach (UI.Dynamic.GateView gate in XScheme.Gates)
-                gate.Reset();
+            var Result = WorkAlgorithm.Visualize(XScheme);
 
-            WorkAlgorithmResult Result = WorkAlgorithm.Visualize(XScheme, result);
-
-            if (Result == WorkAlgorithmResult.ExInsNotInited)
-                await new Message(MessageTypes.ExInsNotInited).ShowAsync();
-            else if (Result == WorkAlgorithmResult.GatesNotConnected)
-                await new Message(MessageTypes.GatesNotConnected).ShowAsync();
-            else if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
-                await new Message(MessageTypes.VisualizingFailed).ShowAsync();
+            // todo
+            //if (Result == WorkAlgorithmResult.GatesNotConnected)
+            //    await new Message(MessageTypes.GatesNotConnected).ShowAsync();
+            //else
+            if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
+                await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 
         private void XTraceSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new Tracer();
+            Tracer tracer = new(XScheme);
 
-            tracer.Trace(XScheme, out var result);
+            var result = tracer.Run();
 
-            //TODO
-            //XScheme.ShowTracings(tracer.TraceHistory);
+            XScheme.ShowTracings(result);
         }
 
         private async void XSaveSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(XScheme);
@@ -71,7 +67,7 @@ namespace SchemeCreator
 
         private async void XNewSchemeBt_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialogResult result = await new Message(MessageTypes.NewSchemeButtonClicked).ShowAsync();
+            var result = await new Message(Messages.CreateNew).ShowAsync();
 
             if (result == ContentDialogResult.Primary)
                 XScheme.Clear();

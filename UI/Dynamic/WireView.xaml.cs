@@ -32,6 +32,7 @@ namespace SchemeCreator.UI.Dynamic
             set
             {
                 _value = value;
+                XLine.Stroke = Colorer.GetBrushByValue(_value);
                 XLine.Fill = Colorer.GetBrushByValue(_value);
             }
         }

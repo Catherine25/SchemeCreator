@@ -10,12 +10,12 @@ using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
 using Windows.UI.Xaml;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class GateView : UserControl
     {
-        public Guid Guid { get; set; } = new Guid();
         public readonly GateEnum Type;
         public readonly string Text;
         public readonly Size GateBodySize;
@@ -41,17 +41,14 @@ namespace SchemeCreator.UI.Dynamic
         public Action<GateBodyView, GateView> GateBodyTapped;
         public Action<GatePortView, GateView> GatePortTapped;
 
-        public int InputCount;
-        public int OutputCount;
+        public IEnumerable<GatePortView> Inputs { get => XInputs.Children.Select(p => p as GatePortView); }
+        public IEnumerable<GatePortView> Outputs { get => XOutputs.Children.Select(p => p as GatePortView); }
 
-        public bool AreOutputsReady => XOutputs.Children.Any(x => ((GatePortView) x).Value != null);
+        public bool AreOutputsReady => Outputs.Any(p => p.Value != null);
 
         public GateView(GateEnum type, Vector2 point, int inputs = 0, int outputs = 0)
         {
-            Guid = new Guid();
             Type = type;
-            InputCount = inputs;
-            OutputCount = outputs;
             MatrixLocation = point;
             Text = GateNames[type];
 
@@ -76,15 +73,13 @@ namespace SchemeCreator.UI.Dynamic
 
         public void Work()
         {
-            List<bool?> values =
-                GateWorkPatterns.ActionByType[Type](XInputs.Children
-                    .Select(x => ((GatePortView) x).Value)
-                    .ToList());
+            List<bool?> initialValues = Inputs.Select(p => p.Value).ToList();
+            List<bool?> resultValues = GateWorkPatterns.ActionByType[Type](initialValues);
 
-            var outPorts = XOutputs.Children.Select(o => o as GatePortView).ToList();
-            
+            var outPorts = Outputs.ToList();
+
             for (int i = 0; i < outPorts.Count; i++)
-                outPorts[i].Value = values[i];
+                outPorts[i].Value = resultValues[i];
         }
 
         private void CreatePorts(int inputs, int outputs)
@@ -106,6 +101,7 @@ namespace SchemeCreator.UI.Dynamic
                 XInputs.Children.Add(port);
             }
         }
+
         private void CreateOutputs(int count)
         {
             for (int i = 0; i < count; i++)
@@ -116,29 +112,25 @@ namespace SchemeCreator.UI.Dynamic
             }
         }
 
-        public void SetInputValueFromWire(WireView wire)
-        {
-            XInputs.Children
-                .Select(x => x as GatePortView)
-                .FirstOrDefault(x => x.Center == wire.Connection.EndPoint)
-                .Value = wire.Value;
-        }
+        public void SetInputValueFromWire(WireView wire) =>
+            Inputs.First(i => i.Index == wire.Connection.EndPort).Value = wire.Value;
+
+        public void SetOutputValueToWire(WireView wire) =>
+            wire.Value = Outputs.First(o => o.Index == wire.Connection.StartPort).Value;
 
         public void Reset()
         {
-            foreach (var child in XInputs.Children)
-                (child as GatePortView).Value = null;
+            foreach (var child in Inputs)
+                child.Value = null;
         }
 
-        public bool WirePartConnects(Point point)
-        {
-            var inputs = XInputs.Children.Select(i => i as GatePortView);
-            var outputs = XOutputs.Children.Select(i => i as GatePortView);
+        public bool WireStartConnects(WireConnection c) =>
+            (MatrixLocation == c.MatrixStart) && (c.StartPort == null || Outputs.Any(i => i.Index == c.StartPort));
 
-            return inputs.Any(i => i.Center == point) || outputs.Any(i => i.Center == point);
-        }
+        public bool WireEndConnects(WireConnection c) =>
+            (MatrixLocation == c.MatrixEnd) && (c.EndPort == null || Inputs.Any(i => i.Index == c.EndPort));
 
         public bool WireConnects(WireView wire) =>
-            (this.MatrixLocation == wire.Connection.MatrixStart) || (this.MatrixLocation == wire.Connection.MatrixEnd);
+            (MatrixLocation == wire.Connection.MatrixStart) || (MatrixLocation == wire.Connection.MatrixEnd);
     }
 }

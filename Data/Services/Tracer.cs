@@ -8,53 +8,79 @@ using PortType = SchemeCreator.UI.Dynamic.PortType;
 
 namespace SchemeCreator.Data.Services
 {
+    /// <summary>
+    /// Used to trace the components of <see cref="SchemeView"/>.
+    /// Builds a trace history as it's result.
+    /// Shows a message in case of invalid scheme.
+    /// Supports following types of components:
+    /// - <see cref="ExternalPortView"/>;
+    /// - <see cref="GateView"/>;
+    /// - <see cref="WireView"/>;
+    /// </summary>
     public class Tracer
     {
         private HistoryService service;
 
-        public Tracer()
+        private IEnumerable<ExternalPortView> externalPorts;
+        private IEnumerable<GateView> gates;
+        private IEnumerable<WireView> wires;
+
+        public Tracer(SchemeView scheme)
         {
             service = new HistoryService();
+
+            externalPorts = scheme.ExternalPorts;
+            gates = scheme.Gates;
+            wires = scheme.Wires;
         }
 
-        public void Trace(SchemeView scheme, out IEnumerable<HistoryComponent> result)
+        public IEnumerable<HistoryComponent> Run()
         {
-            (int gates, int wires) total = (scheme.Gates.Count(), scheme.Wires.Count());
+            (int exPorts, int gates, int wires) total = (externalPorts.Count(), gates.Count(), wires.Count());
 
-            if (!AnyComponentsToTrace(scheme))
-                throw new NotImplementedException();
-
-            TraceExternalInputs(scheme);
-
-            while (!AllGatesAndWiresTraced(total))
+            // check if there is nothing to trace
+            if ((total.exPorts == 0 || total.gates == 0) && total.wires == 0)
             {
-                bool somethingTraced = false;
-
-                somethingTraced = TraceWires(scheme) || TraceGates(scheme);
-
-                if (!somethingTraced)
-                    throw new Exception();
+                new Message(Messages.NothingToTrace).ShowAsync();
+                return null;
             }
 
-            TraceExternalOutputs(scheme);
+            // trace external inputs first
+            service.AddToHistory(TraceExternalPorts(PortType.Input));
 
-            result = service.TraceHistory;
+            while (!AllGatesAndWiresTraced((total.gates, total.wires)))
+            {
+                // flag used to handle logic errors in the scheme
+                bool anyTraced = false;
+
+                var tracedWires = TraceWires();
+                bool wiresTraced = tracedWires.Count() > 0;
+                service.AddToHistory(tracedWires);
+
+                var tracedGates = TraceGates();
+                bool gatesTraced = tracedGates.Count() > 0;
+                service.AddToHistory(tracedGates);
+
+                anyTraced = wiresTraced || gatesTraced;
+
+                if (!anyTraced)
+                    // TODO handle
+                    throw new Exception("Tracing error!");
+            }
+
+            // external outputs should be traced last
+            service.AddToHistory(TraceExternalPorts(PortType.Output));
+
+            return service.TraceHistory;
         }
 
         private bool AllGatesAndWiresTraced((int gates, int wires) total) =>
             total.gates == service.Count(nameof(GateView)) && total.wires == service.Count(nameof(WireView));
 
-        private bool AnyComponentsToTrace(SchemeView scheme) =>
-            scheme.ExternalPorts.Any() && scheme.Gates.Any() && scheme.Wires.Any();
+        private IEnumerable<ExternalPortView> TraceExternalPorts(PortType type) =>
+            externalPorts.Where(x => x.Type == type);
 
-        private void TraceExternalInputs(SchemeView scheme)
-        {
-            var externalPortViews = scheme.ExternalPorts.Where(x => x.Type == PortType.Input);
-            foreach (ExternalPortView externalPortView in externalPortViews)
-                service.TraceHistory.Add(new HistoryComponent(nameof(ExternalPortView)));
-        }
-
-        private bool TraceGates(SchemeView scheme)
+        private IEnumerable<GateView> TraceGates()
         {
             var tracedWires = service.GetAll(nameof(WireView))
                 .Select(x => x.TracedObject as WireView);
@@ -62,24 +88,18 @@ namespace SchemeCreator.Data.Services
             var tracedGates = service.GetAll(nameof(GateView))
                 .Select(x => x.TracedObject as GateView);
 
-            var notTracedGates = scheme.Gates.Except(tracedGates);
+            var notTracedGates = gates.Except(tracedGates);
 
-            var gatesToTrace = notTracedGates
+            // select only gates connected to traced wires
+            return notTracedGates
                 .Where(gate => tracedWires
-                    .Any(wire => gate.WirePartConnects(wire.Connection.EndPoint)));
-
-            if (gatesToTrace.Count() != 0)
-                return false;
-
-            foreach (GateView gateView in gatesToTrace)
-                service.TraceHistory.Add(new HistoryComponent(gateView));
-
-            return true;
+                    .Any(wire => gate.WireEndConnects(wire.Connection)));
         }
 
-        private bool TraceWires(SchemeView scheme)
+        private IEnumerable<WireView> TraceWires()
         {
-            var exPorts = scheme.ExternalPorts.Where(p => p.Type == PortType.Input);
+            var exPorts = externalPorts
+                    .Where(p => p.Type == PortType.Input);
 
             var tracedGates = service.GetAll(nameof(GateView))
                 .Select(x => x.TracedObject as GateView);
@@ -87,26 +107,10 @@ namespace SchemeCreator.Data.Services
             var tracedWires = service.GetAll(nameof(WireView))
                 .Select(x => x.TracedObject as WireView);
 
-            //check by point OR by matrix location or external point
-            var wiresToTrace = scheme.Wires
-                .Except(tracedWires)
-                .Where(w => tracedGates.Any(g => g.WirePartConnects(w.Connection.StartPoint))
-                || exPorts.Any(p => p.MatrixLocation == w.Connection.MatrixStart));
-
-            if (wiresToTrace.Count() == 0)
-                return false;
-
-            foreach (WireView wire in wiresToTrace)
-                service.TraceHistory.Add(new HistoryComponent(wire));
-
-            return true;
-        }
-
-        private void TraceExternalOutputs(SchemeView scheme)
-        {
-            var externalPortViews = scheme.ExternalPorts.Where(x => x.Type == PortType.Output);
-            foreach (ExternalPortView externalPortView in externalPortViews)
-                service.TraceHistory.Add(new HistoryComponent(externalPortView));
+            // check by point OR by matrix location or external point
+            return wires.Except(tracedWires)
+                .Where(w => tracedGates.Any(g => g.WireStartConnects(w.Connection))
+                    || exPorts.Any(p => p.MatrixLocation == w.Connection.MatrixStart));
         }
     }
 }

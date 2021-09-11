@@ -1,5 +1,6 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Services.History;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI.Dynamic;
 using SchemeCreator.UI.Layers;
@@ -30,41 +31,10 @@ namespace SchemeCreator.UI
 
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
-        public bool ValidateScheme()
-        {
-            var gates = new Stack<GateView>(GateLayer.Gates);
-            var wires = new List<WireView>(WireLayer.Wires);
-
-            bool found = true;
-
-            if (AllExternalPortsConnect(PortType.Input, wires))
-                return false;
-
-            if (AllExternalPortsConnect(PortType.Output, wires))
-                return false;
-
-            while (gates.Count != 0 && found)
-            {
-                GateView gate = gates.Pop();
-                found = false;
-
-                int connections = gate.InputCount + gate.OutputCount;
-
-                foreach (var wire in wires)
-                    if (gate.WirePartConnects(wire.Connection.StartPoint) || gate.WirePartConnects(wire.Connection.EndPoint))
-                        connections--;
-
-                if (connections <= 0)
-                    found = true;
-            }
-
-            return gates.Count == 0;
-        }
-
         public IEnumerable<GateView> Gates { get => GateLayer.Gates; }
         public IEnumerable<WireView> Wires { get => WireLayer.Wires; }
         public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.ExternalPorts; }
-        
+
         public void AddToView(GateView g) => GateLayer.AddToView(g);
         public void AddToView(WireView w) => WireLayer.AddToView(w);
 
@@ -94,11 +64,17 @@ namespace SchemeCreator.UI
             return found;
         }
 
-        //public void ResetGates()
-        //{
-        //    foreach (GateView gate in Gates)
-        //        gate.Reset();
-        //}
+        public void Reset()
+        {
+            foreach (ExternalPortView port in ExternalPorts.Where(p => p.Type == PortType.Output))
+                port.Value = null;
+
+            foreach (GateView gate in Gates)
+                gate.Reset();
+
+            foreach (WireView wire in Wires)
+                wire.Value = null;
+        }
 
         public void Clear()
         {
@@ -114,11 +90,12 @@ namespace SchemeCreator.UI
                 externalPort.GetCenterRelativeTo(XSchemeGrid),
                 externalPort.MatrixLocation);
 
-        private void GatePortTapped(GatePortView arg1, GateView arg2) =>
+        private void GatePortTapped(GatePortView port, GateView gate) =>
             WireLayer.WireBuilder.SetPoint(
-                arg1.Type != Data.Models.Enums.ConnectionTypeEnum.Input,
-                arg1.GetCenterRelativeTo(XSchemeGrid),
-                arg2.MatrixLocation);
+                port.Type != Data.Models.Enums.ConnectionTypeEnum.Input,
+                port.GetCenterRelativeTo(XSchemeGrid),
+                gate.MatrixLocation,
+                port.Index);
 
         private async void DotTappedEventAsync(Ellipse e)
         {
@@ -147,6 +124,7 @@ namespace SchemeCreator.UI
         {
             Clear();
 
+            // todo
             // WireBuilder = new();
             // WireBuilder.WireReady = (wire) => AddToView(wire);
 
@@ -162,5 +140,8 @@ namespace SchemeCreator.UI
 
             return(gateDtos, wireDtos);
         }
+
+        public void ShowTracings(IEnumerable<HistoryComponent> historyComponents) =>
+            TraceLayer.ShowTracings(historyComponents);
     }
 }

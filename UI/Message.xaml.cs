@@ -1,22 +1,19 @@
-﻿using Windows.UI.Xaml.Controls;
-using static SchemeCreator.Data.Constants;
-using SchemeCreator.Data.Services;
+﻿using SchemeCreator.Data.Services;
+using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI
 {
     public sealed partial class Message : ContentDialog
     {
-        public Message(MessageTypes mt)
+        public Message(MessageData data)
         {
             InitializeComponent();
 
-            string[] messageInfo = TextController.GetText(mt);
+            Title = data.Title;
+            PrimaryButtonText = data.PrimaryButton ?? "";
+            SecondaryButtonText = data.SecondaryButton ?? "";
 
-            Title = messageInfo[0];
-            PrimaryButtonText = messageInfo[2];
-            SecondaryButtonText = messageInfo[3];
-
-            textBlock.Text = messageInfo[1];
+            textBlock.Text = data.Description;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) { }
