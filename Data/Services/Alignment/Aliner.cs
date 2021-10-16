@@ -8,7 +8,7 @@ using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Services.Navigation;
 
-namespace SchemeCreator.Data.Services
+namespace SchemeCreator.Data.Services.Alignment
 {
     public class Aliner
     {

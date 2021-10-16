@@ -1,4 +1,5 @@
 ﻿using SchemeCreator.Data.Services;
+using SchemeCreator.Data.Services.Alignment;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI;
 using System;
