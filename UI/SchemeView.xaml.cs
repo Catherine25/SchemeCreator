@@ -35,6 +35,8 @@ namespace SchemeCreator.UI
         public IEnumerable<WireView> Wires { get => WireLayer.Wires; }
         public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.ExternalPorts; }
 
+        public void AddToView(ExternalPortView p) => ExternalPortsLayer.AddToView(p);
+
         public void AddToView(GateView g) => GateLayer.AddToView(g);
         public void AddToView(WireView w) => WireLayer.AddToView(w);
 
@@ -78,10 +80,9 @@ namespace SchemeCreator.UI
 
         public void Clear()
         {
-            var toRemove = XSchemeGrid.Children.Where(x => !(x is Ellipse));
-
-            while(toRemove.Any())
-                XSchemeGrid.Children.Remove(toRemove.Take(1).First());
+            ExternalPortsLayer.Clear();
+            GateLayer.Clear();
+            WireLayer.Clear();
         }
 
         private void ExternalPortTapped(ExternalPortView externalPort) =>

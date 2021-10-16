@@ -133,19 +133,16 @@
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
-    <Compile Include="Data\Interfaces\IGridChild.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
-    <Compile Include="Data\Models\AppearanceSettings.cs" />
     <Compile Include="Data\Models\WireConnection.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
-    <Compile Include="Data\Models\ExternalPort.cs" />
-    <Compile Include="Data\Interfaces\IResizable.cs" />
-    <Compile Include="Data\Models\SmartEllipse.cs" />
-    <Compile Include="Data\Models\SmartGrid.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
     <Compile Include="Data\Services\GateWorkPatterns.cs" />
+    <Compile Include="Data\Services\Liner.cs" />
     <Compile Include="Data\Services\MessageData.cs" />
     <Compile Include="Data\Services\Messages.cs" />
+    <Compile Include="Data\Services\Navigation\SchemeNavigationService.cs" />
+    <Compile Include="Data\Services\Navigation\Source.cs" />
     <Compile Include="Data\Services\SchemeValidator.cs" />
     <Compile Include="Data\Services\Serialization\Gate.cs" />
     <Compile Include="Data\Services\Serialization\Serializer.cs" />
@@ -158,6 +155,10 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\GateBuilder.cs" />
+    <Compile Include="Test\PortBuilder.cs" />
+    <Compile Include="Test\TestRunner.cs" />
+    <Compile Include="Test\TestSamples.cs" />
     <Compile Include="UI\Dynamic\ExternalPortView.xaml.cs">
       <DependentUpon>ExternalPortView.xaml</DependentUpon>
     </Compile>
@@ -284,9 +285,7 @@
       <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

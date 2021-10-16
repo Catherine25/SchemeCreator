@@ -43,6 +43,9 @@ namespace SchemeCreator.UI.Dynamic
                 _matrixIndex = value;
                 Grid.SetColumn(this, (int)_matrixIndex.X);
                 Grid.SetRow(this, (int)_matrixIndex.Y);
+
+                //must be called to update coordinates immediately
+                UpdateLayout();
             }
         }
 

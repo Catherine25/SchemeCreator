@@ -54,7 +54,7 @@ namespace SchemeCreator.Data.Services
 
             foreach (WireView wire in initedWires)
             {
-                var connectedGates = scheme.Gates.Where(g => g.WireEndConnects(wire.Connection));
+                var connectedGates = scheme.Gates.Where(g => g.WireEndConnects(wire));
 
                 foreach (GateView gate in connectedGates)
                 {
@@ -75,7 +75,7 @@ namespace SchemeCreator.Data.Services
 
             foreach (WireView wire in notInitedWires)
             {
-                var connectedGates = scheme.Gates.Where(g => g.WireStartConnects(wire.Connection) && g.AreOutputsReady);
+                var connectedGates = scheme.Gates.Where(g => g.WireStartConnects(wire) && g.AreOutputsReady);
 
                 foreach (GateView gate in connectedGates)
                 {

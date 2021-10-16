@@ -26,12 +26,14 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="XNewSchemeBt" Content="New Scheme" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 <Button x:Name="XLoadSchemeBt" Content="Load Scheme" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 <Button x:Name="XSaveSchemeBt" Content="Save Scheme" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XTraceSchemeBt" Content="Trace Scheme" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XWorkSchemeBt" Content="Work" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XLineUpSchemeBt" Content="Line Up" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XTraceSchemeBt" Content="Trace Scheme" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="XWorkSchemeBt" Content="Work" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
             <ui:SchemeView x:Name="XScheme" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>

@@ -31,8 +31,11 @@ namespace SchemeCreator.UI.Dynamic
                 _matrixIndex = value;
                 Grid.SetColumn(this, (int)_matrixIndex.X);
                 Grid.SetRow(this, (int)_matrixIndex.Y);
+
+                //must be called to update coordinates immediately
+                UpdateLayout();
             }
-        } 
+        }
         private Vector2 _matrixIndex;
 
         public readonly Brush ForegroundBrush;
@@ -46,7 +49,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public bool AreOutputsReady => Outputs.Any(p => p.Value != null);
 
-        public GateView(GateEnum type, Vector2 point, int inputs = 0, int outputs = 0)
+        public GateView(GateEnum type, Vector2 point, int inputs = 1, int outputs = 1)
         {
             Type = type;
             MatrixLocation = point;
@@ -124,11 +127,11 @@ namespace SchemeCreator.UI.Dynamic
                 child.Value = null;
         }
 
-        public bool WireStartConnects(WireConnection c) =>
-            (MatrixLocation == c.MatrixStart) && (c.StartPort == null || Outputs.Any(i => i.Index == c.StartPort));
+        public bool WireStartConnects(WireView wire) =>
+            (MatrixLocation == wire.Connection.MatrixStart) && (wire.Connection.StartPort == null || Outputs.Any(i => i.Index == wire.Connection.StartPort));
 
-        public bool WireEndConnects(WireConnection c) =>
-            (MatrixLocation == c.MatrixEnd) && (c.EndPort == null || Inputs.Any(i => i.Index == c.EndPort));
+        public bool WireEndConnects(WireView wire) =>
+            (MatrixLocation == wire.Connection.MatrixEnd) && (wire.Connection.EndPort == null || Inputs.Any(i => i.Index == wire.Connection.EndPort));
 
         public bool WireConnects(WireView wire) =>
             (MatrixLocation == wire.Connection.MatrixStart) || (MatrixLocation == wire.Connection.MatrixEnd);
