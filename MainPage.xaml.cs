@@ -23,62 +23,58 @@ namespace SchemeCreator
             InactiveBrush = Colorer.GetBrushByValue(false);
             UnknownBrush = Colorer.GetBrushByValue(null);
 
-            XNewSchemeBt.Click += XNewSchemeBt_Click;
-            XLoadSchemeBt.Click += XLoadSchemeBt_Click;
-            XSaveSchemeBt.Click += XSaveSchemeBt_Click;
-            XLineUpSchemeBt.Click += XLineUpSchemeBt_ClickAsync;
-            XTraceSchemeBt.Click += XTraceSchemeBt_Click;
-            XWorkSchemeBt.Click += XWorkSchemeBt_Click;
+            NewBt.Click += NewBt_Click;
+            LoadBt.Click += LoadBt_Click;
+            SaveBt.Click += SaveBt_Click;
+            AlignBt.Click += AlignBt_ClickAsync;
+            TraceBt.Click += TraceBt_Click;
+            WorkBt.Click += WorkBt_Click;
         }
 
-        #region Menu
-
-        private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
+        private async void WorkBt_Click(object sender, RoutedEventArgs e)
         {
-            var validationResult = SchemeValidator.ValidateAsync(XScheme);
+            var validationResult = SchemeValidator.ValidateAsync(Scheme);
 
             if (!validationResult)
                 return;
 
             // reset all components at first
-            XScheme.Reset();
+            Scheme.Reset();
 
-            var Result = WorkAlgorithm.Visualize(XScheme);
+            var Result = WorkAlgorithm.Visualize(Scheme);
 
             if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
                 await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 
-        private void XTraceSchemeBt_Click(object sender, RoutedEventArgs e)
+        private void TraceBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new(XScheme);
+            Tracer tracer = new(Scheme);
 
             var result = tracer.Run();
 
-            XScheme.ShowTracings(result.TraceHistory);
+            Scheme.ShowTracings(result.TraceHistory);
         }
 
-        private async void XLineUpSchemeBt_ClickAsync(object sender, RoutedEventArgs e)
+        private async void AlignBt_ClickAsync(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new(XScheme);
+            Tracer tracer = new(Scheme);
             var tracerResult = tracer.Run();
 
-            Liner liner = new(XScheme, tracerResult);
+            Liner liner = new(Scheme, tracerResult);
             liner.Run();
         }
 
-        private async void XSaveSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(XScheme);
+        private async void SaveBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(Scheme);
 
-        private async void XLoadSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Load(XScheme);
+        private async void LoadBt_Click(object sender, RoutedEventArgs e) => await Serializer.Load(Scheme);
 
-        private async void XNewSchemeBt_Click(object sender, RoutedEventArgs e)
+        private async void NewBt_Click(object sender, RoutedEventArgs e)
         {
             var result = await new Message(Messages.CreateNew).ShowAsync();
 
             if (result == ContentDialogResult.Primary)
-                XScheme.Clear();
+                Scheme.Clear();
         }
-
-        #endregion
     }
 }

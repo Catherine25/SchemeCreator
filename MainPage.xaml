@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     x:Name="MainPageName"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     <Frame Name="MainFrame">
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
@@ -15,6 +16,7 @@
                 <!-- for buttons-->
                 <RowDefinition Height="15*" />
             </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -28,14 +30,16 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="XNewSchemeBt" Content="New Scheme" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XLoadSchemeBt" Content="Load Scheme" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XSaveSchemeBt" Content="Save Scheme" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XLineUpSchemeBt" Content="Line Up" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XTraceSchemeBt" Content="Trace Scheme" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <Button x:Name="XWorkSchemeBt" Content="Work" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                <Button x:Name="NewBt" Content="Create" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="LoadBt" Content="Load" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="SaveBt" Content="Save" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="AlignBt" Content="Align" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="TraceBt" Content="Trace" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Button x:Name="WorkBt" Content="Work" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
-            <ui:SchemeView x:Name="XScheme" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+            <ui:SchemeView x:Name="Scheme" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>
     </Frame>
 </Page>
