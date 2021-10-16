@@ -139,7 +139,6 @@
     <Compile Include="Data\Services\Colorer.cs" />
     <Compile Include="Data\Services\GateWorkPatterns.cs" />
     <Compile Include="Data\Services\Liner.cs" />
-    <Compile Include="Data\Services\Liner2.cs" />
     <Compile Include="Data\Services\MessageData.cs" />
     <Compile Include="Data\Services\Messages.cs" />
     <Compile Include="Data\Services\Navigation\SchemeNavigationService.cs" />

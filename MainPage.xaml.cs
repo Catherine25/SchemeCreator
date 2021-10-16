@@ -63,7 +63,7 @@ namespace SchemeCreator
             Tracer tracer = new(XScheme);
             var tracerResult = tracer.Run();
 
-            Liner2 liner = new(XScheme, tracerResult);
+            Liner liner = new(XScheme, tracerResult);
             liner.Run();
         }
 
