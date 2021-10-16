@@ -138,7 +138,7 @@
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
     <Compile Include="Data\Services\GateWorkPatterns.cs" />
-    <Compile Include="Data\Services\Liner.cs" />
+    <Compile Include="Data\Services\Aliner.cs" />
     <Compile Include="Data\Services\MessageData.cs" />
     <Compile Include="Data\Services\Messages.cs" />
     <Compile Include="Data\Services\Navigation\SchemeNavigationService.cs" />

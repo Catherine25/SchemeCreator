@@ -10,7 +10,7 @@ using SchemeCreator.Data.Services.Navigation;
 
 namespace SchemeCreator.Data.Services
 {
-    public class Liner
+    public class Aliner
     {
         private int range = Constants.NetSize;
         private SchemeView scheme;
@@ -19,7 +19,7 @@ namespace SchemeCreator.Data.Services
         private Queue<HistoryComponent> historyQ;
         private SchemeNavigationService navigationService;
 
-        public Liner(SchemeView scheme, HistoryService history)
+        public Aliner(SchemeView scheme, HistoryService history)
         {
             this.scheme = scheme;
             this.service = history;

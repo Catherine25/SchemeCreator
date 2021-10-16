@@ -61,7 +61,7 @@ namespace SchemeCreator
             Tracer tracer = new(Scheme);
             var tracerResult = tracer.Run();
 
-            Liner liner = new(Scheme, tracerResult);
+            Aliner liner = new(Scheme, tracerResult);
             liner.Run();
         }
 
