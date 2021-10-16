@@ -34,6 +34,8 @@ namespace SchemeCreator.UI
         public IEnumerable<GateView> Gates { get => GateLayer.Gates; }
         public IEnumerable<WireView> Wires { get => WireLayer.Wires; }
         public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.ExternalPorts; }
+        public IEnumerable<ExternalPortView> ExternalInputs { get => ExternalPortsLayer.ExternalPorts.Where(x => x.Type == PortType.Input); }
+        public IEnumerable<ExternalPortView> ExternalOutputs { get => ExternalPortsLayer.ExternalPorts.Where(x => x.Type == PortType.Output); }
 
         public void AddToView(ExternalPortView p) => ExternalPortsLayer.AddToView(p);
 

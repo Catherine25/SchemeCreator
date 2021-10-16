@@ -35,7 +35,7 @@ namespace SchemeCreator.Data.Services
 
         private static void TransferFromExternalInputsToWires(SchemeView scheme)
         {
-            var externalInputs = scheme.ExternalPorts.Where(p => p.Type == PortType.Input);
+            var externalInputs = scheme.ExternalInputs;
 
             foreach (ExternalPortView port in externalInputs)
             {
