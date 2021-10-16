@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI;
@@ -34,8 +35,10 @@ namespace SchemeCreator.Data.Services
             wires = scheme.Wires;
         }
 
-        public IEnumerable<HistoryComponent> Run()
+        public HistoryService Run()
         {
+            Debug.WriteLine("Running Tracer...");
+
             (int exPorts, int gates, int wires) total = (externalPorts.Count(), gates.Count(), wires.Count());
 
             // check if there is nothing to trace
@@ -70,7 +73,9 @@ namespace SchemeCreator.Data.Services
             // external outputs should be traced last
             service.AddToHistory(TraceExternalPorts(PortType.Output));
 
-            return service.TraceHistory;
+            Debug.WriteLine("Done running Tracer");
+
+            return service;
         }
 
         private bool AllGatesAndWiresTraced((int gates, int wires) total) =>
@@ -92,7 +97,7 @@ namespace SchemeCreator.Data.Services
             // select only gates connected to traced wires
             return notTracedGates
                 .Where(gate => tracedWires
-                    .Any(wire => gate.WireEndConnects(wire.Connection)));
+                    .Any(wire => gate.WireEndConnects(wire)));
         }
 
         private IEnumerable<WireView> TraceWires()
@@ -108,7 +113,7 @@ namespace SchemeCreator.Data.Services
 
             // check by point OR by matrix location or external point
             return wires.Except(tracedWires)
-                .Where(w => tracedGates.Any(g => g.WireStartConnects(w.Connection))
+                .Where(w => tracedGates.Any(g => g.WireStartConnects(w))
                     || exPorts.Any(p => p.MatrixLocation == w.Connection.MatrixStart));
         }
     }

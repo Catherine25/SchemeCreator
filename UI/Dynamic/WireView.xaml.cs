@@ -22,6 +22,9 @@ namespace SchemeCreator.UI.Dynamic
             XLine.Y1 = con.StartPoint.Y;
             XLine.X2 = con.EndPoint.X;
             XLine.Y2 = con.EndPoint.Y;
+
+            //must be called to update coordinates immediately
+            UpdateLayout();
         }
 
         public new Action<WireView> Tapped;

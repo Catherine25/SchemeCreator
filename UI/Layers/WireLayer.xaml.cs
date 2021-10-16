@@ -2,7 +2,6 @@
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dynamic;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
@@ -11,7 +10,6 @@ namespace SchemeCreator.UI.Layers
 {
     public sealed partial class WireLayer : UserControl
     {
-
         public IEnumerable<WireView> Wires { get => Grid.Children.Select(c => c as WireView); }
         public WireBuilder WireBuilder;
 
@@ -50,6 +48,11 @@ namespace SchemeCreator.UI.Layers
 
             Grid.Children.Add(wire);
             wire.Tapped += Wire_Tapped;
+        }
+
+        public void Clear()
+        {
+            Grid.Children.Clear();
         }
     }
 }

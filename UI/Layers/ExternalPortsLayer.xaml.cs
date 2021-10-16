@@ -33,5 +33,11 @@ namespace SchemeCreator.UI.Layers
             Grid.Children.Add(port);
             ExternalPorts.Add(port);
         }
+
+        public void Clear()
+        {
+            ExternalPorts.Clear();
+            Grid.Children.Clear();
+        }
     }
 }

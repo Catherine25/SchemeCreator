@@ -36,5 +36,11 @@ namespace SchemeCreator.UI.Layers
             Grid.Children.Remove(gate);
             RemoveWiresByGateRequest(gate);
         }
+
+        public void Clear()
+        {
+            SetGates(new List<GateView>());
+            Grid.Children.Clear();
+        }
     }
 }

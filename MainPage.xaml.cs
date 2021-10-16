@@ -26,6 +26,7 @@ namespace SchemeCreator
             XNewSchemeBt.Click += XNewSchemeBt_Click;
             XLoadSchemeBt.Click += XLoadSchemeBt_Click;
             XSaveSchemeBt.Click += XSaveSchemeBt_Click;
+            XLineUpSchemeBt.Click += XLineUpSchemeBt_ClickAsync;
             XTraceSchemeBt.Click += XTraceSchemeBt_Click;
             XWorkSchemeBt.Click += XWorkSchemeBt_Click;
         }
@@ -54,7 +55,16 @@ namespace SchemeCreator
 
             var result = tracer.Run();
 
-            XScheme.ShowTracings(result);
+            XScheme.ShowTracings(result.TraceHistory);
+        }
+
+        private async void XLineUpSchemeBt_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            Tracer tracer = new(XScheme);
+            var tracerResult = tracer.Run();
+
+            Liner2 liner = new(XScheme, tracerResult);
+            liner.Run();
         }
 
         private async void XSaveSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(XScheme);
