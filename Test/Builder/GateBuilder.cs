@@ -2,7 +2,7 @@
 using SchemeCreator.UI.Dynamic;
 using System.Numerics;
 
-namespace SchemeCreator.Test
+namespace SchemeCreator.Test.Builder
 {
     public class GateBuilder
     {

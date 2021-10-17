@@ -11,11 +11,11 @@ namespace SchemeCreator.Data.Services.Alignment
         private ExternalOutputsAligner outputsAligner;
         private GatesAligner gatesAligner;
 
-        public Aliner(SchemeView scheme, HistoryService history)
+        public Aliner(SchemeView scheme)
         {
             inputsAligner = new(scheme);
             outputsAligner = new(scheme);
-            gatesAligner = new(scheme, history);
+            gatesAligner = new(scheme);
         }
 
         public void Run()

@@ -27,7 +27,7 @@ namespace SchemeCreator
             NewBt.Click += NewBt_Click;
             LoadBt.Click += LoadBt_Click;
             SaveBt.Click += SaveBt_Click;
-            AlignBt.Click += AlignBt_ClickAsync;
+            AlignBt.Click += AlignBt_Click;
             TraceBt.Click += TraceBt_Click;
             WorkBt.Click += WorkBt_Click;
         }
@@ -57,12 +57,9 @@ namespace SchemeCreator
             Scheme.ShowTracings(result.TraceHistory);
         }
 
-        private async void AlignBt_ClickAsync(object sender, RoutedEventArgs e)
+        private void AlignBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new(Scheme);
-            var tracerResult = tracer.Run();
-
-            Aliner liner = new(Scheme, tracerResult);
+            Aliner liner = new(Scheme);
             liner.Run();
         }
 

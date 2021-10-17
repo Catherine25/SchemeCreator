@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Services.History;
 using SchemeCreator.Data.Services.Navigation;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
@@ -13,13 +11,8 @@ namespace SchemeCreator.Data.Services.Alignment
     public class GatesAligner
     {
         private SchemeView scheme;
-        private HistoryService historyService;
 
-        public GatesAligner(SchemeView scheme, HistoryService historyService)
-        {
-            this.scheme = scheme;
-            this.historyService = historyService;
-        }
+        public GatesAligner(SchemeView scheme) => this.scheme = scheme;
 
         public void MoveGates()
         {
@@ -28,26 +21,10 @@ namespace SchemeCreator.Data.Services.Alignment
 
             // get logic gates of the scheme
             var gates = scheme.Gates.ToList();
-            Debug.WriteLine($"Got {gates.Count} to move");
+            this.Log($"Got {gates.Count} to move");
 
-            // get components grouped by their ranges
-            var sameTypeComponents = historyService.GroupComponentsWithSameType();
-            Debug.WriteLine($"GetComponentsWithSameType() returned {sameTypeComponents.Count()}");
-            Debug.WriteLine(string.Join(", ", sameTypeComponents.Select(x => x.Count())));
-
-            // select only groups with gates
-            var historizedGates = sameTypeComponents.Where(x => x.First().TypeName == nameof(GateView));
-            Debug.WriteLine($"historizedGates = {historizedGates.Count()}");
-            Debug.WriteLine($"historizedGates = {historizedGates.First()}");
-
-            // select gates with ranges
-            var gatesWithRanges = new List<(GateView gate, int range)>();
-            for (int i = 0; i < historizedGates.Count(); i++)
-            {
-                var gatesInGroup = historizedGates.ElementAt(i).ToList();
-                gatesInGroup.ForEach(x => gatesWithRanges.Add((x.TracedObject as GateView, i)));
-            }
-            Debug.WriteLine($"gatesWithRanges = {gatesWithRanges.Count()}");
+            var gatesWithRanges = gates.Select(x => (gate: x, range: new RangeHelper(scheme).GetRange(x))).ToList();
+            this.Log($"gatesWithRanges = {string.Join(", ", gatesWithRanges.Select(x => $"{x.gate.Type} with range = {x.range}"))}");
 
             var gatesToProcess = new Queue<GateView>(gatesWithRanges.OrderByDescending(x => x.range).Select(g => g.gate));
             while(gatesToProcess.Any())
@@ -60,10 +37,10 @@ namespace SchemeCreator.Data.Services.Alignment
                 var destinations = outputWires.Select(w => NavigationHelper.GetDestination(scheme, w));
 
                 var locations = destinations.Select(x => x.MatrixLocation);
-                var minRow = locations.Max(l => l.Y);
+                var minRow = locations.Min(l => l.Y);
 
                 // adjust range to skip external ports
-                MoveGate(gate, range + 1, (int)minRow);
+                MoveGate(gate, range, (int)minRow);
             }
         }
 
@@ -78,14 +55,14 @@ namespace SchemeCreator.Data.Services.Alignment
             var oldLocation = g.MatrixLocation;
 
             var inputWires = NavigationHelper.ConnectedInputWires(scheme, g).ToList();
-            Debug.WriteLine($"inputWires = {inputWires.Count()}");
+            this.Log($"inputWires = {inputWires.Count()}");
             var outputWires = NavigationHelper.ConnectedOutputWires(scheme, g).ToList();
-            Debug.WriteLine($"outputWires = {outputWires.Count()}");
+            this.Log($"outputWires = {outputWires.Count()}");
 
             var newLocation = new Vector2(range, index);
             g.MatrixLocation = newLocation;
 
-            Debug.WriteLine($"Moving gate from [{oldLocation.X}, {oldLocation.Y}] to [{newLocation.X}, {newLocation.Y}]");
+            this.Log($"Moving gate from [{oldLocation.X}, {oldLocation.Y}] to [{newLocation.X}, {newLocation.Y}]");
 
             // adjust connected wires location
             foreach (var w in inputWires)
