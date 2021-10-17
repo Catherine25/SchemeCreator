@@ -1,45 +1,37 @@
-﻿using System.Diagnostics;
-using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Services.History;
+﻿using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI;
-using SchemeCreator.UI.Dynamic;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using SchemeCreator.Data.Services.Navigation;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.Data.Services.Alignment
 {
     public class Aliner
     {
         private SchemeView scheme;
-        private SchemeNavigationService navigationService;
         private ExternalInputsAligner inputsAligner;
         private ExternalOutputsAligner outputsAligner;
         private GatesAligner gatesAligner;
 
         public Aliner(SchemeView scheme, HistoryService history)
         {
-            navigationService = new(scheme);
-            inputsAligner = new ExternalInputsAligner(scheme);
-            outputsAligner = new ExternalOutputsAligner(scheme);
-            gatesAligner = new GatesAligner(scheme, history, new(scheme));
+            inputsAligner = new(scheme);
+            outputsAligner = new(scheme);
+            gatesAligner = new(scheme, history);
         }
 
         public void Run()
         {
-            Debug.WriteLine("Running Liner...");
+            this.Log("Running");
 
-            Debug.WriteLine("Moving external inputs...");
-            inputsAligner.MoveExternalInputs();
-
-            Debug.WriteLine("Moving gates...");
-            gatesAligner.MoveGates();
-
-            Debug.WriteLine("Moving external outputs...");
+            this.Log("Moving external outputs...");
             outputsAligner.MoveExternalOutputs();
 
-            Debug.WriteLine("Finished running Liner");
+            this.Log("Moving gates...");
+            gatesAligner.MoveGates();
+
+            this.Log("Moving external inputs...");
+            inputsAligner.MoveExternalInputs();
+
+            this.Log("Done");
         }
     }
 }

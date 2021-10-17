@@ -130,6 +130,7 @@
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\ControlExtension.cs" />
+    <Compile Include="Data\Extensions\DebugExtension.cs" />
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
@@ -144,6 +145,9 @@
     <Compile Include="Data\Services\GateWorkPatterns.cs" />
     <Compile Include="Data\Services\MessageData.cs" />
     <Compile Include="Data\Services\Messages.cs" />
+    <Compile Include="Data\Interfaces\ISchemeComponent.cs" />
+    <Compile Include="Data\Services\Navigation\GateWithSources.cs" />
+    <Compile Include="Data\Services\Navigation\NavigationHelper.cs" />
     <Compile Include="Data\Services\Navigation\SchemeNavigationService.cs" />
     <Compile Include="Data\Services\Navigation\Source.cs" />
     <Compile Include="Data\Services\SchemeValidator.cs" />

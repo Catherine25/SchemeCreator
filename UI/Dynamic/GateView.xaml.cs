@@ -10,11 +10,11 @@ using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
 using Windows.UI.Xaml;
 using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
-    public sealed partial class GateView : UserControl
+    public sealed partial class GateView : UserControl, ISchemeComponent
     {
         public readonly GateEnum Type;
         public readonly string Text;

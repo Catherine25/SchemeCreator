@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
@@ -37,7 +37,7 @@ namespace SchemeCreator.Data.Services
 
         public HistoryService Run()
         {
-            Debug.WriteLine("Running Tracer...");
+            this.Log("Running...");
 
             (int exPorts, int gates, int wires) total = (externalPorts.Count(), gates.Count(), wires.Count());
 
@@ -73,7 +73,7 @@ namespace SchemeCreator.Data.Services
             // external outputs should be traced last
             service.AddToHistory(TraceExternalPorts(PortType.Output));
 
-            Debug.WriteLine("Done running Tracer");
+            this.Log("Done");
 
             return service;
         }

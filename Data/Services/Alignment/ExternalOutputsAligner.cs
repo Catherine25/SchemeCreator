@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Services.Navigation;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
 
@@ -18,29 +19,29 @@ namespace SchemeCreator.Data.Services.Alignment
 
         public void MoveExternalOutputs()
         {
-            // 1.1. Get external outputs of the scheme.
-            var externalOutputs = scheme.ExternalPorts.Where(p => p.Type == PortType.Output).ToList();
-            Debug.WriteLine($"Got {externalOutputs.Count()} external inputs.");
+            this.Log("Running...");
 
-            // 3.2. Get new locations' columns of the current scheme's components (except for external outputs).
-            var componentsLocations = scheme.ExternalPorts.Where(x => x.Type != PortType.Output).Select(x => x.MatrixLocation.Y).ToList();
-            componentsLocations.AddRange(scheme.Gates.Select(x => x.MatrixLocation.X));
+            // get external outputs of the scheme.
+            var externalOutputs = scheme.ExternalOutputs.ToList();
+            this.Log($"Got {externalOutputs.Count()} external outputs.");
 
-            // todo finish writing docs
-            int maxXLocation = componentsLocations.Max(x => (int)x);
+            foreach (var item in externalOutputs)
+            {
+                Vector2? place = NavigationHelper.GetNotOccupiedLocationOnColumn(scheme, Constants.NetSize - 1);
+                Debug.Assert(place != null); // todo handle no-place error
+                MoveExternalOutput(item, place.Value);
+            }
 
-            for (int i = 0; i < externalOutputs.Count(); i++)
-                MoveExternalOutput(externalOutputs[i], new Vector2(maxXLocation + 1, i));
+            this.Log("Done");
         }
 
-        private void MoveExternalOutput(ExternalPortView port, Vector2 newPosition)
+        private void MoveExternalOutput(ExternalPortView port, Vector2 newLocation)
         {
-            var oldLocation = port.MatrixLocation;
-            var newLocation = newPosition;
-            port.MatrixLocation = newLocation;
+            // get connected wires to the port
+            var connectedWires = Navigation.NavigationHelper.ConnectedWires(scheme, port).ToList();
 
-            // get connected wires to the port by its old location
-            var connectedWires = scheme.Wires.Where(w => w.Connection.MatrixEnd == oldLocation).ToList();
+            // update location
+            port.MatrixLocation = newLocation;
 
             // adjust connected wires location
             foreach (var w in connectedWires)

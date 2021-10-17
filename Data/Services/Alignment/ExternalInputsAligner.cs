@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Services.Navigation;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
 
@@ -18,24 +20,41 @@ namespace SchemeCreator.Data.Services.Alignment
 
         public void MoveExternalInputs()
         {
+            this.Log("Running...");
+
             // get external inputs of the scheme.
             var externalInputs = scheme.ExternalInputs;
-            Debug.WriteLine($"Got {externalInputs.Count()} external inputs.");
+            this.Log($"Got {externalInputs.Count()} external inputs.");
 
-            // create a tuple list of their location matrixes and themselves.
-            var tuples = externalInputs.Select(p => (port: p, loc: p.MatrixLocation));
-            Debug.WriteLine($"Created {tuples.Count()} tuples.");
+            var portsWithIndexes = new List<(ExternalPortView port, int destLoc, int portIdx)>();
 
-            // order them ascending by their location first by row and then by column.
-            var tuplesOrdered = tuples.OrderBy(x => x.loc.X).ThenBy(x => x.loc.Y).Select(t => t.port).ToList();
-            Debug.WriteLine($"Ordered {tuplesOrdered.Count()} tuples.");
-
-            for (int i = 0; i < tuplesOrdered.Count(); i++)
+            foreach (var i in externalInputs)
             {
-                var port = tuplesOrdered[i];
+                var wires = NavigationHelper.ConnectedWires(scheme, i);
+                var dests = wires.Select(x => NavigationHelper.GetDestination(scheme, x));
+                var minLocDest = dests.OrderBy(x => x.MatrixLocation.X).ThenBy(x => x.MatrixLocation.Y).First();
+                var minLoc = minLocDest.MatrixLocation;
 
-                MoveExternalInput(port, new Vector2(0, i));
+                var minPortIndex = 0;
+                if(minLocDest is GateView gate)
+                {
+                    var connectingWires = wires.Where(w => gate.WireEndConnects(w));
+                    minPortIndex = connectingWires.Min(x => x.Connection.EndPort.Value);
+                }
+
+                portsWithIndexes.Add((i, (int)minLoc.Y, minPortIndex));
             }
+
+            var portsToPlace = portsWithIndexes.OrderBy(x => x.destLoc).ThenBy(x => x.portIdx).Select(x => x.port);
+
+            foreach (var port in portsToPlace)
+            {
+                Vector2? place = NavigationHelper.GetNotOccupiedLocationOnColumn(scheme, 0);
+                Debug.Assert(place != null); // todo handle no-place error
+                MoveExternalInput(port, place.Value);
+            }
+
+            this.Log("Done");
         }
 
         private void MoveExternalInput(ExternalPortView port, Vector2 newPosition)

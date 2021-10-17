@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Extensions;
@@ -13,13 +14,11 @@ namespace SchemeCreator.Data.Services.Alignment
     {
         private SchemeView scheme;
         private HistoryService historyService;
-        private SchemeNavigationService navigationService;
 
-        public GatesAligner(SchemeView scheme, HistoryService historyService, SchemeNavigationService navigationService)
+        public GatesAligner(SchemeView scheme, HistoryService historyService)
         {
             this.scheme = scheme;
             this.historyService = historyService;
-            this.navigationService = navigationService;
         }
 
         public void MoveGates()
@@ -27,50 +26,66 @@ namespace SchemeCreator.Data.Services.Alignment
             if(!scheme.Gates.Any())
                 return;
 
-            // 2.1 Get logic gates of the scheme.
+            // get logic gates of the scheme
             var gates = scheme.Gates.ToList();
             Debug.WriteLine($"Got {gates.Count} to move");
 
-            // 2.2 Get gates ranges.
-            var sameTypeComponents = historyService.GetComponentsWithSameType();
+            // get components grouped by their ranges
+            var sameTypeComponents = historyService.GroupComponentsWithSameType();
             Debug.WriteLine($"GetComponentsWithSameType() returned {sameTypeComponents.Count()}");
+            Debug.WriteLine(string.Join(", ", sameTypeComponents.Select(x => x.Count())));
 
-            var historizedGates = sameTypeComponents.Where(x => x.Item1 == nameof(GateView));
+            // select only groups with gates
+            var historizedGates = sameTypeComponents.Where(x => x.First().TypeName == nameof(GateView));
             Debug.WriteLine($"historizedGates = {historizedGates.Count()}");
             Debug.WriteLine($"historizedGates = {historizedGates.First()}");
 
-            var gatesWithRanges = historizedGates.SelectMany(x => x.Item2.Select(y => (y.Item1, y.Item2.TracedObject as GateView))).ToList();
+            // select gates with ranges
+            var gatesWithRanges = new List<(GateView gate, int range)>();
+            for (int i = 0; i < historizedGates.Count(); i++)
+            {
+                var gatesInGroup = historizedGates.ElementAt(i).ToList();
+                gatesInGroup.ForEach(x => gatesWithRanges.Add((x.TracedObject as GateView, i)));
+            }
             Debug.WriteLine($"gatesWithRanges = {gatesWithRanges.Count()}");
 
-            //! maybe it's X, check
-            var gatesWithRangesAndExInputsYs = gatesWithRanges.Select(x => (x.Item1, x.Item2,
-                navigationService.GetGateExternalPortInputs(x.Item2)
-                    .Max(y => y.MatrixLocation.Y)));
-            Debug.WriteLine($"gatesWithRangesAndExInputs = {gatesWithRangesAndExInputsYs.Count()}");
-
-            var tuplesOrdered = gatesWithRangesAndExInputsYs.OrderBy(x => x.Item1).ThenBy(x => x.Item3).ToList();
-            Debug.WriteLine($"tuplesOrdered = {tuplesOrdered.Count()}");
-
-            for (int i = 0; i < tuplesOrdered.Count(); i++)
+            var gatesToProcess = new Queue<GateView>(gatesWithRanges.OrderByDescending(x => x.range).Select(g => g.gate));
+            while(gatesToProcess.Any())
             {
-                (int, GateView, float) g = tuplesOrdered[i];
-                MoveGate(g.Item2, g.Item1 + 1, i);
+                var gate = gatesToProcess.Dequeue();
+                // will be used to set column
+                int range = gatesWithRanges.Find(x => x.gate == gate).range;
+
+                var outputWires = NavigationHelper.ConnectedOutputWires(scheme, gate);
+                var destinations = outputWires.Select(w => NavigationHelper.GetDestination(scheme, w));
+
+                var locations = destinations.Select(x => x.MatrixLocation);
+                var minRow = locations.Max(l => l.Y);
+
+                // adjust range to skip external ports
+                MoveGate(gate, range + 1, (int)minRow);
             }
         }
 
+        /// <summary>
+        /// Moves gate to new position.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="range"> Specifies column </param>
+        /// <param name="index"> Specifies row </param>
         private void MoveGate(GateView g, int range, int index)
         {
             var oldLocation = g.MatrixLocation;
 
-            var inputWires = navigationService.GetGateInputWires(g).ToList();
+            var inputWires = NavigationHelper.ConnectedInputWires(scheme, g).ToList();
             Debug.WriteLine($"inputWires = {inputWires.Count()}");
-            var outputWires = navigationService.GetGateOutputWires(g).ToList();
+            var outputWires = NavigationHelper.ConnectedOutputWires(scheme, g).ToList();
             Debug.WriteLine($"outputWires = {outputWires.Count()}");
 
-            // todo adjust range to skip wires
-            Debug.WriteLine($"range = {range}, index = {index}");
             var newLocation = new Vector2(range, index);
             g.MatrixLocation = newLocation;
+
+            Debug.WriteLine($"Moving gate from [{oldLocation.X}, {oldLocation.Y}] to [{newLocation.X}, {newLocation.Y}]");
 
             // adjust connected wires location
             foreach (var w in inputWires)
@@ -81,7 +96,7 @@ namespace SchemeCreator.Data.Services.Alignment
 
                 if (c2.EndPort != null)
                 {
-                    // todo investigate
+                    // todo investigate why it's null
                     var port = g.Inputs.ElementAt(c2.EndPort.Value);
                     c2.EndPoint = port.GetCenterRelativeTo(scheme);
                 }
@@ -97,7 +112,7 @@ namespace SchemeCreator.Data.Services.Alignment
 
                 if (c2.StartPort != null)
                 {
-                    // todo investigate
+                    // todo investigate why it's null
                     var port = g.Outputs.ElementAt(c2.StartPort.Value);
                     c2.StartPoint = port.GetCenterRelativeTo(scheme);
                 }

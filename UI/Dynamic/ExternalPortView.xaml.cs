@@ -15,7 +15,7 @@ namespace SchemeCreator.UI.Dynamic
         Output
     }
 
-    public sealed partial class ExternalPortView : UserControl, IValueHolder
+    public sealed partial class ExternalPortView : UserControl, IValueHolder, ISchemeComponent
     {
         public PortType Type;
 

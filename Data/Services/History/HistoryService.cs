@@ -11,18 +11,17 @@ namespace SchemeCreator.Data.Services.History
     {
         public List<HistoryComponent> TraceHistory = new();
 
-        public IEnumerable<(string, IEnumerable<(int, HistoryComponent)>)> GetComponentsWithSameType()
+        public IEnumerable<IEnumerable<HistoryComponent>> GroupComponentsWithSameType()
         {
-            var history = new Queue<HistoryComponent>(TraceHistory);
-            var result = new List<(string, IEnumerable<(int, HistoryComponent)>)>();
-            int iterator = 0;
+            var history = new List<HistoryComponent>(TraceHistory);
+            var result = new List<IEnumerable<HistoryComponent>>();
 
-            while (history.TryDequeue(out var first))
+            while (history.Any())
             {
-                var elements = history.TakeWhile(x => x.TypeName == first.TypeName).ToList();
-                elements.Add(first);
-                var res = (first.TypeName, elements);
-                result.Add((res.TypeName, elements.Select(x => (iterator++, x))));
+                var h = history.First();
+                var cs = history.TakeWhile(x => x.TypeName == h.TypeName);
+                history = history.Except(cs).ToList();
+                result.Add(cs);
             }
 
             return result;
