@@ -10,7 +10,6 @@ using System.Linq;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI
 {
@@ -31,11 +30,11 @@ namespace SchemeCreator.UI
 
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
-        public IEnumerable<GateView> Gates { get => GateLayer.Gates; }
-        public IEnumerable<WireView> Wires { get => WireLayer.Wires; }
-        public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.ExternalPorts; }
-        public IEnumerable<ExternalPortView> ExternalInputs { get => ExternalPortsLayer.ExternalPorts.Where(x => x.Type == PortType.Input); }
-        public IEnumerable<ExternalPortView> ExternalOutputs { get => ExternalPortsLayer.ExternalPorts.Where(x => x.Type == PortType.Output); }
+        public IEnumerable<GateView> Gates { get => GateLayer.Items; }
+        public IEnumerable<WireView> Wires { get => WireLayer.Items; }
+        public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.Items; }
+        public IEnumerable<ExternalPortView> ExternalInputs { get => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Input); }
+        public IEnumerable<ExternalPortView> ExternalOutputs { get => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Output); }
 
         public void AddToView(ExternalPortView p) => ExternalPortsLayer.AddToView(p);
 
@@ -48,7 +47,7 @@ namespace SchemeCreator.UI
                 ? wires.Select(x => x.Connection.StartPoint)
                 : wires.Select(x => x.Connection.EndPoint);
 
-            var allExternalPorts = ExternalPortsLayer.ExternalPorts;
+            var allExternalPorts = ExternalPortsLayer.Items;
             var externalPorts = new Stack<ExternalPortView>(allExternalPorts.Where(x => x.Type == type));
 
             bool found = true;
@@ -85,7 +84,10 @@ namespace SchemeCreator.UI
             ExternalPortsLayer.Clear();
             GateLayer.Clear();
             WireLayer.Clear();
+            TraceLayer.Clear();
         }
+
+        public void Recreate() => Clear();
 
         private void ExternalPortTapped(ExternalPortView externalPort) =>
             WireLayer.WireBuilder.SetPoint(
@@ -100,7 +102,7 @@ namespace SchemeCreator.UI
                 gate.MatrixLocation,
                 port.Index);
 
-        private async void DotTappedEventAsync(Ellipse e)
+        private async void DotTappedEventAsync(DotView e)
         {
             var msg = new NewGateDialog();
 
@@ -123,17 +125,15 @@ namespace SchemeCreator.UI
             }
         }
 
-        public void Recreate() => Clear();
-
         public (IEnumerable<GateDto>, IEnumerable<WireDto>) PrepareForSerialization() 
         {
-            var gateDtos = GateLayer.Gates.Select(gate => new GateDto(gate));
-            var wireDtos = WireLayer.Wires.Select(wire => new WireDto(wire));
+            var gateDtos = GateLayer.Items.Select(gate => new GateDto(gate));
+            var wireDtos = WireLayer.Items.Select(wire => new WireDto(wire));
 
             return(gateDtos, wireDtos);
         }
 
-        public void ShowTracings(IEnumerable<HistoryComponent> historyComponents) =>
-            TraceLayer.ShowTracings(historyComponents);
+        public void ShowTracings(HistoryService historyService) => TraceLayer.ShowTracings(historyService);
+        public void ClearTracings() => TraceLayer.Clear();
     }
 }

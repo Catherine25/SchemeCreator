@@ -134,6 +134,7 @@
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
+    <Compile Include="Data\Interfaces\ILayer.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
     <Compile Include="Data\Models\WireConnection.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
@@ -167,6 +168,9 @@
     <Compile Include="Test\UserSimulatorExtension.cs" />
     <Compile Include="Test\TestRunner.cs" />
     <Compile Include="Test\TestSamples.cs" />
+    <Compile Include="UI\Dynamic\DotView.xaml.cs">
+      <DependentUpon>DotView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Dynamic\ExternalPortView.xaml.cs">
       <DependentUpon>ExternalPortView.xaml</DependentUpon>
     </Compile>
@@ -178,6 +182,9 @@
     </Compile>
     <Compile Include="UI\Dynamic\GateView.xaml.cs">
       <DependentUpon>GateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dynamic\TraceLabel.xaml.cs">
+      <DependentUpon>TraceLabel.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Dynamic\WireView.xaml.cs">
       <DependentUpon>WireView.xaml</DependentUpon>
@@ -232,6 +239,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Dynamic\DotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Dynamic\ExternalPortView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -245,6 +256,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Dynamic\GateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dynamic\TraceLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

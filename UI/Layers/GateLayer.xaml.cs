@@ -1,5 +1,6 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.UI.Dynamic;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI.Layers
 {
-    public sealed partial class GateLayer : UserControl
+    public sealed partial class GateLayer : UserControl, ILayer<GateView>
     {
         public event Action<GatePortView, GateView> GatePortTapped;
-        //public event Action<GateBodyView, GateView> GateBodyTapped;
         public event Action<GateView> RemoveWiresByGateRequest;
 
-        public IList<GateView> Gates { get => Grid.Children.Select(e => e as GateView).ToList(); }
-        private void SetGates(List<GateView> gates) => gates.ForEach(g => Grid.Children.Add(g));
+        public IEnumerable<GateView> Items => Grid.Children.Select(e => e as GateView);
 
         public GateLayer()
         {
@@ -28,7 +27,6 @@ namespace SchemeCreator.UI.Layers
             gate.GateBodyTapped += (gateBody, gate) => DeleteGate(gateBody, gate);
             gate.GatePortTapped += (gatePort, gate) => GatePortTapped(gatePort, gate);
             Grid.Children.Add(gate);
-            Gates.Add(gate);
         }
 
         private void DeleteGate(GateBodyView gateBody, GateView gate)
@@ -37,10 +35,6 @@ namespace SchemeCreator.UI.Layers
             RemoveWiresByGateRequest(gate);
         }
 
-        public void Clear()
-        {
-            SetGates(new List<GateView>());
-            Grid.Children.Clear();
-        }
+        public void Clear() => Grid.Children.Clear();
     }
 }

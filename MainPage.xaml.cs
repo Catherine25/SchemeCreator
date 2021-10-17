@@ -54,13 +54,14 @@ namespace SchemeCreator
 
             var result = tracer.Run();
 
-            Scheme.ShowTracings(result.TraceHistory);
+            Scheme.ShowTracings(result);
         }
 
         private void AlignBt_Click(object sender, RoutedEventArgs e)
         {
             Aliner liner = new(Scheme);
             liner.Run();
+            Scheme.ClearTracings();
         }
 
         private async void SaveBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(Scheme);

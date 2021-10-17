@@ -1,5 +1,6 @@
 ﻿using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dynamic;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI.Layers
 {
-    public sealed partial class WireLayer : UserControl
+    public sealed partial class WireLayer : UserControl, ILayer<WireView>
     {
-        public IEnumerable<WireView> Wires { get => Grid.Children.Select(c => c as WireView); }
+        public IEnumerable<WireView> Items { get => Grid.Children.Select(c => c as WireView); }
         public WireBuilder WireBuilder;
 
         public WireLayer()
@@ -27,15 +28,12 @@ namespace SchemeCreator.UI.Layers
         /// <param name="wire"></param>
         private void WireReady(WireView wire) => AddToView(wire);
 
-        private void Wire_Tapped(WireView wire)
-        {
-            Grid.Children.Remove(wire);
-        }
+        private void Wire_Tapped(WireView wire) => Grid.Children.Remove(wire);
 
         public void RemoveWiresByGate(GateView gate)
         {
             // ToList() is needed to remove wires correctly
-            var wiresToRemove = Wires.Where(wire => gate.WireConnects(wire)).ToList();
+            var wiresToRemove = Items.Where(wire => gate.WireConnects(wire)).ToList();
 
             foreach (var wire in wiresToRemove)
                 Grid.Children.Remove(wire);
@@ -50,9 +48,6 @@ namespace SchemeCreator.UI.Layers
             wire.Tapped += Wire_Tapped;
         }
 
-        public void Clear()
-        {
-            Grid.Children.Clear();
-        }
+        public void Clear() => Grid.Children.Clear();
     }
 }
