@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Models.Enums;
 using static SchemeCreator.Data.Constants;
-using Windows.UI.Xaml;
 using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
@@ -17,38 +15,26 @@ namespace SchemeCreator.UI.Dynamic
         public Action<GateBodyView, GateView> GateBodyTapped;
         public Action<GatePortView, GateView> GatePortTapped;
 
+        public GateView(GateEnum type, Vector2 point, int inputs = 1, int outputs = 1)
+        {
+            InitializeComponent();
+
+            Type = type;
+            MatrixLocation = point;
+
+            Body.GateType = type;
+            Body.Tapped += (sender, args) => GateBodyTapped(Body, this);
+
+            CreateInputs(inputs);
+            CreateOutputs(outputs);
+        }
+
         public readonly GateEnum Type;
-        public readonly Size GateBodySize;
-        public readonly GridLength PortsMargin;
-        public readonly Size PortSize;
 
         public Vector2 MatrixLocation
         {
             get => this.GetMatrixLocation();
             set => this.SetMatrixLocation(value);
-        }
-
-        public GateView(GateEnum type, Vector2 point, int inputs = 1, int outputs = 1)
-        {
-            Type = type;
-            MatrixLocation = point;
-
-            GateBodySize = LogicGateSize;
-            PortSize = GatePortSize;
-
-            PortsMargin = new GridLength(MarginBetweenPorts);
-
-            InitializeComponent();
-
-            xBody.Tapped += (sender, args) => GateBodyTapped(FindName("xBody") as GateBodyView, this);
-            xBody.Content = GateNames[type];
-            xBody.Width = LogicGateSize.Width;
-            xBody.Height = LogicGateSize.Height;
-            xBody.Foreground = Colorer.GetGateForegroundBrush();
-            xBody.Background = Colorer.GetGateBackgroundBrush();
-
-            CreateInputs(inputs);
-            CreateOutputs(outputs);
         }
 
         public void Work()

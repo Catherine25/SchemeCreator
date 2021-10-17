@@ -17,7 +17,7 @@
             </Grid.ColumnDefinitions>
 
             <dynamic:GatePortsLayer x:Name="InputsView" Grid.Column="0"/>
-            <Button x:Name="xBody" Grid.Column="1" FontSize="10"/>
+            <dynamic:GateBodyView x:Name="Body" Grid.Column="1"/>
             <dynamic:GatePortsLayer x:Name="OutputsView" Grid.Column="2"/>
         </Grid>
     </Grid>
