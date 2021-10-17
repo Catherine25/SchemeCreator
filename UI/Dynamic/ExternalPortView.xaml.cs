@@ -17,6 +17,8 @@ namespace SchemeCreator.UI.Dynamic
 
     public sealed partial class ExternalPortView : UserControl, IValueHolder, ISchemeComponent
     {
+        public new Action<ExternalPortView> Tapped;
+
         public PortType Type;
 
         public bool? Value
@@ -34,24 +36,9 @@ namespace SchemeCreator.UI.Dynamic
 
         public Vector2 MatrixLocation
         {
-            get
-            {
-                return _matrixIndex;
-            }
-            set
-            {
-                _matrixIndex = value;
-                Grid.SetColumn(this, (int)_matrixIndex.X);
-                Grid.SetRow(this, (int)_matrixIndex.Y);
-
-                //must be called to update coordinates immediately
-                UpdateLayout();
-            }
+            get => this.GetMatrixLocation();
+            set => this.SetMatrixLocation(value);
         }
-
-        private Vector2 _matrixIndex;
-
-        public new Action<ExternalPortView> Tapped;
 
         public ExternalPortView() => InitializeComponent();
 

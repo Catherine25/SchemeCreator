@@ -11,6 +11,8 @@ namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class GatePortView : UserControl, IValueHolder
     {
+        public new Action<GatePortView> Tapped;
+
         /// <summary>
         /// Defines the Port's type - Input or Output
         /// </summary>
@@ -61,7 +63,5 @@ namespace SchemeCreator.UI.Dynamic
             XEllipse.PointerEntered += (sender, e) => XEllipse.Activate();
             XEllipse.PointerExited += (sender, e) => XEllipse.Deactivate();
         }
-
-        public new Action<GatePortView> Tapped;
     }
 }

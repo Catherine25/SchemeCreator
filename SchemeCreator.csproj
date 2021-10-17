@@ -135,6 +135,7 @@
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
     <Compile Include="Data\Interfaces\ILayer.cs" />
+    <Compile Include="Data\Interfaces\ISchemeComponentExtension.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
     <Compile Include="Data\Models\WireConnection.cs" />
     <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
