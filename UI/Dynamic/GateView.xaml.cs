@@ -56,7 +56,7 @@ namespace SchemeCreator.UI.Dynamic
         {
             InputsView.CreatePorts(ConnectionTypeEnum.Input, count);
             InputsView.Tapped += (port) => GatePortTapped(port, this);
-            InputsView.ValuesChanged += () => Work();
+            InputsView.ValuesChanged += Work;
         }
         public void Reset() => Inputs.ToList().ForEach(x => x.Value = null);
 

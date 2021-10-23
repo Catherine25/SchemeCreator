@@ -20,7 +20,7 @@ namespace SchemeCreator.UI.Dynamic
         public new Action<ExternalPortView> Tapped;
         public new Action<ExternalPortView> RightTapped;
 
-        public PortType Type;
+        public readonly PortType Type;
 
         public bool? Value
         {
@@ -40,10 +40,10 @@ namespace SchemeCreator.UI.Dynamic
             get => this.GetMatrixLocation();
             set => this.SetMatrixLocation(value);
         }
-
-        public ExternalPortView() => InitializeComponent();
-
+        
         public Point Center => new(CenterPoint.X, CenterPoint.Y);
+        
+        public ExternalPortView() => InitializeComponent();
 
         public ExternalPortView(PortType type, Vector2 point)
         {
@@ -57,19 +57,22 @@ namespace SchemeCreator.UI.Dynamic
 
             Value = null;
             MatrixLocation = point;
-
-            XEllipse.Tapped += (_, _) => Tapped(this);
+            
             PortName.Tapped += (_, _) => Tapped(this);
-            XEllipse.RightTapped += (_, _) => RightTapped(this);
             PortName.RightTapped += (_, _) => RightTapped(this);
-            XEllipse.DoubleTapped += (_, _) => SwitchMode();
             PortName.DoubleTapped += (_, _) => SwitchMode();
         }
 
-        public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
+        private void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
+
+        #region Wire
 
         public bool WireConnects(WireView wire) => WireStartConnects(wire) || WireEndConnects(wire);
+        
         public bool WireStartConnects(WireView wire) => wire.Connection.MatrixStart == MatrixLocation;
+        
         public bool WireEndConnects(WireView wire) => wire.Connection.MatrixEnd == MatrixLocation;
+        
+        #endregion
     }
 }
