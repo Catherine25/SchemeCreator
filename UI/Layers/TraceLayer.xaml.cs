@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services.History;
@@ -14,7 +13,7 @@ namespace SchemeCreator.UI.Layers
         public TraceLayer()
         {
             InitializeComponent();
-            Grid.InitGridColumnsAndRows(Constants.GridSize);
+            Grid.InitGridColumnsAndRows(SchemeView.GridSize);
         }
 
         public void ShowTracings(HistoryService service)

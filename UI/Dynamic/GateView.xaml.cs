@@ -4,12 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.Models.Enums;
-using static SchemeCreator.Data.Constants;
 using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
+    public enum GateEnum
+    {
+        Buffer,
+        Not,
+        And,
+        Nand,
+        Or,
+        Nor,
+        Xor,
+        Xnor
+    }
+
     public sealed partial class GateView : UserControl, ISchemeComponent
     {
         public Action<GateBodyView, GateView> GateBodyTapped;

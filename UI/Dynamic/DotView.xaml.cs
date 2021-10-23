@@ -1,15 +1,15 @@
 ﻿using System;
-using SchemeCreator.Data;
+using Windows.Foundation;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class DotView : UserControl
     {
         public new Action<DotView> Tapped;
+        private readonly Size dotSize = new(15, 15);
 
         public DotView() => InitializeComponent();
 
@@ -19,8 +19,8 @@ namespace SchemeCreator.UI.Dynamic
 
             HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
             VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
-            Width = Constants.DotSize.Width;
-            Height = Constants.DotSize.Height;
+            
+            this.SetSize(dotSize);
 
             Grid.SetRow(this, x - 1);
             Grid.SetColumn(this, y - 1);

@@ -1,5 +1,4 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dynamic;
@@ -16,7 +15,7 @@ namespace SchemeCreator.UI.Layers
         public WireLayer()
         {
             InitializeComponent();
-            Grid.InitGridColumnsAndRows(Constants.GridSize);
+            Grid.InitGridColumnsAndRows(SchemeView.GridSize);
             WireBuilder = new WireBuilder();
             WireBuilder.WireReady += WireReady;
         }
@@ -42,8 +41,7 @@ namespace SchemeCreator.UI.Layers
 
         public void Add(WireView wire)
         {
-            Grid.SetColumnSpan(wire, Constants.NetSize);
-            Grid.SetRowSpan(wire, Constants.NetSize);
+            wire.MakeCellIndependent(SchemeView.GridSize);
 
             Grid.Add(wire);
             wire.Tapped += Wire_Tapped;

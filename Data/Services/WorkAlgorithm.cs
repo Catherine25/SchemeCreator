@@ -1,10 +1,15 @@
 ﻿using System.Linq;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
-using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Services
 {
+    public enum WorkAlgorithmResult
+    {
+        Correct,
+        BadScheme
+    }
+    
     static class WorkAlgorithm
     {
         public static WorkAlgorithmResult Visualize(SchemeView scheme)
@@ -24,7 +29,7 @@ namespace SchemeCreator.Data.Services
 
                 // handle scheme errors
                 if (!traced)
-                    return WorkAlgorithmResult.SchemeIsntCorrect;
+                    return WorkAlgorithmResult.BadScheme;
             }
 
             // transfer from wires to output ports

@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Services;
-using SchemeCreator.Data;
 using System.Numerics;
 using Windows.Foundation;
 using static SchemeCreator.Data.Extensions.ControlExtension;
@@ -17,6 +16,8 @@ namespace SchemeCreator.UI.Dynamic
 
     public sealed partial class ExternalPortView : UserControl, IValueHolder, ISchemeComponent
     {
+        private readonly Size externalPortSize = new(25, 25);
+
         public new Action<ExternalPortView> Tapped;
         public new Action<ExternalPortView> RightTapped;
 
@@ -49,18 +50,19 @@ namespace SchemeCreator.UI.Dynamic
         {
             InitializeComponent();
 
+            this.SetSize(externalPortSize);
+            
             Type = type;
-
-            PortName.Text = type == PortType.Input ? "In" : "Out";
-
-            this.SetSize(Constants.ExternalPortSize);
-
             Value = null;
             MatrixLocation = point;
-            
+
+            PortName.Text = type == PortType.Input ? "In" : "Out";
             PortName.Tapped += (_, _) => Tapped(this);
             PortName.RightTapped += (_, _) => RightTapped(this);
-            PortName.DoubleTapped += (_, _) => SwitchMode();
+            
+            // only inputs support changing mode
+            if (type == PortType.Input)
+                PortName.DoubleTapped += (_, _) => SwitchMode();
         }
 
         private void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;

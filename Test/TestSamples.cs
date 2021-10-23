@@ -1,6 +1,5 @@
 ﻿using SchemeCreator.UI;
 using System.Linq;
-using static SchemeCreator.Data.Constants;
 using System.Diagnostics;
 using SchemeCreator.Test.Builder;
 
@@ -45,7 +44,7 @@ namespace SchemeCreator.Test
             var input2 = builder.BuildInput();
             var output = builder.BuildOutput();
 
-            var gate = builder.BuildGate(GateEnum.AND, 2);
+            var gate = builder.BuildGate(GateEnum.And, 2);
 
             scheme.Connect(input, gate);
             scheme.Connect(input2, gate, 1);
@@ -63,7 +62,7 @@ namespace SchemeCreator.Test
             var input3 = builder.BuildInput();
             var output = builder.BuildOutput();
 
-            var gate = builder.BuildGate(GateEnum.AND, 3);
+            var gate = builder.BuildGate(GateEnum.And, 3);
 
             scheme.Connect(input, gate);
             scheme.Connect(input2, gate, 1);
@@ -83,7 +82,7 @@ namespace SchemeCreator.Test
             var input4 = builder.BuildInput();
             var output = builder.BuildOutput();
 
-            var gate = builder.BuildGate(GateEnum.AND, 4);
+            var gate = builder.BuildGate(GateEnum.And, 4);
 
             scheme.Connect(input, gate);
             scheme.Connect(input2, gate, 1);
@@ -120,8 +119,8 @@ namespace SchemeCreator.Test
             var input3 = builder.BuildInput();
             var output = builder.BuildOutput();
 
-            var gate = builder.BuildGate(GateEnum.AND, 2);
-            var gate2 = builder.BuildGate(GateEnum.NAND, 2);
+            var gate = builder.BuildGate(GateEnum.And, 2);
+            var gate2 = builder.BuildGate(GateEnum.Nand, 2);
 
             scheme.Connect(input, gate);
             scheme.Connect(input2, gate, 1);
@@ -141,7 +140,7 @@ namespace SchemeCreator.Test
             var output = builder.BuildOutput();
             var output2 = builder.BuildOutput();
 
-            var gate = builder.BuildGate(GateEnum.AND, 2);
+            var gate = builder.BuildGate(GateEnum.And, 2);
             var gate2 = builder.BuildGate();
 
             scheme.Connect(input, gate);
@@ -162,7 +161,7 @@ namespace SchemeCreator.Test
             var output = builder.BuildOutput();
 
             var gate = builder.BuildGate();
-            var gate2 = builder.BuildGate(GateEnum.AND, 2);
+            var gate2 = builder.BuildGate(GateEnum.And, 2);
             var gate3 = builder.BuildGate();
 
             scheme.Connect(input, gate);

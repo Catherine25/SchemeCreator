@@ -1,7 +1,5 @@
-﻿using SchemeCreator.UI.Dynamic;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Services
 {
@@ -10,13 +8,13 @@ namespace SchemeCreator.Data.Services
         public static Dictionary<GateEnum, Func<List<bool?>, List<bool?>>> ActionByType =
             new Dictionary<GateEnum, Func<List<bool?>, List<bool?>>> {
                 { GateEnum.Buffer, BufferWork },
-                { GateEnum.NOT, NotWork },
-                { GateEnum.AND, AndWork },
-                { GateEnum.NAND, NandWork },
-                { GateEnum.OR, OrWork },
-                { GateEnum.NOR, NorWork },
-                { GateEnum.XOR, XorWork },
-                { GateEnum.XNOR, XnorWork }
+                { GateEnum.Not, NotWork },
+                { GateEnum.And, AndWork },
+                { GateEnum.Nand, NandWork },
+                { GateEnum.Or, OrWork },
+                { GateEnum.Nor, NorWork },
+                { GateEnum.Xor, XorWork },
+                { GateEnum.Xnor, XnorWork }
             };
 
         public static List<bool?> BufferWork(List<bool?> inputs) => inputs;

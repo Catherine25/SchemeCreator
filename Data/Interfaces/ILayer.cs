@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.Data.Interfaces
 {

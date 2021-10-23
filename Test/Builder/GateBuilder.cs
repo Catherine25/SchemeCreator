@@ -1,5 +1,4 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.UI.Dynamic;
+﻿using SchemeCreator.UI.Dynamic;
 using System.Numerics;
 
 namespace SchemeCreator.Test.Builder

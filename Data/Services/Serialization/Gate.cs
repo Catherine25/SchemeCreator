@@ -1,7 +1,6 @@
 using SchemeCreator.UI.Dynamic;
 using System.Linq;
 using System.Numerics;
-using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Data.Services.Serialization
 {

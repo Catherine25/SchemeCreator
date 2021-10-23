@@ -62,7 +62,7 @@ namespace SchemeCreator.Data.Services.Navigation
 
             var occupiedColumns = locs.Where(l => l.X == column).Select(x => x.Y);
 
-            for (int i = 0; i < Constants.NetSize; i++)
+            for (int i = 0; i < SchemeView.GridSize.Width; i++)
                 if(!occupiedColumns.Contains(i))
                     return new Vector2(column, i);
 
@@ -77,7 +77,7 @@ namespace SchemeCreator.Data.Services.Navigation
 
             var occupiedRows = locs.Where(l => l.Y == row).Select(x => x.X);
 
-            for (int i = 0; i < Constants.NetSize; i++)
+            for (int i = 0; i < SchemeView.GridSize.Height; i++)
                 if(!occupiedRows.Contains(i))
                     return new Vector2(i, row);
 

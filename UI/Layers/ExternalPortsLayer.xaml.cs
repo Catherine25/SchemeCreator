@@ -1,5 +1,4 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.UI.Dynamic;
 using System;
@@ -17,7 +16,7 @@ namespace SchemeCreator.UI.Layers
         public ExternalPortsLayer()
         {
             InitializeComponent();
-            Grid.InitGridColumnsAndRows(Constants.GridSize);
+            Grid.InitGridColumnsAndRows(SchemeView.GridSize);
         }
 
         public ExternalPortView GetFirstNotInitedExternalPort() => Items.Where(x => x.Type == PortType.Input).FirstOrDefault(x => x.Value == null);

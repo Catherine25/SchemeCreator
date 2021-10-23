@@ -3,7 +3,6 @@ using SchemeCreator.Data.Extensions;
 using SchemeCreator.UI.Dynamic;
 using System;
 using Windows.Foundation;
-using SchemeCreator.Data.Models;
 
 namespace SchemeCreator.Data.Services
 {

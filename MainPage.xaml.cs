@@ -5,7 +5,6 @@ using SchemeCreator.UI;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator
 {
@@ -35,7 +34,7 @@ namespace SchemeCreator
 
             var result = WorkAlgorithm.Visualize(Scheme);
 
-            if (result == WorkAlgorithmResult.SchemeIsntCorrect)
+            if (result == WorkAlgorithmResult.BadScheme)
                 await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 

@@ -128,7 +128,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\ControlExtension.cs" />
     <Compile Include="Data\Extensions\DebugExtension.cs" />
@@ -138,8 +137,6 @@
     <Compile Include="Data\Interfaces\ILayer.cs" />
     <Compile Include="Data\Interfaces\ISchemeComponentExtension.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
-    <Compile Include="Data\Models\WireConnection.cs" />
-    <Compile Include="Data\Models\Enums\ConnectionTypeEnum.cs" />
     <Compile Include="Data\Services\Alignment\Aliner.cs" />
     <Compile Include="Data\Services\Alignment\ExternalOutputsAligner.cs" />
     <Compile Include="Data\Services\Alignment\ExternalInputsAligner.cs" />

@@ -1,4 +1,3 @@
-using SchemeCreator.Data.Models;
 using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.Data.Services.Serialization

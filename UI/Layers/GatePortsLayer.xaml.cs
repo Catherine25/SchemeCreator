@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
-using SchemeCreator.Data.Models.Enums;
 using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.UI.Layers
@@ -18,7 +16,7 @@ namespace SchemeCreator.UI.Layers
         public GatePortsLayer()
         {
             InitializeComponent();
-            Grid.SetSize(Constants.GatePortSize.Width, Constants.LogicGateSize.Height);
+            Grid.SetSize(GatePortView.GatePortSize.Width, GateBodyView.LogicGateSize.Height);
         }
 
         public void CreatePorts(ConnectionTypeEnum type, int count)

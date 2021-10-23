@@ -1,16 +1,30 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Interfaces;
+﻿using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using System;
+using System.Numerics;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.UI.Dynamic
 {
+    public class WireConnection
+    {
+        public Vector2 MatrixStart { get; set; }
+        public int? StartPort { get; set; }
+
+        public Vector2 MatrixEnd { get; set; }
+        public int? EndPort { get; set; }
+
+        public Point StartPoint;
+        public Point EndPoint;
+    }
+
     public sealed partial class WireView : UserControl, IValueHolder
     {
+        private const double WireThickness = 5.0;
         public WireConnection Connection => connection;
         private WireConnection connection;
 
@@ -62,11 +76,11 @@ namespace SchemeCreator.UI.Dynamic
 
         public void InitLine()
         {
-            Grid.SetColumnSpan(XLine, Constants.NetSize);
-            Grid.SetRowSpan(XLine, Constants.NetSize);
+            XLine.SetLeftTopAlignment();
+            XLine.MakeCellIndependent(SchemeView.GridSize);
 
             XLine.Fill = Colorer.GetBrushByValue(null);
-            XLine.StrokeThickness = Constants.WireThickness;
+            XLine.StrokeThickness = WireThickness;
             XLine.Tapped += (sender, e) => Tapped(this);
 
             XLine.PointerEntered += (sender, e) => XLine.StrokeThickness *= 2;
@@ -74,9 +88,6 @@ namespace SchemeCreator.UI.Dynamic
 
             XLine.Stroke = new SolidColorBrush(Colors.Wheat);
             XLine.Fill = new SolidColorBrush(Colors.Wheat);
-            XLine.StrokeThickness = 5;
-            XLine.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Left;
-            XLine.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using SchemeCreator.Data.Services.History;
-using SchemeCreator.UI;
+﻿using SchemeCreator.UI;
 using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.Data.Services.Alignment

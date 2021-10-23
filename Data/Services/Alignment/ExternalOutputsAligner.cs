@@ -27,7 +27,7 @@ namespace SchemeCreator.Data.Services.Alignment
 
             foreach (var item in externalOutputs)
             {
-                Vector2? place = NavigationHelper.GetNotOccupiedLocationOnColumn(scheme, Constants.NetSize - 1);
+                Vector2? place = NavigationHelper.GetNotOccupiedLocationOnColumn(scheme, (int)SchemeView.GridSize.Width - 1);
                 Debug.Assert(place != null); // todo handle no-place error
                 MoveExternalOutput(item, place.Value);
             }

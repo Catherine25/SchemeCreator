@@ -1,10 +1,8 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.UI.Dynamic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI.Layers
@@ -17,7 +15,7 @@ namespace SchemeCreator.UI.Layers
         public GateLayer()
         {
             InitializeComponent();
-            Grid.InitGridColumnsAndRows(Constants.GridSize);
+            Grid.InitGridColumnsAndRows(SchemeView.GridSize);
         }
 
         private void DeleteGate(GateBodyView gateBody, GateView gate)

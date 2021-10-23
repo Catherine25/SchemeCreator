@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
-using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator.Test.Builder
 {
@@ -59,8 +58,8 @@ namespace SchemeCreator.Test.Builder
 
         private Vector2 GeneratePlace()
         {
-            var x = random.Next(NetSize);
-            var y = random.Next(NetSize);
+            var x = random.Next((int)SchemeView.GridSize.Width);
+            var y = random.Next((int)SchemeView.GridSize.Height);
             return new Vector2(x, y);
         }
     }

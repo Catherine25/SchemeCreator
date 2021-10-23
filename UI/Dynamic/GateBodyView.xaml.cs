@@ -1,17 +1,19 @@
-﻿using SchemeCreator.Data.Services;
+﻿using Windows.Foundation;
+using SchemeCreator.Data.Services;
 using Windows.UI.Xaml.Controls;
-using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Extensions;
 
 namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class GateBodyView : UserControl
     {
+        public static readonly Size LogicGateSize = new(50, 70);
+
         public GateBodyView()
         {
             InitializeComponent();
 
-            Width = LogicGateSize.Width;
-            Height = LogicGateSize.Height;
+            this.SetSize(LogicGateSize);
 
             Button.Foreground = Colorer.GetGateForegroundBrush();
             Button.Background = Colorer.GetGateBackgroundBrush();

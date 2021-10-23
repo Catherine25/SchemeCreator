@@ -1,18 +1,16 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Models;
-using SchemeCreator.Data.Services;
-using SchemeCreator.UI.Dynamic;
+﻿using SchemeCreator.UI.Dynamic;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Windows.UI.Xaml.Controls;
-using static SchemeCreator.Data.Constants;
+
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SchemeCreator.UI
 {
     public sealed partial class NewGateDialog : ContentDialog
     {
-        public GateEnum? gateType = GateEnum.AND;
+        public GateEnum? gateType = GateEnum.And;
         public int inputs = 1;
         public int outputs = 1;
         public bool? isExternalInput;
@@ -29,14 +27,14 @@ namespace SchemeCreator.UI
             gateComboBox.Items.Add(PortType.Output);
             
             // add gate types
-            gateComboBox.Items.Add(GateEnum.AND);
+            gateComboBox.Items.Add(GateEnum.And);
             gateComboBox.Items.Add(GateEnum.Buffer);
-            gateComboBox.Items.Add(GateEnum.NAND);
-            gateComboBox.Items.Add(GateEnum.NOR);
-            gateComboBox.Items.Add(GateEnum.NOT);
-            gateComboBox.Items.Add(GateEnum.OR);
-            gateComboBox.Items.Add(GateEnum.XNOR);
-            gateComboBox.Items.Add(GateEnum.XOR);
+            gateComboBox.Items.Add(GateEnum.Nand);
+            gateComboBox.Items.Add(GateEnum.Nor);
+            gateComboBox.Items.Add(GateEnum.Not);
+            gateComboBox.Items.Add(GateEnum.Or);
+            gateComboBox.Items.Add(GateEnum.Xnor);
+            gateComboBox.Items.Add(GateEnum.Xor);
 
             // add inputs count
             inputsComboBox.Items.Add(1);
@@ -131,5 +129,23 @@ namespace SchemeCreator.UI
                 ? (PortType?)(PortType)type
                 : null;
         }
+        
+        public static readonly SortedSet<GateEnum> SingleInput = new()
+        {
+            GateEnum.Buffer,
+            GateEnum.Not,
+        };
+        
+        public static readonly Dictionary<GateEnum, string> GateNames = new()
+        {
+            { GateEnum.And, "AND" },
+            { GateEnum.Buffer, "Buffer" },
+            { GateEnum.Nand, "NAND" },
+            { GateEnum.Nor, "NOR" },
+            { GateEnum.Not, "NOT" },
+            { GateEnum.Or, "OR" },
+            { GateEnum.Xnor, "XNOR" },
+            { GateEnum.Xor, "XOR" }
+        };
     }
 }

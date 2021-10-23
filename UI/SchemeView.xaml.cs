@@ -1,9 +1,7 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services.History;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI.Dynamic;
-using SchemeCreator.UI.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +14,8 @@ namespace SchemeCreator.UI
 {
     public sealed partial class SchemeView : UserControl
     {
+        public static readonly Size GridSize = new(8, 8);
+
         public SchemeView()
         {
             InitializeComponent();
@@ -27,7 +27,7 @@ namespace SchemeCreator.UI
             ExternalPortsLayer.RemoveConnectedWires += RemoveConnectedWires;
             
             DotLayer.Tapped += TappedEventAsync;
-            DotLayer.InitGrid(Constants.GridSize);
+            DotLayer.InitGrid(GridSize);
         }
 
         private void RemoveConnectedWires(ISchemeComponent schemeComponent) => WireLayer.RemoveConnectedWires(schemeComponent);
@@ -44,32 +44,6 @@ namespace SchemeCreator.UI
 
         public void AddToView(GateView g) => GateLayer.Add(g);
         public void AddToView(WireView w) => WireLayer.Add(w);
-
-        private bool AllExternalPortsConnect(PortType type, List<WireView> wires)
-        {
-            IEnumerable<Point> wirePointsToCheck = type == PortType.Input
-                ? wires.Select(x => x.Connection.StartPoint)
-                : wires.Select(x => x.Connection.EndPoint);
-
-            var allExternalPorts = ExternalPortsLayer.Items;
-            var externalPorts = new Stack<ExternalPortView>(allExternalPorts.Where(x => x.Type == type));
-
-            bool found = true;
-
-            while (externalPorts.TryPop(out var externalPort) && found)
-            {
-                found = false;
-
-                foreach (Point point in wirePointsToCheck)
-                    if (externalPort.Center == point)
-                    {
-                        found = true;
-                        break;
-                    }
-            }
-
-            return found;
-        }
 
         public void Reset()
         {
@@ -101,7 +75,7 @@ namespace SchemeCreator.UI
 
         private void GatePortTapped(GatePortView port, GateView gate) =>
             WireLayer.WireBuilder.SetPoint(
-                port.Type != Data.Models.Enums.ConnectionTypeEnum.Input,
+                port.Type != ConnectionTypeEnum.Input,
                 port.GetCenterRelativeTo(XSchemeGrid),
                 gate.MatrixLocation,
                 port.Index);
