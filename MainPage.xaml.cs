@@ -5,24 +5,15 @@ using SchemeCreator.UI;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using static SchemeCreator.Data.Constants;
 
 namespace SchemeCreator
 {
     public sealed partial class MainPage : Page
     {
-        private Brush ActiveBrush;
-        private Brush InactiveBrush;
-        private Brush UnknownBrush;
-
         public MainPage()
         {
             InitializeComponent();
-
-            ActiveBrush = Colorer.GetBrushByValue(true);
-            InactiveBrush = Colorer.GetBrushByValue(false);
-            UnknownBrush = Colorer.GetBrushByValue(null);
 
             NewBt.Click += NewBt_Click;
             LoadBt.Click += LoadBt_Click;
@@ -42,9 +33,9 @@ namespace SchemeCreator
             // reset all components at first
             Scheme.Reset();
 
-            var Result = WorkAlgorithm.Visualize(Scheme);
+            var result = WorkAlgorithm.Visualize(Scheme);
 
-            if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
+            if (result == WorkAlgorithmResult.SchemeIsntCorrect)
                 await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 

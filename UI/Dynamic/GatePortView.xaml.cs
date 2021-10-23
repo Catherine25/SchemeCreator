@@ -24,8 +24,8 @@ namespace SchemeCreator.UI.Dynamic
             set
             {
                 _value = value;
-                XEllipse.Fill = Colorer.GetBrushByValue(value);
-                XEllipse.Stroke = Colorer.GetBrushByValue(value);
+                Ellipse.Fill = Colorer.GetBrushByValue(value);
+                Ellipse.Stroke = Colorer.GetBrushByValue(value);
                 ValueChanged?.Invoke(_value);
             }
         }
@@ -50,18 +50,18 @@ namespace SchemeCreator.UI.Dynamic
 
             InitializeComponent();
 
-            XEllipse.Width = Constants.GatePortSize.Width;
-            XEllipse.Height = Constants.GatePortSize.Height;
+            Ellipse.Width = Constants.GatePortSize.Width;
+            Ellipse.Height = Constants.GatePortSize.Height;
             Width = Constants.GatePortSize.Width;
             Height = Constants.GatePortSize.Height;
 
             Grid.SetRow(this, index);
 
-            Colorer.SetFillByValue(this.XEllipse, null);
+            Colorer.SetFillByValue(Ellipse, null);
 
-            XEllipse.Tapped += (sender, e) => Tapped(this);
-            XEllipse.PointerEntered += (sender, e) => XEllipse.Activate();
-            XEllipse.PointerExited += (sender, e) => XEllipse.Deactivate();
+            Ellipse.Tapped += (sender, e) => Tapped(this);
+            Ellipse.PointerEntered += (sender, e) => Ellipse.Activate();
+            Ellipse.PointerExited += (sender, e) => Ellipse.Deactivate();
         }
     }
 }
