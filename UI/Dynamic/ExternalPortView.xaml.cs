@@ -18,6 +18,7 @@ namespace SchemeCreator.UI.Dynamic
     public sealed partial class ExternalPortView : UserControl, IValueHolder, ISchemeComponent
     {
         public new Action<ExternalPortView> Tapped;
+        public new Action<ExternalPortView> RightTapped;
 
         public PortType Type;
 
@@ -57,14 +58,17 @@ namespace SchemeCreator.UI.Dynamic
             Value = null;
             MatrixLocation = point;
 
-            XEllipse.Tapped += (sender, args) => Tapped(this);
-            PortName.Tapped += (sender, args) => Tapped(this);
-            XEllipse.RightTapped += (sender, args) => SwitchMode();
-            PortName.RightTapped += (sender, args) => SwitchMode();
+            XEllipse.Tapped += (_, _) => Tapped(this);
+            PortName.Tapped += (_, _) => Tapped(this);
+            XEllipse.RightTapped += (_, _) => RightTapped(this);
+            PortName.RightTapped += (_, _) => RightTapped(this);
+            XEllipse.DoubleTapped += (_, _) => SwitchMode();
+            PortName.DoubleTapped += (_, _) => SwitchMode();
         }
 
         public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
 
+        public bool WireConnects(WireView wire) => WireStartConnects(wire) || WireEndConnects(wire);
         public bool WireStartConnects(WireView wire) => wire.Connection.MatrixStart == MatrixLocation;
         public bool WireEndConnects(WireView wire) => wire.Connection.MatrixEnd == MatrixLocation;
     }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI
 {
@@ -18,28 +19,31 @@ namespace SchemeCreator.UI
         public SchemeView()
         {
             InitializeComponent();
-            GateLayer.GatePortTapped += GatePortTapped;
-            GateLayer.RemoveWiresByGateRequest += RemoveWiresByGate;
-            ExternalPortsLayer.ExternalPortTapped += ExternalPortTapped;
-            DotLayer.DotTapped += DotTappedEventAsync;
 
+            GateLayer.GatePortTapped += GatePortTapped;
+            GateLayer.RemoveConnectedWires += RemoveConnectedWires;
+            
+            ExternalPortsLayer.Tapped += Tapped;
+            ExternalPortsLayer.RemoveConnectedWires += RemoveConnectedWires;
+            
+            DotLayer.Tapped += TappedEventAsync;
             DotLayer.InitGrid(Constants.GridSize);
         }
 
-        private void RemoveWiresByGate(GateView gate) => WireLayer.RemoveWiresByGate(gate);
-
+        private void RemoveConnectedWires(ISchemeComponent schemeComponent) => WireLayer.RemoveConnectedWires(schemeComponent);
+        
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
-        public IEnumerable<GateView> Gates { get => GateLayer.Items; }
-        public IEnumerable<WireView> Wires { get => WireLayer.Items; }
-        public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.Items; }
-        public IEnumerable<ExternalPortView> ExternalInputs { get => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Input); }
-        public IEnumerable<ExternalPortView> ExternalOutputs { get => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Output); }
+        public IEnumerable<GateView> Gates => GateLayer.Items;
+        public IEnumerable<WireView> Wires => WireLayer.Items;
+        public IEnumerable<ExternalPortView> ExternalPorts => ExternalPortsLayer.Items;
+        public IEnumerable<ExternalPortView> ExternalInputs => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Input);
+        public IEnumerable<ExternalPortView> ExternalOutputs => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Output);
 
-        public void AddToView(ExternalPortView p) => ExternalPortsLayer.AddToView(p);
+        public void AddToView(ExternalPortView p) => ExternalPortsLayer.Add(p);
 
-        public void AddToView(GateView g) => GateLayer.AddToView(g);
-        public void AddToView(WireView w) => WireLayer.AddToView(w);
+        public void AddToView(GateView g) => GateLayer.Add(g);
+        public void AddToView(WireView w) => WireLayer.Add(w);
 
         private bool AllExternalPortsConnect(PortType type, List<WireView> wires)
         {
@@ -89,7 +93,7 @@ namespace SchemeCreator.UI
 
         public void Recreate() => Clear();
 
-        private void ExternalPortTapped(ExternalPortView externalPort) =>
+        private void Tapped(ExternalPortView externalPort) =>
             WireLayer.WireBuilder.SetPoint(
                 externalPort.Type == PortType.Input,
                 externalPort.GetCenterRelativeTo(XSchemeGrid),
@@ -102,7 +106,7 @@ namespace SchemeCreator.UI
                 gate.MatrixLocation,
                 port.Index);
 
-        private async void DotTappedEventAsync(DotView e)
+        private async void TappedEventAsync(DotView e)
         {
             var msg = new NewGateDialog();
 
@@ -115,12 +119,12 @@ namespace SchemeCreator.UI
                 if(msg.Gate != null)
                 {
                     msg.Gate.MatrixLocation = location;
-                    GateLayer.AddToView(msg.Gate);
+                    GateLayer.Add(msg.Gate);
                 }
                 else if(msg.ExternalPort != null)
                 {
                     msg.ExternalPort.MatrixLocation = location;
-                    ExternalPortsLayer.AddToView(msg.ExternalPort);
+                    ExternalPortsLayer.Add(msg.ExternalPort);
                 }
             }
         }

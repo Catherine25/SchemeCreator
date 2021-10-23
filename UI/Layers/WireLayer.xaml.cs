@@ -11,7 +11,6 @@ namespace SchemeCreator.UI.Layers
 {
     public sealed partial class WireLayer : UserControl, ILayer<WireView>
     {
-        public IEnumerable<WireView> Items { get => Grid.Children.Select(c => c as WireView); }
         public WireBuilder WireBuilder;
 
         public WireLayer()
@@ -26,28 +25,34 @@ namespace SchemeCreator.UI.Layers
         /// Adds wire to the view and requests scheme validating.
         /// </summary>
         /// <param name="wire"></param>
-        private void WireReady(WireView wire) => AddToView(wire);
+        private void WireReady(WireView wire) => Add(wire);
 
-        private void Wire_Tapped(WireView wire) => Grid.Children.Remove(wire);
+        private void Wire_Tapped(WireView wire) => Grid.Remove(wire);
 
-        public void RemoveWiresByGate(GateView gate)
+        public void RemoveConnectedWires(ISchemeComponent component)
         {
             // ToList() is needed to remove wires correctly
-            var wiresToRemove = Items.Where(wire => gate.WireConnects(wire)).ToList();
+            var wiresToRemove = Items.Where(wire => component.WireConnects(wire)).ToList();
 
             foreach (var wire in wiresToRemove)
-                Grid.Children.Remove(wire);
+                Grid.Remove(wire);
         }
 
-        public void AddToView(WireView wire)
+        #region ILayer
+
+        public void Add(WireView wire)
         {
             Grid.SetColumnSpan(wire, Constants.NetSize);
             Grid.SetRowSpan(wire, Constants.NetSize);
 
-            Grid.Children.Add(wire);
+            Grid.Add(wire);
             wire.Tapped += Wire_Tapped;
         }
+        
+        public IEnumerable<WireView> Items => Grid.GetItems<WireView>();
 
-        public void Clear() => Grid.Children.Clear();
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }

@@ -11,8 +11,6 @@ namespace SchemeCreator.UI.Layers
 {
     public sealed partial class TraceLayer : UserControl, ILayer<TraceLabel>
     {
-        public IEnumerable<TraceLabel> Items => Grid.Children.Select(x => x as TraceLabel);
-
         public TraceLayer()
         {
             InitializeComponent();
@@ -37,11 +35,18 @@ namespace SchemeCreator.UI.Layers
 
                 var traceLabel = new TraceLabel(i, x, y);
 
-                AddToView(traceLabel);
+                Add(traceLabel);
             }
         }
 
-        public void AddToView(TraceLabel item) => Grid.Children.Add(item);
-        public void Clear() => Grid.Children.Clear();
+        #region ILayer
+
+        public void Add(TraceLabel item) => Grid.Add(item);
+        
+        public IEnumerable<TraceLabel> Items => Grid.GetItems<TraceLabel>();
+
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }

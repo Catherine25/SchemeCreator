@@ -11,9 +11,7 @@ namespace SchemeCreator.UI.Layers
 {
     public sealed partial class DotLayer : UserControl, ILayer<DotView>
     {
-        public event Action<DotView> DotTapped;
-
-        public IEnumerable<DotView> Items => Grid.Children.Select(e => e as DotView);
+        public event Action<DotView> Tapped;
 
         public DotLayer() => InitializeComponent();
 
@@ -25,13 +23,20 @@ namespace SchemeCreator.UI.Layers
                 for (int j = 1; j <= size.Height; j++)
                 {
                     DotView dot = new(i, j);
-                    dot.Tapped += (dot) => DotTapped(dot);
-                    AddToView(dot);
+                    dot.Tapped += (d) => Tapped(d);
+                    Add(dot);
                 }
         }
 
-        public void AddToView(DotView e) => Grid.Children.Add(e);
+        #region ILayer
+        
+        public void Add(DotView e) => Grid.Add(e);
+        
+        public IEnumerable<DotView> Items => Grid.GetItems<DotView>();
+        
+        public void Clear() => Grid.Clear();
 
-        public void Clear() => Grid.Children.Clear();
+        
+        #endregion
     }
 }

@@ -11,9 +11,8 @@ namespace SchemeCreator.UI.Layers
 {
     public sealed partial class ExternalPortsLayer : UserControl, ILayer<ExternalPortView>
     {
-        public event Action<ExternalPortView> ExternalPortTapped;
-
-        public IEnumerable<ExternalPortView> Items => Grid.Children.Select(x => x as ExternalPortView);
+        public event Action<ExternalPortView> Tapped;
+        public event Action<ExternalPortView> RemoveConnectedWires;
 
         public ExternalPortsLayer()
         {
@@ -23,12 +22,23 @@ namespace SchemeCreator.UI.Layers
 
         public ExternalPortView GetFirstNotInitedExternalPort() => Items.Where(x => x.Type == PortType.Input).FirstOrDefault(x => x.Value == null);
 
-        public void AddToView(ExternalPortView port)
-        {
-            port.Tapped += (port) => ExternalPortTapped(port);
-            Grid.Children.Add(port);
-        }
+        #region ILayer
 
-        public void Clear() => Grid.Children.Clear();
+        public void Add(ExternalPortView port)
+        {
+            port.RightTapped += (p) =>
+            {
+                RemoveConnectedWires(p);
+                Grid.Remove(p);
+            };
+            port.Tapped += (p) => Tapped(p);
+            Grid.Add(port);
+        }
+        
+        public IEnumerable<ExternalPortView> Items => Grid.GetItems<ExternalPortView>();
+        
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }

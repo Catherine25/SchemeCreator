@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.Data.Interfaces
 {
@@ -7,7 +8,7 @@ namespace SchemeCreator.Data.Interfaces
     {
         public IEnumerable<T> Items { get; }
 
-        public void AddToView(T item);
+        public void Add(T item);
         public void Clear();
     }
 }

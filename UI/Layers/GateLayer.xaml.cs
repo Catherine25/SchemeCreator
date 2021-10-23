@@ -12,9 +12,7 @@ namespace SchemeCreator.UI.Layers
     public sealed partial class GateLayer : UserControl, ILayer<GateView>
     {
         public event Action<GatePortView, GateView> GatePortTapped;
-        public event Action<GateView> RemoveWiresByGateRequest;
-
-        public IEnumerable<GateView> Items => Grid.Children.Select(e => e as GateView);
+        public event Action<GateView> RemoveConnectedWires;
 
         public GateLayer()
         {
@@ -22,19 +20,25 @@ namespace SchemeCreator.UI.Layers
             Grid.InitGridColumnsAndRows(Constants.GridSize);
         }
 
-        public void AddToView(GateView gate)
-        {
-            gate.GateBodyTapped += (gateBody, gate) => DeleteGate(gateBody, gate);
-            gate.GatePortTapped += (gatePort, gate) => GatePortTapped(gatePort, gate);
-            Grid.Children.Add(gate);
-        }
-
         private void DeleteGate(GateBodyView gateBody, GateView gate)
         {
-            Grid.Children.Remove(gate);
-            RemoveWiresByGateRequest(gate);
+            Grid.Remove(gate);
+            RemoveConnectedWires(gate);
         }
 
-        public void Clear() => Grid.Children.Clear();
+        #region ILayer
+
+        public void Add(GateView gate)
+        {
+            gate.GateBodyTapped += (body, g) => DeleteGate(body, g);
+            gate.GatePortTapped += (port, g) => GatePortTapped(port, g);
+            Grid.Add(gate);
+        }
+
+        public IEnumerable<GateView> Items => Grid.GetItems<GateView>();
+
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dynamic="using:SchemeCreator.UI.Dynamic"
+    xmlns:layers="using:SchemeCreator.UI.Layers"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -16,9 +17,9 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <dynamic:GatePortsLayer x:Name="InputsView" Grid.Column="0"/>
+            <layers:GatePortsLayer x:Name="InputsView" Grid.Column="0"/>
             <dynamic:GateBodyView x:Name="Body" Grid.Column="1"/>
-            <dynamic:GatePortsLayer x:Name="OutputsView" Grid.Column="2"/>
+            <layers:GatePortsLayer x:Name="OutputsView" Grid.Column="2"/>
         </Grid>
     </Grid>
 </UserControl>

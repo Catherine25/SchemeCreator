@@ -1,4 +1,8 @@
-﻿using Windows.Foundation;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.Foundation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.Data.Extensions
@@ -61,6 +65,36 @@ namespace SchemeCreator.Data.Extensions
 
             for (int j = 1; j <= size.Height; j++)
                 grid.RowDefinitions.Add(new RowDefinition());
+        }
+
+        public static IEnumerable<T> GetItems<T>(this Grid grid)
+            where T : UIElement
+        {
+            return grid.Children.Select(c => c as T);
+        }
+        
+        public static void SetItems<T>(this Grid grid, IEnumerable<T> items)
+            where T : UIElement
+        {
+            grid.Children.Clear();
+            items.ToList().ForEach(x => grid.Add(x));
+        }
+
+        public static void Add<T>(this Grid grid, T item)
+            where T : UIElement
+        {
+            grid.Children.Add(item);
+        }
+        
+        public static void Remove<T>(this Grid grid, T item)
+            where T : UIElement
+        {
+            grid.Children.Remove(item);
+        }
+        
+        public static void Clear(this Grid grid)
+        {
+            grid.Children.Clear();
         }
     }
 }

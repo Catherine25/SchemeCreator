@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Models.Enums;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.Foundation;
-using Windows.UI.Xaml.Controls;
+using SchemeCreator.UI.Dynamic;
 
-namespace SchemeCreator.UI.Dynamic
+namespace SchemeCreator.UI.Layers
 {
     public sealed partial class GatePortsLayer : UserControl, ILayer<GatePortView> 
     {
@@ -28,14 +28,20 @@ namespace SchemeCreator.UI.Dynamic
             for (int i = 0; i < count; i++)
             {
                 GatePortView port = new(type, i);
-                port.Tapped += (port) => Tapped(port);
+                port.Tapped += (p) => Tapped(p);
                 port.ValueChanged += (newValue) => ValuesChanged?.Invoke();
-                AddToView(port);
+                Add(port);
             }
         }
 
-        public IEnumerable<GatePortView> Items => Grid.Children.Select(p => p as GatePortView);
-        public void AddToView(GatePortView item) => Grid.Children.Add(item);
-        public void Clear() => Grid.Children.Clear();
+        #region ILayer
+
+        public IEnumerable<GatePortView> Items => Grid.GetItems<GatePortView>();
+        
+        public void Add(GatePortView item) => Grid.Add(item);
+        
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }
