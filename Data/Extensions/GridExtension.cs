@@ -59,11 +59,24 @@ namespace SchemeCreator.Data.Extensions
 
         public static void InitGridColumnsAndRows(this Grid grid, Size size)
         {
-            for (int i = 1; i <= size.Width; i++)
-                grid.ColumnDefinitions.Add(new ColumnDefinition());
+            InitColumns(grid, (int)size.Width);
+            InitRows(grid, (int)size.Height);
+        }
+        
+        public static void InitRows(this Grid grid, int count)
+        {
+            grid.RowDefinitions.Clear();
 
-            for (int j = 1; j <= size.Height; j++)
+            for (var i = 1; i <= count; i++)
                 grid.RowDefinitions.Add(new RowDefinition());
+        }
+        
+        public static void InitColumns(this Grid grid, int count)
+        {
+            grid.ColumnDefinitions.Clear();
+
+            for (var i = 1; i <= count; i++)
+                grid.ColumnDefinitions.Add(new ColumnDefinition());
         }
 
         public static IEnumerable<T> GetItems<T>(this Grid grid)

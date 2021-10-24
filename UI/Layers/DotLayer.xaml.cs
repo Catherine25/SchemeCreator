@@ -11,6 +11,7 @@ namespace SchemeCreator.UI.Layers
     public sealed partial class DotLayer : UserControl, ILayer<DotView>
     {
         public event Action<DotView> Tapped;
+        public event Action<DotView> RightTapped;
 
         public DotLayer() => InitializeComponent();
 
@@ -21,8 +22,10 @@ namespace SchemeCreator.UI.Layers
             for (int i = 1; i <= size.Width; i++)
                 for (int j = 1; j <= size.Height; j++)
                 {
-                    DotView dot = new(i, j);
+                    DotView dot = new();
+                    dot.MatrixLocation = new(i - 1, j - 1);
                     dot.Tapped += (d) => Tapped(d);
+                    dot.RightTapped += (d) => RightTapped(d);
                     Add(dot);
                 }
         }

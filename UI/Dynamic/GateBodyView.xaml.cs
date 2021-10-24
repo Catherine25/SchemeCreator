@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using System.Collections.Generic;
+using Windows.Foundation;
 using SchemeCreator.Data.Services;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
@@ -7,7 +8,7 @@ namespace SchemeCreator.UI.Dynamic
 {
     public sealed partial class GateBodyView : UserControl
     {
-        public static readonly Size LogicGateSize = new(50, 70);
+        public static readonly Size LogicGateSize = new(50, 75);
 
         public GateBodyView()
         {
@@ -23,5 +24,18 @@ namespace SchemeCreator.UI.Dynamic
         {
             set => Button.Content = GateNames[value];
         }
+        
+        public static readonly Dictionary<GateEnum, string> GateNames = new()
+        {
+            { GateEnum.And, "AND" },
+            { GateEnum.Buffer, "Buffer" },
+            { GateEnum.Nand, "NAND" },
+            { GateEnum.Nor, "NOR" },
+            { GateEnum.Not, "NOT" },
+            { GateEnum.Or, "OR" },
+            { GateEnum.Xnor, "XNOR" },
+            { GateEnum.Xor, "XOR" },
+            { GateEnum.Custom, "Custom" },
+        };
     }
 }

@@ -5,7 +5,6 @@ using SchemeCreator.UI.Dynamic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Interfaces;
@@ -23,10 +22,11 @@ namespace SchemeCreator.UI
             GateLayer.GatePortTapped += GatePortTapped;
             GateLayer.RemoveConnectedWires += RemoveConnectedWires;
             
-            ExternalPortsLayer.Tapped += Tapped;
+            ExternalPortsLayer.Tapped += ExternalPortTapped;
             ExternalPortsLayer.RemoveConnectedWires += RemoveConnectedWires;
             
-            DotLayer.Tapped += TappedEventAsync;
+            DotLayer.Tapped += DotTappedEventAsync;
+            DotLayer.RightTapped += DotRightTappedEventAsync;
             DotLayer.InitGrid(GridSize);
         }
 
@@ -47,7 +47,7 @@ namespace SchemeCreator.UI
 
         public void Reset()
         {
-            foreach (ExternalPortView port in ExternalPorts.Where(p => p.Type == PortType.Output))
+            foreach (ExternalPortView port in ExternalOutputs)
                 port.Value = null;
 
             foreach (GateView gate in Gates)
@@ -67,7 +67,7 @@ namespace SchemeCreator.UI
 
         public void Recreate() => Clear();
 
-        private void Tapped(ExternalPortView externalPort) =>
+        private void ExternalPortTapped(ExternalPortView externalPort) =>
             WireLayer.WireBuilder.SetPoint(
                 externalPort.Type == PortType.Input,
                 externalPort.GetCenterRelativeTo(XSchemeGrid),
@@ -80,27 +80,43 @@ namespace SchemeCreator.UI
                 gate.MatrixLocation,
                 port.Index);
 
-        private async void TappedEventAsync(DotView e)
+        private async void DotTappedEventAsync(DotView dot)
         {
             var msg = new NewGateDialog();
+            var result = await msg.ShowAsync();
 
-            await msg.ShowAsync();
+            if(result != ContentDialogResult.Primary)
+                return;
 
-            if (msg.gateType != null)
-            {
-                var location = new Vector2(Grid.GetColumn(e), Grid.GetRow(e));
+            GateView? gate = msg.Gate;
+            // todo fix
+            // if (gate.Type == GateEnum.Custom)
+            // {
+            //     var msg2 = new CustomGateDialog(gate.Inputs.Count());
+            //     result = await msg2.ShowAsync();
+            //
+            //     if (result != ContentDialogResult.Primary)
+            //         return;
+            //
+            //     gate.ConfigureCustomWorkFunction(msg2.exceptionsData);
+            // }
 
-                if(msg.Gate != null)
-                {
-                    msg.Gate.MatrixLocation = location;
-                    GateLayer.Add(msg.Gate);
-                }
-                else if(msg.ExternalPort != null)
-                {
-                    msg.ExternalPort.MatrixLocation = location;
-                    ExternalPortsLayer.Add(msg.ExternalPort);
-                }
-            }
+            gate.MatrixLocation = dot.MatrixLocation;
+            GateLayer.Add(gate);
+        }
+
+        private async void DotRightTappedEventAsync(DotView dot)
+        {
+            var msg = new NewExternalPortDialog();
+            var result = await msg.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
+                return;
+
+            ExternalPortView port = msg.ExternalPortView;
+            port.MatrixLocation = dot.MatrixLocation;
+            
+            ExternalPortsLayer.Add(port);
         }
 
         public (IEnumerable<GateDto>, IEnumerable<WireDto>) PrepareForSerialization() 

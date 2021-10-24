@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
@@ -17,7 +18,8 @@ namespace SchemeCreator.UI.Dynamic
         Or,
         Nor,
         Xor,
-        Xnor
+        Xnor,
+        Custom
     }
 
     public sealed partial class GateView : UserControl, ISchemeComponent
@@ -50,13 +52,40 @@ namespace SchemeCreator.UI.Dynamic
         public void Work()
         {
             List<bool?> initialValues = Inputs.Select(p => p.Value).ToList();
-            List<bool?> resultValues = GateWorkPatterns.ActionByType[Type](initialValues);
 
+            List<bool?> resultValues = Type == GateEnum.Custom
+                ? CustomWorkFunction(initialValues)
+                : StandardGateWorkPatterns.ActionByType[Type](initialValues);
+            
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            
             var outPorts = Outputs.ToList();
 
             for (int i = 0; i < outPorts.Count; i++)
                 outPorts[i].Value = resultValues[i];
         }
+
+        // todo fix
+        public void ConfigureCustomWorkFunction(CustomGateConfiguration exceptionsData) =>
+            CustomWorkFunction = _ =>
+            {
+                var inputs = Inputs.Select(x => x.Value).ToList();
+
+                bool output = exceptionsData.DefaultOutput;
+
+                foreach (var sets in exceptionsData.ExceptionSets)
+                    for (int i = 0; i < sets.Exceptions.Count(); i++)
+                        if (sets.Exceptions.ElementAt(i) != inputs[i])
+                            output = !exceptionsData.DefaultOutput;
+
+                return new List<bool?> { output };
+            };
+
+        private Func<List<bool?>, List<bool?>> CustomWorkFunction;
 
         #region Ports
 

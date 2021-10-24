@@ -41,6 +41,12 @@ namespace SchemeCreator.Data.Extensions
             control.VerticalAlignment = VerticalAlignment.Top;
         }
         
+        public static void SetCenterAlignment(this FrameworkElement control)
+        {
+            control.HorizontalAlignment = HorizontalAlignment.Center;
+            control.VerticalAlignment = VerticalAlignment.Center;
+        }
+        
         public static void MakeCellIndependent(this FrameworkElement control, Size gridSize)
         {
             Grid.SetColumnSpan(control, (int)gridSize.Width);

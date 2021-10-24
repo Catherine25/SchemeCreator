@@ -134,6 +134,7 @@
     <Compile Include="Data\Extensions\EllipseExtension.cs" />
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
+    <Compile Include="Data\Interfaces\IGridComponent.cs" />
     <Compile Include="Data\Interfaces\ILayer.cs" />
     <Compile Include="Data\Interfaces\ISchemeComponentExtension.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
@@ -143,7 +144,7 @@
     <Compile Include="Data\Services\Alignment\GatesAligner.cs" />
     <Compile Include="Data\Services\Alignment\RangeHelper.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
-    <Compile Include="Data\Services\GateWorkPatterns.cs" />
+    <Compile Include="Data\Services\StandardGateWorkPatterns.cs" />
     <Compile Include="Data\Services\MessageData.cs" />
     <Compile Include="Data\Services\Messages.cs" />
     <Compile Include="Data\Interfaces\ISchemeComponent.cs" />
@@ -167,6 +168,9 @@
     <Compile Include="Test\UserSimulatorExtension.cs" />
     <Compile Include="Test\TestRunner.cs" />
     <Compile Include="Test\TestSamples.cs" />
+    <Compile Include="UI\CustomGateDialog.xaml.cs">
+      <DependentUpon>CustomGateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Dynamic\DotView.xaml.cs">
       <DependentUpon>DotView.xaml</DependentUpon>
     </Compile>
@@ -175,6 +179,12 @@
     </Compile>
     <Compile Include="UI\Dynamic\GateBodyView.xaml.cs">
       <DependentUpon>GateBodyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dynamic\PortConfigurationView.xaml.cs">
+      <DependentUpon>PortConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Layers\ExceptionsLayer.xaml.cs">
+      <DependentUpon>ExceptionsLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Layers\GatePortsLayer.xaml.cs">
       <DependentUpon>GatePortsLayer.xaml</DependentUpon>
@@ -200,6 +210,9 @@
     <Compile Include="UI\Layers\GateLayer.xaml.cs">
       <DependentUpon>GateLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Layers\PortConfigurationLayer.xaml.cs">
+      <DependentUpon>PortConfigurationLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Layers\TraceLayer.xaml.cs">
       <DependentUpon>TraceLayer.xaml</DependentUpon>
     </Compile>
@@ -208,6 +221,9 @@
     </Compile>
     <Compile Include="UI\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\NewExternalPortDialog.xaml.cs">
+      <DependentUpon>NewExternalPortDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\NewGateDialog.xaml.cs">
       <DependentUpon>NewGateDialog.xaml</DependentUpon>
@@ -241,6 +257,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\CustomGateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Dynamic\DotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -250,6 +270,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Dynamic\GateBodyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dynamic\PortConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Layers\ExceptionsLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -285,6 +313,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Layers\PortConfigurationLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Layers\TraceLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -294,6 +326,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Message.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\NewExternalPortDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

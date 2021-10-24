@@ -3,12 +3,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.Data.Interfaces
 {
-    public static class ISchemeComponentExtension
+    public static class SchemeComponentExtension
     {
-        public static Vector2 GetMatrixLocation<T>(this T control) where T : UserControl, ISchemeComponent =>
-            new Vector2(Grid.GetColumn(control), Grid.GetRow(control));
+        public static Vector2 GetMatrixLocation<T>(this T control) where T : UserControl, IGridComponent =>
+            new(Grid.GetColumn(control), Grid.GetRow(control));
 
-        public static void SetMatrixLocation<T>(this T control, Vector2 value) where T: UserControl, ISchemeComponent
+        public static void SetMatrixLocation<T>(this T control, Vector2 value) where T: UserControl, IGridComponent
         {
             Grid.SetColumn(control, (int)value.X);
             Grid.SetRow(control, (int)value.Y);

@@ -33,6 +33,7 @@ namespace SchemeCreator.UI.Dynamic
                 Ellipse.Fill = Colorer.GetBrushByValue(value);
                 Ellipse.Stroke = Colorer.GetBrushByValue(value);
                 ValueChanged?.Invoke(_value);
+                UpdateLayout();
             }
         }
         private bool? _value;

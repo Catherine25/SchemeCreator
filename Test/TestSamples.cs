@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Diagnostics;
 using SchemeCreator.Test.Builder;
+using SchemeCreator.UI.Dynamic;
 
 namespace SchemeCreator.Test
 {

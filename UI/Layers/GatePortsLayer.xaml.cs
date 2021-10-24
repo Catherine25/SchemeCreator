@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
@@ -21,7 +20,7 @@ namespace SchemeCreator.UI.Layers
 
         public void CreatePorts(ConnectionTypeEnum type, int count)
         {
-            Grid.InitGridColumnsAndRows(new Size(0, count));
+            Grid.InitRows(count);
 
             for (int i = 0; i < count; i++)
             {

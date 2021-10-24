@@ -5,6 +5,6 @@ namespace SchemeCreator.Test.Builder
 {
     public class GateBuilder
     {
-        public GateView Build(Constants.GateEnum type, Vector2 point, int inputs = 1, int outputs = 1) => new GateView(type, point, inputs, outputs); 
+        public GateView Build(GateEnum type, Vector2 point, int inputs = 1, int outputs = 1) => new(type, point, inputs, outputs); 
     }
 }
