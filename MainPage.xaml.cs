@@ -45,7 +45,8 @@ namespace SchemeCreator
 
             var result = tracer.Run();
 
-            Scheme.ShowTracings(result);
+            if (result != null)
+                Scheme.ShowTracings(result);
         }
 
         private void AlignBt_Click(object sender, RoutedEventArgs e)
