@@ -168,8 +168,14 @@
     <Compile Include="Test\UserSimulatorExtension.cs" />
     <Compile Include="Test\TestRunner.cs" />
     <Compile Include="Test\TestSamples.cs" />
-    <Compile Include="UI\CustomGateDialog.xaml.cs">
+    <Compile Include="UI\Dialogs\CustomGateDialog.xaml.cs">
       <DependentUpon>CustomGateDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialogs\NewExternalPortDialog.xaml.cs">
+      <DependentUpon>NewExternalPortDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialogs\NewGateDialog.xaml.cs">
+      <DependentUpon>NewGateDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Dynamic\DotView.xaml.cs">
       <DependentUpon>DotView.xaml</DependentUpon>
@@ -222,12 +228,6 @@
     <Compile Include="UI\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\NewExternalPortDialog.xaml.cs">
-      <DependentUpon>NewExternalPortDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\NewGateDialog.xaml.cs">
-      <DependentUpon>NewGateDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\SchemeView.xaml.cs">
       <DependentUpon>SchemeView.xaml</DependentUpon>
     </Compile>
@@ -257,7 +257,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\CustomGateDialog.xaml">
+    <Page Include="UI\Dialogs\CustomGateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dialogs\NewExternalPortDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dialogs\NewGateDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -329,14 +337,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\NewExternalPortDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\NewGateDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UI\SchemeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -350,7 +350,6 @@
       <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

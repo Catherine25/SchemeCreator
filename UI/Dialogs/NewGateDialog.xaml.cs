@@ -3,7 +3,7 @@ using System;
 using System.Numerics;
 using Windows.UI.Xaml.Controls;
 
-namespace SchemeCreator.UI
+namespace SchemeCreator.UI.Dialogs
 {
     public sealed partial class NewGateDialog : ContentDialog
     {

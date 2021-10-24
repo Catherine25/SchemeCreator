@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 using SchemeCreator.UI.Dynamic;
 using SchemeCreator.UI.Layers;
 
-namespace SchemeCreator.UI
+namespace SchemeCreator.UI.Dialogs
 {
     public class CustomGateConfiguration
     {

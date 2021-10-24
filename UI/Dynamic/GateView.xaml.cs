@@ -6,6 +6,7 @@ using System.Numerics;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator.UI.Dynamic
 {
