@@ -5,6 +5,7 @@ using SchemeCreator.UI;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator
@@ -39,12 +40,22 @@ namespace SchemeCreator
                 await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 
-        private void TraceBt_Click(object sender, RoutedEventArgs e)
+        private async void TraceBt_Click(object sender, RoutedEventArgs e)
         {
             Tracer tracer = new(Scheme);
 
-            var result = tracer.Run();
-
+            HistoryService? result = null;
+            
+            try
+            {
+                result = tracer.Run();
+            }
+            catch (TracingErrorException)
+            {
+                await new Message(Messages.TracingError).ShowAsync();
+                return;
+            }
+            
             if (result != null)
                 Scheme.ShowTracings(result);
         }

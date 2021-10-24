@@ -17,6 +17,7 @@ namespace SchemeCreator.UI.Dynamic
     {
         public new Action<GatePortView> Tapped;
      
+        public static readonly Size ExtendedGatePortSize = new(20, 20);
         public static readonly Size GatePortSize = new(10, 10);
 
         /// <summary>
@@ -35,13 +36,14 @@ namespace SchemeCreator.UI.Dynamic
         /// </summary>
         /// <param name="connectionType"></param>
         /// <param name="index"></param>
-        public GatePortView(ConnectionTypeEnum connectionType, int index)
+        public GatePortView(ConnectionTypeEnum connectionType, int index, bool extended = false)
         {
             Type = connectionType;
             Index = index;
 
             InitializeComponent();
-            this.SetSize(GatePortSize);
+            
+            this.SetSize(extended == true ? ExtendedGatePortSize : GatePortSize);
 
             Grid.SetRow(this, index);
 

@@ -58,6 +58,14 @@
             Description = "You have some feedbacks in the scheme.",
             SecondaryButton = OK
         };
+        
+        public static readonly MessageData TracingError = new()
+        {
+            Title = "Can't trace the scheme",
+            Description = "Scheme isn't correct.\n" + 
+                          "Please check it for error.",
+            SecondaryButton = OK
+        };
 
         private const string OK = "OK";
     }

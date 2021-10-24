@@ -27,14 +27,14 @@ namespace SchemeCreator.UI.Dynamic
         
         public static readonly Dictionary<GateEnum, string> GateNames = new()
         {
-            { GateEnum.And, "AND" },
-            { GateEnum.Buffer, "Buffer" },
-            { GateEnum.Nand, "NAND" },
-            { GateEnum.Nor, "NOR" },
-            { GateEnum.Not, "NOT" },
-            { GateEnum.Or, "OR" },
-            { GateEnum.Xnor, "XNOR" },
-            { GateEnum.Xor, "XOR" },
+            { GateEnum.And, "&" },
+            { GateEnum.Buffer, "1" },
+            { GateEnum.Nand, "&" },
+            { GateEnum.Nor, "1" },
+            { GateEnum.Not, "1" },
+            { GateEnum.Or, "1" },
+            { GateEnum.Xnor, "=1" },
+            { GateEnum.Xor, "=1" },
             { GateEnum.Custom, "Custom" },
         };
     }
