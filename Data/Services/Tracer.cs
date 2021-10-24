@@ -43,13 +43,14 @@ namespace SchemeCreator.Data.Services
             (int exPorts, int gates, int wires) total = (externalPorts.Count(), gates.Count(), wires.Count());
 
             // check if there is nothing to trace
-            if ((total.exPorts == 0 || total.gates == 0) && total.wires == 0)
+            if (total.exPorts == 0 || total.wires == 0)
             {
                 new Message(Messages.NothingToTrace).ShowAsync();
                 return null;
             }
 
             // trace external inputs first
+            this.Log("Tracing external inputs...");
             service.AddToHistory(TraceExternalPorts(PortType.Input));
 
             while (!AllGatesAndWiresTraced((total.gates, total.wires)))
@@ -72,6 +73,7 @@ namespace SchemeCreator.Data.Services
             }
 
             // external outputs should be traced last
+            this.Log("Tracing external outputs...");
             service.AddToHistory(TraceExternalPorts(PortType.Output));
 
             this.Log("Done");
