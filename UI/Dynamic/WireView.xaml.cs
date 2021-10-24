@@ -24,6 +24,8 @@ namespace SchemeCreator.UI.Dynamic
 
     public sealed partial class WireView : UserControl, IValueHolder
     {
+        public new Action<WireView> Tapped;
+
         private const double WireThickness = 5.0;
         public WireConnection Connection => connection;
         private WireConnection connection;
@@ -40,21 +42,6 @@ namespace SchemeCreator.UI.Dynamic
             //must be called to update coordinates immediately
             UpdateLayout();
         }
-
-        public new Action<WireView> Tapped;
-
-        public bool? Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                XLine.Stroke = Colorer.GetBrushByValue(_value);
-                XLine.Fill = Colorer.GetBrushByValue(_value);
-            }
-        }
-        private bool? _value;
-        public Action<bool?> ValueChanged { get; set; }
 
         public WireView()
         {
@@ -81,13 +68,35 @@ namespace SchemeCreator.UI.Dynamic
 
             XLine.Fill = Colorer.GetBrushByValue(null);
             XLine.StrokeThickness = WireThickness;
-            XLine.Tapped += (sender, e) => Tapped(this);
+            XLine.Tapped += (_, _) => Tapped(this);
 
-            XLine.PointerEntered += (sender, e) => XLine.StrokeThickness *= 2;
-            XLine.PointerExited += (sender, e) => XLine.StrokeThickness /= 2;
+            XLine.PointerEntered += (_, _) => XLine.StrokeThickness *= 2;
+            XLine.PointerExited += (_, _) => XLine.StrokeThickness /= 2;
 
             XLine.Stroke = new SolidColorBrush(Colors.Wheat);
             XLine.Fill = new SolidColorBrush(Colors.Wheat);
         }
+
+        #region ValueHolder
+
+        public bool? Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                XLine.Stroke = Colorer.GetBrushByValue(_value);
+                XLine.Fill = Colorer.GetBrushByValue(_value);
+            }
+        }
+        private bool? _value;
+        
+        public Action<bool?> ValueChanged { get; set; }
+        
+        public void SwitchValue() => this.SwitchControlValue();
+        
+        public void Reset() => this.ResetControlValue();
+
+        #endregion
     }
 }

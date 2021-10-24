@@ -23,27 +23,12 @@ namespace SchemeCreator.UI.Dynamic
 
         public readonly PortType Type;
 
-        public bool? Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                XEllipse.Fill = Colorer.GetBrushByValue(value);
-                ValueChanged?.Invoke(_value);
-            }
-        }
-        private bool? _value;
-        public Action<bool?> ValueChanged { get; set; }
-
         public Vector2 MatrixLocation
         {
             get => this.GetMatrixLocation();
             set => this.SetMatrixLocation(value);
         }
-        
-        public Point Center => new(CenterPoint.X, CenterPoint.Y);
-        
+
         public ExternalPortView() => InitializeComponent();
 
         public ExternalPortView(PortType type, Vector2 point)
@@ -62,10 +47,30 @@ namespace SchemeCreator.UI.Dynamic
             
             // only inputs support changing mode
             if (type == PortType.Input)
-                PortName.DoubleTapped += (_, _) => SwitchMode();
+                PortName.DoubleTapped += (_, _) => SwitchValue();
         }
 
-        private void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
+        #region ValueHolder
+        
+        public Action<bool?> ValueChanged { get; set; }
+
+        public bool? Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                XEllipse.Fill = Colorer.GetBrushByValue(value);
+                ValueChanged?.Invoke(_value);
+            }
+        }
+        private bool? _value;
+        
+        public void SwitchValue() => this.SwitchControlValue();
+        
+        public void Reset() => this.ResetControlValue();
+        
+        #endregion
 
         #region Wire
 

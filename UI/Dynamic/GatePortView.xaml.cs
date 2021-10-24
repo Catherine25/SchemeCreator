@@ -24,21 +24,6 @@ namespace SchemeCreator.UI.Dynamic
         /// </summary>
         public readonly ConnectionTypeEnum Type;
 
-        public bool? Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                Ellipse.Fill = Colorer.GetBrushByValue(value);
-                Ellipse.Stroke = Colorer.GetBrushByValue(value);
-                ValueChanged?.Invoke(_value);
-                UpdateLayout();
-            }
-        }
-        private bool? _value;
-        public Action<bool?> ValueChanged { get; set; }
-
         public readonly int Index;
 
         public Point Center { get => CenterPoint.TransformToPoint(); }
@@ -66,5 +51,29 @@ namespace SchemeCreator.UI.Dynamic
             Ellipse.PointerEntered += (sender, e) => Ellipse.Activate();
             Ellipse.PointerExited += (sender, e) => Ellipse.Deactivate();
         }
+
+        #region ValueHolder
+
+        public Action<bool?> ValueChanged { get; set; }
+
+        public bool? Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                Ellipse.Fill = Colorer.GetBrushByValue(value);
+                Ellipse.Stroke = Colorer.GetBrushByValue(value);
+                ValueChanged?.Invoke(_value);
+                UpdateLayout();
+            }
+        }
+        private bool? _value;
+        
+        public void SwitchValue() => this.SwitchControlValue();
+
+        public void Reset() => this.ResetControlValue();
+
+        #endregion
     }
 }

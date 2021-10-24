@@ -47,11 +47,9 @@ namespace SchemeCreator.UI
 
         public void Reset()
         {
-            foreach (ExternalPortView port in ExternalOutputs)
-                port.Value = null;
-
-            foreach (GateView gate in Gates)
-                gate.Reset();
+            ExternalOutputs.ToList().ForEach(x => x.Value = null);
+            Gates.ToList().ForEach(x => x.Reset());
+            Wires.ToList().ForEach(x => x.Value = null);
 
             foreach (WireView wire in Wires)
                 wire.Value = null;
