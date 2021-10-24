@@ -4,6 +4,7 @@ using System.Linq;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services.History;
 using SchemeCreator.UI;
+using SchemeCreator.UI.Dialogs;
 using SchemeCreator.UI.Dynamic;
 using PortType = SchemeCreator.UI.Dynamic.PortType;
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SchemeCreator.UI;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator.Data.Services
 {

@@ -171,6 +171,9 @@
     <Compile Include="UI\Dialogs\CustomGateDialog.xaml.cs">
       <DependentUpon>CustomGateDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Dialogs\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Dialogs\NewExternalPortDialog.xaml.cs">
       <DependentUpon>NewExternalPortDialog.xaml</DependentUpon>
     </Compile>
@@ -225,9 +228,6 @@
     <Compile Include="UI\Layers\WireLayer.xaml.cs">
       <DependentUpon>WireLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Message.xaml.cs">
-      <DependentUpon>Message.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\SchemeView.xaml.cs">
       <DependentUpon>SchemeView.xaml</DependentUpon>
     </Compile>
@@ -258,6 +258,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Dialogs\CustomGateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dialogs\Message.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -330,10 +334,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Layers\WireLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Message.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

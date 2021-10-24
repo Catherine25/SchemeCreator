@@ -5,6 +5,7 @@ using SchemeCreator.UI;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator
 {
