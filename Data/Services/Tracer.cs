@@ -11,6 +11,11 @@ using PortType = SchemeCreator.UI.Dynamic.PortType;
 namespace SchemeCreator.Data.Services
 {
     /// <summary>
+    /// Exception to throw in during tracing.
+    /// </summary>
+    public class TracingErrorException : Exception { }
+    
+    /// <summary>
     /// Used to trace the components of <see cref="SchemeView"/>.
     /// Builds a trace history as it's result.
     /// Shows a message in case of invalid scheme.
@@ -21,7 +26,7 @@ namespace SchemeCreator.Data.Services
     /// </summary>
     public class Tracer
     {
-        private HistoryService service;
+        private HistoryService? service;
 
         private IEnumerable<ExternalPortView> externalPorts;
         private IEnumerable<GateView> gates;
@@ -36,7 +41,7 @@ namespace SchemeCreator.Data.Services
             wires = scheme.Wires;
         }
 
-        public HistoryService Run()
+        public HistoryService? Run()
         {
             this.Log("Running...");
 
@@ -58,18 +63,22 @@ namespace SchemeCreator.Data.Services
                 // flag used to handle logic errors in the scheme
                 bool anyTraced = false;
 
-                var tracedWires = TraceWires();
-                bool wiresTraced = tracedWires.Count() > 0;
+                // tracing wires
+                this.Log("Tracing wires...");
+                var tracedWires = GetWiresToTrace().ToList();
+                bool wiresTraced = tracedWires.Any();
                 service.AddToHistory(tracedWires);
 
-                var tracedGates = TraceGates();
-                bool gatesTraced = tracedGates.Count() > 0;
+                // tracing gates
+                this.Log("Tracing gates...");
+                var tracedGates = GetGatesToTrace().ToList();
+                bool gatesTraced = tracedGates.Any();
                 service.AddToHistory(tracedGates);
 
                 anyTraced = wiresTraced || gatesTraced;
 
                 if (!anyTraced)
-                    throw new Exception("Tracing error!");
+                    throw new TracingErrorException();
             }
 
             // external outputs should be traced last
@@ -81,13 +90,24 @@ namespace SchemeCreator.Data.Services
             return service;
         }
 
+        /// <summary>
+        /// Checks all gates and wires are traced.
+        /// </summary>
+        /// <param name="total">count if gates and wires traced</param>
+        /// <returns>true if all components are traced</returns>
         private bool AllGatesAndWiresTraced((int gates, int wires) total) =>
             total.gates == service.Count(nameof(GateView)) && total.wires == service.Count(nameof(WireView));
 
-        private IEnumerable<ExternalPortView> TraceExternalPorts(PortType type) =>
-            externalPorts.Where(x => x.Type == type);
+        private IEnumerable<ExternalPortView> TraceExternalPorts(PortType type) => externalPorts.Where(x => x.Type == type);
 
-        private IEnumerable<GateView> TraceGates()
+        /// <summary>
+        /// Gets gates to trace.
+        /// Algorithm:
+        /// Select all traced wires and gates.
+        /// Return all not traces gates that connect to traced wires.
+        /// </summary>
+        /// <returns>List of gates to trace</returns>
+        private IEnumerable<GateView> GetGatesToTrace()
         {
             var tracedWires = service.GetAll(nameof(WireView))
                 .Select(x => x.TracedObject as WireView);
@@ -103,7 +123,14 @@ namespace SchemeCreator.Data.Services
                     .Any(wire => gate.WireEndConnects(wire)));
         }
 
-        private IEnumerable<WireView> TraceWires()
+        /// <summary>
+        /// Gets wires to trace.
+        /// Algorithm:
+        /// Select all already traced components of the scheme.
+        /// Return all not traced wires that connect to the components. 
+        /// </summary>
+        /// <returns>List of wires to trace</returns>
+        private IEnumerable<WireView> GetWiresToTrace()
         {
             var exPorts = externalPorts
                     .Where(p => p.Type == PortType.Input);
