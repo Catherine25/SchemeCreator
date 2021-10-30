@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Services;
-using SchemeCreator.Data;
 using System.Numerics;
 using Windows.Foundation;
 using static SchemeCreator.Data.Extensions.ControlExtension;
@@ -15,9 +14,45 @@ namespace SchemeCreator.UI.Dynamic
         Output
     }
 
-    public sealed partial class ExternalPortView : UserControl, IValueHolder
+    public sealed partial class ExternalPortView : UserControl, IValueHolder, ISchemeComponent
     {
-        public PortType Type;
+        private readonly Size externalPortSize = new(25, 25);
+
+        public new Action<ExternalPortView> Tapped;
+        public new Action<ExternalPortView> RightTapped;
+
+        public readonly PortType Type;
+
+        public Vector2 MatrixLocation
+        {
+            get => this.GetMatrixLocation();
+            set => this.SetMatrixLocation(value);
+        }
+
+        public ExternalPortView() => InitializeComponent();
+
+        public ExternalPortView(PortType type, Vector2 point)
+        {
+            InitializeComponent();
+
+            this.SetSize(externalPortSize);
+            
+            Type = type;
+            Value = null;
+            MatrixLocation = point;
+
+            PortName.Text = type == PortType.Input ? "In" : "Out";
+            PortName.Tapped += (_, _) => Tapped(this);
+            PortName.RightTapped += (_, _) => RightTapped(this);
+            
+            // only inputs support changing mode
+            if (type == PortType.Input)
+                PortName.DoubleTapped += (_, _) => SwitchValue();
+        }
+
+        #region ValueHolder
+        
+        public Action<bool?> ValueChanged { get; set; }
 
         public bool? Value
         {
@@ -30,55 +65,21 @@ namespace SchemeCreator.UI.Dynamic
             }
         }
         private bool? _value;
-        public Action<bool?> ValueChanged { get; set; }
+        
+        public void SwitchValue() => this.SwitchControlValue();
+        
+        public void Reset() => this.ResetControlValue();
+        
+        #endregion
 
-        public Vector2 MatrixLocation
-        {
-            get
-            {
-                return _matrixIndex;
-            }
-            set
-            {
-                _matrixIndex = value;
-                Grid.SetColumn(this, (int)_matrixIndex.X);
-                Grid.SetRow(this, (int)_matrixIndex.Y);
+        #region Wire
 
-                //must be called to update coordinates immediately
-                UpdateLayout();
-            }
-        }
-
-        private Vector2 _matrixIndex;
-
-        public new Action<ExternalPortView> Tapped;
-
-        public ExternalPortView() => InitializeComponent();
-
-        public Point Center => new(CenterPoint.X, CenterPoint.Y);
-
-        public ExternalPortView(PortType type, Vector2 point)
-        {
-            InitializeComponent();
-
-            Type = type;
-
-            PortName.Text = type == PortType.Input ? "In" : "Out";
-
-            this.SetSize(Constants.ExternalPortSize);
-
-            Value = null;
-            MatrixLocation = point;
-
-            XEllipse.Tapped += (sender, args) => Tapped(this);
-            PortName.Tapped += (sender, args) => Tapped(this);
-            XEllipse.RightTapped += (sender, args) => SwitchMode();
-            PortName.RightTapped += (sender, args) => SwitchMode();
-        }
-
-        public void SwitchMode() => Value = Value == true ? false : Value == false ? null : true;
-
+        public bool WireConnects(WireView wire) => WireStartConnects(wire) || WireEndConnects(wire);
+        
         public bool WireStartConnects(WireView wire) => wire.Connection.MatrixStart == MatrixLocation;
+        
         public bool WireEndConnects(WireView wire) => wire.Connection.MatrixEnd == MatrixLocation;
+        
+        #endregion
     }
 }

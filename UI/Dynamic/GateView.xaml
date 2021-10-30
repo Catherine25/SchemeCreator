@@ -2,9 +2,9 @@
     x:Class="SchemeCreator.UI.Dynamic.GateView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SchemeCreator.UI.Dynamic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dynamic="using:SchemeCreator.UI.Dynamic"
+    xmlns:layers="using:SchemeCreator.UI.Layers"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -17,13 +17,9 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="XInputs" Grid.Column="0"/>
-            <Button x:Name="xBody" Content="{x:Bind Text}"
-                    Foreground="{x:Bind ForegroundBrush}"
-                    Background="{x:Bind BackgroundBrush}"
-                    Grid.Column="1"
-                    FontSize="10"/>
-            <Grid x:Name="XOutputs" Grid.Column="2"/>
+            <layers:GatePortsLayer x:Name="InputsView" Grid.Column="0"/>
+            <dynamic:GateBodyView x:Name="Body" Grid.Column="1"/>
+            <layers:GatePortsLayer x:Name="OutputsView" Grid.Column="2"/>
         </Grid>
     </Grid>
 </UserControl>

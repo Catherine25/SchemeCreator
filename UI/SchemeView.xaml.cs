@@ -1,78 +1,56 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services.History;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI.Dynamic;
-using SchemeCreator.UI.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
+using SchemeCreator.Data.Interfaces;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator.UI
 {
     public sealed partial class SchemeView : UserControl
     {
+        public static readonly Size GridSize = new(8, 8);
+
         public SchemeView()
         {
             InitializeComponent();
-            GateLayer.GatePortTapped += GatePortTapped;
-            GateLayer.RemoveWiresByGateRequest += RemoveWiresByGate;
-            ExternalPortsLayer.ExternalPortTapped += ExternalPortTapped;
-            DotLayer.DotTapped += DotTappedEventAsync;
 
-            DotLayer.InitGrid(Constants.GridSize);
+            GateLayer.GatePortTapped += GatePortTapped;
+            GateLayer.RemoveConnectedWires += RemoveConnectedWires;
+            
+            ExternalPortsLayer.Tapped += ExternalPortTapped;
+            ExternalPortsLayer.RemoveConnectedWires += RemoveConnectedWires;
+            
+            DotLayer.Tapped += DotTappedEventAsync;
+            DotLayer.RightTapped += DotRightTappedEventAsync;
+            DotLayer.InitGrid(GridSize);
         }
 
-        private void RemoveWiresByGate(GateView gate) => WireLayer.RemoveWiresByGate(gate);
-
+        private void RemoveConnectedWires(ISchemeComponent schemeComponent) => WireLayer.RemoveConnectedWires(schemeComponent);
+        
         public ExternalPortView GetFirstNotInitedExternalPort() => ExternalPortsLayer.GetFirstNotInitedExternalPort();
 
-        public IEnumerable<GateView> Gates { get => GateLayer.Gates; }
-        public IEnumerable<WireView> Wires { get => WireLayer.Wires; }
-        public IEnumerable<ExternalPortView> ExternalPorts { get => ExternalPortsLayer.ExternalPorts; }
+        public IEnumerable<GateView> Gates => GateLayer.Items;
+        public IEnumerable<WireView> Wires => WireLayer.Items;
+        public IEnumerable<ExternalPortView> ExternalPorts => ExternalPortsLayer.Items;
+        public IEnumerable<ExternalPortView> ExternalInputs => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Input);
+        public IEnumerable<ExternalPortView> ExternalOutputs => ExternalPortsLayer.Items.Where(x => x.Type == PortType.Output);
 
-        public void AddToView(ExternalPortView p) => ExternalPortsLayer.AddToView(p);
+        public void AddToView(ExternalPortView p) => ExternalPortsLayer.Add(p);
 
-        public void AddToView(GateView g) => GateLayer.AddToView(g);
-        public void AddToView(WireView w) => WireLayer.AddToView(w);
-
-        private bool AllExternalPortsConnect(PortType type, List<WireView> wires)
-        {
-            IEnumerable<Point> wirePointsToCheck = type == PortType.Input
-                ? wires.Select(x => x.Connection.StartPoint)
-                : wires.Select(x => x.Connection.EndPoint);
-
-            var allExternalPorts = ExternalPortsLayer.ExternalPorts;
-            var externalPorts = new Stack<ExternalPortView>(allExternalPorts.Where(x => x.Type == type));
-
-            bool found = true;
-
-            while (externalPorts.TryPop(out var externalPort) && found)
-            {
-                found = false;
-
-                foreach (Point point in wirePointsToCheck)
-                    if (externalPort.Center == point)
-                    {
-                        found = true;
-                        break;
-                    }
-            }
-
-            return found;
-        }
+        public void AddToView(GateView g) => GateLayer.Add(g);
+        public void AddToView(WireView w) => WireLayer.Add(w);
 
         public void Reset()
         {
-            foreach (ExternalPortView port in ExternalPorts.Where(p => p.Type == PortType.Output))
-                port.Value = null;
-
-            foreach (GateView gate in Gates)
-                gate.Reset();
+            ExternalOutputs.ToList().ForEach(x => x.Value = null);
+            Gates.ToList().ForEach(x => x.Reset());
+            Wires.ToList().ForEach(x => x.Value = null);
 
             foreach (WireView wire in Wires)
                 wire.Value = null;
@@ -83,7 +61,10 @@ namespace SchemeCreator.UI
             ExternalPortsLayer.Clear();
             GateLayer.Clear();
             WireLayer.Clear();
+            TraceLayer.Clear();
         }
+
+        public void Recreate() => Clear();
 
         private void ExternalPortTapped(ExternalPortView externalPort) =>
             WireLayer.WireBuilder.SetPoint(
@@ -93,45 +74,59 @@ namespace SchemeCreator.UI
 
         private void GatePortTapped(GatePortView port, GateView gate) =>
             WireLayer.WireBuilder.SetPoint(
-                port.Type != Data.Models.Enums.ConnectionTypeEnum.Input,
+                port.Type != ConnectionTypeEnum.Input,
                 port.GetCenterRelativeTo(XSchemeGrid),
                 gate.MatrixLocation,
                 port.Index);
 
-        private async void DotTappedEventAsync(Ellipse e)
+        private async void DotTappedEventAsync(DotView dot)
         {
             var msg = new NewGateDialog();
+            var result = await msg.ShowAsync();
 
-            await msg.ShowAsync();
+            if(result != ContentDialogResult.Primary)
+                return;
 
-            if (msg.gateType != null)
-            {
-                var location = new Vector2(Grid.GetColumn(e), Grid.GetRow(e));
+            GateView? gate = msg.Gate;
+            // todo fix
+            // if (gate.Type == GateEnum.Custom)
+            // {
+            //     var msg2 = new CustomGateDialog(gate.Inputs.Count());
+            //     result = await msg2.ShowAsync();
+            //
+            //     if (result != ContentDialogResult.Primary)
+            //         return;
+            //
+            //     gate.ConfigureCustomWorkFunction(msg2.exceptionsData);
+            // }
 
-                if(msg.Gate != null)
-                {
-                    msg.Gate.MatrixLocation = location;
-                    GateLayer.AddToView(msg.Gate);
-                }
-                else if(msg.ExternalPort != null)
-                {
-                    msg.ExternalPort.MatrixLocation = location;
-                    ExternalPortsLayer.AddToView(msg.ExternalPort);
-                }
-            }
+            gate.MatrixLocation = dot.MatrixLocation;
+            GateLayer.Add(gate);
         }
 
-        public void Recreate() => Clear();
+        private async void DotRightTappedEventAsync(DotView dot)
+        {
+            var msg = new NewExternalPortDialog();
+            var result = await msg.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
+                return;
+
+            ExternalPortView port = msg.ExternalPortView;
+            port.MatrixLocation = dot.MatrixLocation;
+            
+            ExternalPortsLayer.Add(port);
+        }
 
         public (IEnumerable<GateDto>, IEnumerable<WireDto>) PrepareForSerialization() 
         {
-            var gateDtos = GateLayer.Gates.Select(gate => new GateDto(gate));
-            var wireDtos = WireLayer.Wires.Select(wire => new WireDto(wire));
+            var gateDtos = GateLayer.Items.Select(gate => new GateDto(gate));
+            var wireDtos = WireLayer.Items.Select(wire => new WireDto(wire));
 
             return(gateDtos, wireDtos);
         }
 
-        public void ShowTracings(IEnumerable<HistoryComponent> historyComponents) =>
-            TraceLayer.ShowTracings(historyComponents);
+        public void ShowTracings(HistoryService historyService) => TraceLayer.ShowTracings(historyService);
+        public void ClearTracings() => TraceLayer.Clear();
     }
 }

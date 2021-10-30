@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Windows.Foundation;
 using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data.Extensions

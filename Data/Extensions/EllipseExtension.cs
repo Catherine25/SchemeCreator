@@ -1,8 +1,5 @@
 ﻿using SchemeCreator.Data.Services;
-using System.Diagnostics;
-using System.Numerics;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Shapes;
 

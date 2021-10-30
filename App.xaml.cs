@@ -1,5 +1,4 @@
-﻿using SchemeCreator;
-using System;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.ViewManagement;
@@ -9,14 +8,10 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SchemeCreator {
     sealed partial class App : Application {
-        //System.Collections.Generic.Dictionary <string, SchemeCreator.Data.Scheme> schemes =
-        //new System.Collections.Generic.Dictionary <string, SchemeCreator.Data.Scheme>();
         public App() {
             InitializeComponent();
             Suspending += OnSuspending;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
-            //schemes.Add("My Scheme", new SchemeCreator.Data.Scheme());
-            //SchemeCreator.Data.Serializer.DeserializeAll(schemes["My Scheme"]);
         }
 
         /// <summary>

@@ -34,5 +34,23 @@ namespace SchemeCreator.Data.Extensions
             control.Width = size.Width;
             control.Height = size.Height;
         }
+        
+        public static void SetLeftTopAlignment(this FrameworkElement control)
+        {
+            control.HorizontalAlignment = HorizontalAlignment.Left;
+            control.VerticalAlignment = VerticalAlignment.Top;
+        }
+        
+        public static void SetCenterAlignment(this FrameworkElement control)
+        {
+            control.HorizontalAlignment = HorizontalAlignment.Center;
+            control.VerticalAlignment = VerticalAlignment.Center;
+        }
+        
+        public static void MakeCellIndependent(this FrameworkElement control, Size gridSize)
+        {
+            Grid.SetColumnSpan(control, (int)gridSize.Width);
+            Grid.SetRowSpan(control, (int)gridSize.Height);
+        }
     }
 }

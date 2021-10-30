@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using SchemeCreator.UI;
-using SchemeCreator.UI.Dynamic;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator.Data.Services
 {
@@ -8,13 +8,13 @@ namespace SchemeCreator.Data.Services
     {
         public static bool ValidateAsync(SchemeView scheme)
         {
-            if(!HasAnyExternalInput(scheme))
+            if(!scheme.ExternalInputs.Any())
             {
                 new Message(Messages.NoExternalInputs).ShowAsync();
                 return false;
             }
 
-            if (!HasAnyExternalOutput(scheme))
+            if (!scheme.ExternalOutputs.Any())
             {
                 new Message(Messages.NoExternalOutputs).ShowAsync();
                 return false;
@@ -26,7 +26,7 @@ namespace SchemeCreator.Data.Services
                 return false;
             }
 
-            if(!AnyWires(scheme))
+            if(!scheme.Wires.Any())
             {
                new Message(Messages.NoWires).ShowAsync();
                return false;
@@ -35,16 +35,7 @@ namespace SchemeCreator.Data.Services
             return true;
         }
 
-        private static bool HasAnyExternalInput(SchemeView scheme) =>
-            scheme.ExternalPorts.Any(p => p.Type == PortType.Input);
-
-        private static bool HasAnyExternalOutput(SchemeView scheme) =>
-            scheme.ExternalPorts.Any(p => p.Type == PortType.Output);
-
         private static bool ExternalInputsInited(SchemeView scheme) =>
             scheme.GetFirstNotInitedExternalPort() == null;
-
-        private static bool AnyWires(SchemeView scheme) =>
-            scheme.Wires.Count() > 0;
     }
 }

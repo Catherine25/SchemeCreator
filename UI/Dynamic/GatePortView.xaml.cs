@@ -1,34 +1,29 @@
-﻿using SchemeCreator.Data.Models.Enums;
-using SchemeCreator.Data.Services;
+﻿using SchemeCreator.Data.Services;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data;
 using SchemeCreator.Data.Interfaces;
 
 namespace SchemeCreator.UI.Dynamic
 {
+    public enum ConnectionTypeEnum
+    {
+        Input,
+        Output
+    }
+    
     public sealed partial class GatePortView : UserControl, IValueHolder
     {
+        public new Action<GatePortView> Tapped;
+     
+        public static readonly Size ExtendedGatePortSize = new(20, 20);
+        public static readonly Size GatePortSize = new(10, 10);
+
         /// <summary>
         /// Defines the Port's type - Input or Output
         /// </summary>
         public readonly ConnectionTypeEnum Type;
-
-        public bool? Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                XEllipse.Fill = Colorer.GetBrushByValue(value);
-                XEllipse.Stroke = Colorer.GetBrushByValue(value);
-                ValueChanged?.Invoke(_value);
-            }
-        }
-        private bool? _value;
-        public Action<bool?> ValueChanged { get; set; }
 
         public readonly int Index;
 
@@ -41,27 +36,46 @@ namespace SchemeCreator.UI.Dynamic
         /// </summary>
         /// <param name="connectionType"></param>
         /// <param name="index"></param>
-        public GatePortView(ConnectionTypeEnum connectionType, int index)
+        public GatePortView(ConnectionTypeEnum connectionType, int index, bool extended = false)
         {
             Type = connectionType;
             Index = index;
 
             InitializeComponent();
-
-            XEllipse.Width = Constants.GatePortSize.Width;
-            XEllipse.Height = Constants.GatePortSize.Height;
-            Width = Constants.GatePortSize.Width;
-            Height = Constants.GatePortSize.Height;
+            
+            this.SetSize(extended == true ? ExtendedGatePortSize : GatePortSize);
 
             Grid.SetRow(this, index);
 
-            Colorer.SetFillByValue(this.XEllipse, null);
+            Colorer.SetFillByValue(Ellipse, null);
 
-            XEllipse.Tapped += (sender, e) => Tapped(this);
-            XEllipse.PointerEntered += (sender, e) => XEllipse.Activate();
-            XEllipse.PointerExited += (sender, e) => XEllipse.Deactivate();
+            Ellipse.Tapped += (sender, e) => Tapped(this);
+            Ellipse.PointerEntered += (sender, e) => Ellipse.Activate();
+            Ellipse.PointerExited += (sender, e) => Ellipse.Deactivate();
         }
 
-        public new Action<GatePortView> Tapped;
+        #region ValueHolder
+
+        public Action<bool?> ValueChanged { get; set; }
+
+        public bool? Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                Ellipse.Fill = Colorer.GetBrushByValue(value);
+                Ellipse.Stroke = Colorer.GetBrushByValue(value);
+                ValueChanged?.Invoke(_value);
+                UpdateLayout();
+            }
+        }
+        private bool? _value;
+        
+        public void SwitchValue() => this.SwitchControlValue();
+
+        public void Reset() => this.ResetControlValue();
+
+        #endregion
     }
 }

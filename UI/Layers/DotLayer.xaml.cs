@@ -1,24 +1,17 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Services;
+﻿using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
+using SchemeCreator.UI.Dynamic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.UI.Layers
 {
-    public sealed partial class DotLayer : UserControl
+    public sealed partial class DotLayer : UserControl, ILayer<DotView>
     {
-        public event Action<Ellipse> DotTapped;
-
-        public List<Ellipse> Dots
-        {
-            get => Grid.Children.Select(e => e as Ellipse).ToList();
-            private set => value.ForEach(e => Grid.Children.Add(e));
-        }
+        public event Action<DotView> Tapped;
+        public event Action<DotView> RightTapped;
 
         public DotLayer() => InitializeComponent();
 
@@ -29,26 +22,23 @@ namespace SchemeCreator.UI.Layers
             for (int i = 1; i <= size.Width; i++)
                 for (int j = 1; j <= size.Height; j++)
                 {
-                    Ellipse ellipse = new Ellipse
-                    {
-                        HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
-                        VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
-                        Width = Constants.DotSize.Width,
-                        Height = Constants.DotSize.Height
-                    };
-
-                    Grid.SetRow(ellipse, i - 1);
-                    Grid.SetColumn(ellipse, j - 1);
-
-                    ellipse.PointerEntered += (sender, args) => ellipse.Activate();
-                    ellipse.PointerExited += (sender, args) => ellipse.Deactivate();
-                    ellipse.Tapped += (sender, args) => DotTapped(sender as Ellipse);
-
-                    Colorer.SetFillByValue(ellipse, false);
-
-                    Dots.Add(ellipse);
-                    Grid.Children.Add(ellipse);
+                    DotView dot = new();
+                    dot.MatrixLocation = new(i - 1, j - 1);
+                    dot.Tapped += (d) => Tapped(d);
+                    dot.RightTapped += (d) => RightTapped(d);
+                    Add(dot);
                 }
         }
+
+        #region ILayer
+        
+        public void Add(DotView e) => Grid.Add(e);
+        
+        public IEnumerable<DotView> Items => Grid.GetItems<DotView>();
+        
+        public void Clear() => Grid.Clear();
+
+        
+        #endregion
     }
 }

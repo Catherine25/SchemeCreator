@@ -1,5 +1,5 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dynamic;
 using System.Collections.Generic;
@@ -8,15 +8,14 @@ using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI.Layers
 {
-    public sealed partial class WireLayer : UserControl
+    public sealed partial class WireLayer : UserControl, ILayer<WireView>
     {
-        public IEnumerable<WireView> Wires { get => Grid.Children.Select(c => c as WireView); }
         public WireBuilder WireBuilder;
 
         public WireLayer()
         {
             InitializeComponent();
-            Grid.InitGridColumnsAndRows(Constants.GridSize);
+            Grid.InitGridColumnsAndRows(SchemeView.GridSize);
             WireBuilder = new WireBuilder();
             WireBuilder.WireReady += WireReady;
         }
@@ -25,34 +24,33 @@ namespace SchemeCreator.UI.Layers
         /// Adds wire to the view and requests scheme validating.
         /// </summary>
         /// <param name="wire"></param>
-        private void WireReady(WireView wire) => AddToView(wire);
+        private void WireReady(WireView wire) => Add(wire);
 
-        private void Wire_Tapped(WireView wire)
-        {
-            Grid.Children.Remove(wire);
-        }
+        private void Wire_Tapped(WireView wire) => Grid.Remove(wire);
 
-        public void RemoveWiresByGate(GateView gate)
+        public void RemoveConnectedWires(ISchemeComponent component)
         {
             // ToList() is needed to remove wires correctly
-            var wiresToRemove = Wires.Where(wire => gate.WireConnects(wire)).ToList();
+            var wiresToRemove = Items.Where(wire => component.WireConnects(wire)).ToList();
 
             foreach (var wire in wiresToRemove)
-                Grid.Children.Remove(wire);
+                Grid.Remove(wire);
         }
 
-        public void AddToView(WireView wire)
-        {
-            Grid.SetColumnSpan(wire, Constants.NetSize);
-            Grid.SetRowSpan(wire, Constants.NetSize);
+        #region ILayer
 
-            Grid.Children.Add(wire);
+        public void Add(WireView wire)
+        {
+            wire.MakeCellIndependent(SchemeView.GridSize);
+
+            Grid.Add(wire);
             wire.Tapped += Wire_Tapped;
         }
+        
+        public IEnumerable<WireView> Items => Grid.GetItems<WireView>();
 
-        public void Clear()
-        {
-            Grid.Children.Clear();
-        }
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }

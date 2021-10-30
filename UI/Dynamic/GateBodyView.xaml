@@ -8,5 +8,5 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <Button Content="{x:Bind Text}"/>
+    <Button x:Name="Button" FontSize="10" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 </UserControl>

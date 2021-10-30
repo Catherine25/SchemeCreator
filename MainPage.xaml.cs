@@ -1,84 +1,82 @@
 ﻿using SchemeCreator.Data.Services;
+using SchemeCreator.Data.Services.Alignment;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using static SchemeCreator.Data.Constants;
+using SchemeCreator.Data.Services.History;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator
 {
     public sealed partial class MainPage : Page
     {
-        private Brush ActiveBrush;
-        private Brush InactiveBrush;
-        private Brush UnknownBrush;
-
         public MainPage()
         {
             InitializeComponent();
 
-            ActiveBrush = Colorer.GetBrushByValue(true);
-            InactiveBrush = Colorer.GetBrushByValue(false);
-            UnknownBrush = Colorer.GetBrushByValue(null);
-
-            XNewSchemeBt.Click += XNewSchemeBt_Click;
-            XLoadSchemeBt.Click += XLoadSchemeBt_Click;
-            XSaveSchemeBt.Click += XSaveSchemeBt_Click;
-            XLineUpSchemeBt.Click += XLineUpSchemeBt_ClickAsync;
-            XTraceSchemeBt.Click += XTraceSchemeBt_Click;
-            XWorkSchemeBt.Click += XWorkSchemeBt_Click;
+            NewBt.Click += NewBt_Click;
+            LoadBt.Click += LoadBt_Click;
+            SaveBt.Click += SaveBt_Click;
+            AlignBt.Click += AlignBt_Click;
+            TraceBt.Click += TraceBt_Click;
+            WorkBt.Click += WorkBt_Click;
         }
 
-        #region Menu
-
-        private async void XWorkSchemeBt_Click(object sender, RoutedEventArgs e)
+        private async void WorkBt_Click(object sender, RoutedEventArgs e)
         {
-            var validationResult = SchemeValidator.ValidateAsync(XScheme);
+            var validationResult = SchemeValidator.ValidateAsync(Scheme);
 
             if (!validationResult)
                 return;
 
             // reset all components at first
-            XScheme.Reset();
+            Scheme.Reset();
 
-            var Result = WorkAlgorithm.Visualize(XScheme);
+            var result = WorkAlgorithm.Visualize(Scheme);
 
-            if (Result == WorkAlgorithmResult.SchemeIsntCorrect)
+            if (result == WorkAlgorithmResult.BadScheme)
                 await new Message(Messages.ImpossibleToVisualize).ShowAsync();
         }
 
-        private void XTraceSchemeBt_Click(object sender, RoutedEventArgs e)
+        private async void TraceBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new(XScheme);
+            Tracer tracer = new(Scheme);
 
-            var result = tracer.Run();
-
-            XScheme.ShowTracings(result.TraceHistory);
+            HistoryService? result = null;
+            
+            try
+            {
+                result = tracer.Run();
+            }
+            catch (TracingErrorException)
+            {
+                await new Message(Messages.TracingError).ShowAsync();
+                return;
+            }
+            
+            if (result != null)
+                Scheme.ShowTracings(result);
         }
 
-        private async void XLineUpSchemeBt_ClickAsync(object sender, RoutedEventArgs e)
+        private void AlignBt_Click(object sender, RoutedEventArgs e)
         {
-            Tracer tracer = new(XScheme);
-            var tracerResult = tracer.Run();
-
-            Liner liner = new(XScheme, tracerResult);
+            Aliner liner = new(Scheme);
             liner.Run();
+            Scheme.ClearTracings();
         }
 
-        private async void XSaveSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(XScheme);
+        private async void SaveBt_Click(object sender, RoutedEventArgs e) => await Serializer.Save(Scheme);
 
-        private async void XLoadSchemeBt_Click(object sender, RoutedEventArgs e) => await Serializer.Load(XScheme);
+        private async void LoadBt_Click(object sender, RoutedEventArgs e) => await Serializer.Load(Scheme);
 
-        private async void XNewSchemeBt_Click(object sender, RoutedEventArgs e)
+        private async void NewBt_Click(object sender, RoutedEventArgs e)
         {
             var result = await new Message(Messages.CreateNew).ShowAsync();
 
             if (result == ContentDialogResult.Primary)
-                XScheme.Clear();
+                Scheme.Clear();
         }
-
-        #endregion
     }
 }

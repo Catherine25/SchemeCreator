@@ -3,130 +3,120 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using SchemeCreator.Data.Models.Enums;
-using static SchemeCreator.Data.Constants;
-using Windows.UI.Xaml;
 using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Models;
+using SchemeCreator.Data.Interfaces;
+using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator.UI.Dynamic
 {
-    public sealed partial class GateView : UserControl
+    public enum GateEnum
     {
-        public readonly GateEnum Type;
-        public readonly string Text;
-        public readonly Size GateBodySize;
-        public readonly GridLength PortsMargin;
-        public readonly Size PortSize;
-        private GridLength PortWidth => new GridLength(PortSize.Width);
+        Buffer,
+        Not,
+        And,
+        Nand,
+        Or,
+        Nor,
+        Xor,
+        Xnor,
+        Custom
+    }
 
-        public Vector2 MatrixLocation
-        {
-            get => _matrixIndex;
-            set
-            {
-                _matrixIndex = value;
-                Grid.SetColumn(this, (int)_matrixIndex.X);
-                Grid.SetRow(this, (int)_matrixIndex.Y);
-
-                //must be called to update coordinates immediately
-                UpdateLayout();
-            }
-        }
-        private Vector2 _matrixIndex;
-
-        public readonly Brush ForegroundBrush;
-        public readonly Brush BackgroundBrush;
-
+    public sealed partial class GateView : UserControl, ISchemeComponent
+    {
         public Action<GateBodyView, GateView> GateBodyTapped;
         public Action<GatePortView, GateView> GatePortTapped;
 
-        public IEnumerable<GatePortView> Inputs { get => XInputs.Children.Select(p => p as GatePortView); }
-        public IEnumerable<GatePortView> Outputs { get => XOutputs.Children.Select(p => p as GatePortView); }
-
-        public bool AreOutputsReady => Outputs.Any(p => p.Value != null);
-
         public GateView(GateEnum type, Vector2 point, int inputs = 1, int outputs = 1)
         {
-            Type = type;
-            MatrixLocation = point;
-            Text = GateNames[type];
-
-            ForegroundBrush = Colorer.GetGateForegroundBrush();
-            BackgroundBrush = Colorer.GetGateBackgroundBrush();
-
-            GateBodySize = LogicGateSize;
-            PortSize = GatePortSize;
-
-            PortsMargin = new GridLength(MarginBetweenPorts);
-
             InitializeComponent();
 
-            xBody.Tapped += (sender, args) => GateBodyTapped(FindName("xBody") as GateBodyView, this);
-            xBody.Width = LogicGateSize.Width;
-            xBody.Height = LogicGateSize.Height;
+            Type = type;
+            MatrixLocation = point;
 
-            XInputs.SetSize(GatePortSize.Width, LogicGateSize.Height);
+            Body.GateType = type;
+            Body.Tapped += (sender, args) => GateBodyTapped(Body, this);
 
-            CreatePorts(inputs, outputs);
+            CreateInputs(inputs);
+            CreateOutputs(outputs);
+        }
+
+        public readonly GateEnum Type;
+
+        public Vector2 MatrixLocation
+        {
+            get => this.GetMatrixLocation();
+            set => this.SetMatrixLocation(value);
         }
 
         public void Work()
         {
             List<bool?> initialValues = Inputs.Select(p => p.Value).ToList();
-            List<bool?> resultValues = GateWorkPatterns.ActionByType[Type](initialValues);
 
+            List<bool?> resultValues = Type == GateEnum.Custom
+                ? CustomWorkFunction(initialValues)
+                : StandardGateWorkPatterns.ActionByType[Type](initialValues);
+            
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            this.Log(resultValues[0].ToString());
+            
             var outPorts = Outputs.ToList();
 
             for (int i = 0; i < outPorts.Count; i++)
                 outPorts[i].Value = resultValues[i];
         }
 
-        private void CreatePorts(int inputs, int outputs)
-        {
-            CreateInputs(inputs);
-            CreateOutputs(outputs);
-        }
+        // todo fix
+        public void ConfigureCustomWorkFunction(CustomGateConfiguration exceptionsData) =>
+            CustomWorkFunction = _ =>
+            {
+                var inputs = Inputs.Select(x => x.Value).ToList();
+
+                bool output = exceptionsData.DefaultOutput;
+
+                foreach (var sets in exceptionsData.ExceptionSets)
+                    for (int i = 0; i < sets.Exceptions.Count(); i++)
+                        if (sets.Exceptions.ElementAt(i) != inputs[i])
+                            output = !exceptionsData.DefaultOutput;
+
+                return new List<bool?> { output };
+            };
+
+        private Func<List<bool?>, List<bool?>> CustomWorkFunction;
+
+        #region Ports
+
+        public IEnumerable<GatePortView> Inputs { get => InputsView.Items; }
 
         private void CreateInputs(int count)
         {
-            for (int i = 0; i < count; i++)
-                XInputs.RowDefinitions.Add(new RowDefinition());
-
-            for (int i = 0; i < count; i++)
-            {
-                GatePortView port = new(ConnectionTypeEnum.Input, i);
-                port.Tapped += (port) => GatePortTapped(port, this);
-                port.ValueChanged += newValue => { Work(); };
-                XInputs.Children.Add(port);
-            }
+            InputsView.CreatePorts(ConnectionTypeEnum.Input, count);
+            InputsView.Tapped += (port) => GatePortTapped(port, this);
+            InputsView.ValuesChanged += Work;
         }
+        public void Reset() => Inputs.ToList().ForEach(x => x.Value = null);
+
+        public IEnumerable<GatePortView> Outputs { get => OutputsView.Items; }
 
         private void CreateOutputs(int count)
         {
-            for (int i = 0; i < count; i++)
-            {
-                GatePortView port = new(ConnectionTypeEnum.Output, i);
-                port.Tapped += (port) => GatePortTapped(port, this);
-                XOutputs.Children.Add(port);
-            }
+            bool hasExtendedPort = Type == GateEnum.Not || Type == GateEnum.Nand || Type == GateEnum.Nor || Type == GateEnum.Xnor;
+            OutputsView.CreatePorts(ConnectionTypeEnum.Output, count, hasExtendedPort);
+            OutputsView.Tapped += (port) => GatePortTapped(port, this);
         }
 
-        public void SetInputValueFromWire(WireView wire) =>
-            Inputs.First(i => i.Index == wire.Connection.EndPort).Value = wire.Value;
+        public bool AreOutputsReady => Outputs.Any(p => p.Value != null);
 
-        public void SetOutputValueToWire(WireView wire) =>
-            wire.Value = Outputs.First(o => o.Index == wire.Connection.StartPort).Value;
+        #endregion
 
-        public void Reset()
-        {
-            foreach (var child in Inputs)
-                child.Value = null;
-        }
+        #region Interaction with Wires
 
+        public void SetInputValueFromWire(WireView wire) => Inputs.First(i => i.Index == wire.Connection.EndPort).Value = wire.Value;
+        public void SetOutputValueToWire(WireView wire) => wire.Value = Outputs.First(o => o.Index == wire.Connection.StartPort).Value;
         public bool WireStartConnects(WireView wire) =>
             (MatrixLocation == wire.Connection.MatrixStart) && (wire.Connection.StartPort == null || Outputs.Any(i => i.Index == wire.Connection.StartPort));
 
@@ -135,5 +125,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public bool WireConnects(WireView wire) =>
             (MatrixLocation == wire.Connection.MatrixStart) || (MatrixLocation == wire.Connection.MatrixEnd);
+
+        #endregion
     }
 }

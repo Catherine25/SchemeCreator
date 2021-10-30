@@ -1,46 +1,42 @@
-﻿using SchemeCreator.Data;
-using SchemeCreator.Data.Extensions;
+﻿using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.UI.Dynamic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.UI.Layers
 {
-    public sealed partial class GateLayer : UserControl
+    public sealed partial class GateLayer : UserControl, ILayer<GateView>
     {
         public event Action<GatePortView, GateView> GatePortTapped;
-        //public event Action<GateBodyView, GateView> GateBodyTapped;
-        public event Action<GateView> RemoveWiresByGateRequest;
-
-        public IList<GateView> Gates { get => Grid.Children.Select(e => e as GateView).ToList(); }
-        private void SetGates(List<GateView> gates) => gates.ForEach(g => Grid.Children.Add(g));
+        public event Action<GateView> RemoveConnectedWires;
 
         public GateLayer()
         {
             InitializeComponent();
-            Grid.InitGridColumnsAndRows(Constants.GridSize);
-        }
-
-        public void AddToView(GateView gate)
-        {
-            gate.GateBodyTapped += (gateBody, gate) => DeleteGate(gateBody, gate);
-            gate.GatePortTapped += (gatePort, gate) => GatePortTapped(gatePort, gate);
-            Grid.Children.Add(gate);
-            Gates.Add(gate);
+            Grid.InitGridColumnsAndRows(SchemeView.GridSize);
         }
 
         private void DeleteGate(GateBodyView gateBody, GateView gate)
         {
-            Grid.Children.Remove(gate);
-            RemoveWiresByGateRequest(gate);
+            Grid.Remove(gate);
+            RemoveConnectedWires(gate);
         }
 
-        public void Clear()
+        #region ILayer
+
+        public void Add(GateView gate)
         {
-            SetGates(new List<GateView>());
-            Grid.Children.Clear();
+            gate.GateBodyTapped += (body, g) => DeleteGate(body, g);
+            gate.GatePortTapped += (port, g) => GatePortTapped(port, g);
+            Grid.Add(gate);
         }
+
+        public IEnumerable<GateView> Items => Grid.GetItems<GateView>();
+
+        public void Clear() => Grid.Clear();
+
+        #endregion
     }
 }
