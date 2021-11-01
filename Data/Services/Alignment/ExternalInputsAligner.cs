@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services.Navigation;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
@@ -11,14 +11,14 @@ namespace SchemeCreator.Data.Services.Alignment
 {
     public class ExternalInputsAligner
     {
-        private SchemeView scheme;
+        private readonly SchemeView scheme;
 
         public ExternalInputsAligner(SchemeView scheme)
         {
             this.scheme = scheme;
         }
 
-        public void MoveExternalInputs()
+        public HashSet<ISchemeComponent> MoveExternalInputs(HashSet<ISchemeComponent> processed)
         {
             this.Log("Running...");
 
@@ -49,12 +49,13 @@ namespace SchemeCreator.Data.Services.Alignment
 
             foreach (var port in portsToPlace)
             {
-                Vector2? place = NavigationHelper.GetNotOccupiedLocationOnColumn(scheme, 0);
-                Debug.Assert(place != null); // todo handle no-place error
-                MoveExternalInput(port, place.Value);
+                var place = NavigationHelper.GetNotOccupiedLocationOnColumn(processed, 0);
+                MoveExternalInput(port, place);
+                processed.Add(port);
             }
 
             this.Log("Done");
+            return processed;
         }
 
         private void MoveExternalInput(ExternalPortView port, Vector2 newPosition)

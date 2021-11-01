@@ -1,30 +1,31 @@
 ﻿using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
-using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dynamic;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.Services;
 
 namespace SchemeCreator.UI.Layers
 {
     public sealed partial class WireLayer : UserControl, ILayer<WireView>
     {
-        public WireBuilder WireBuilder;
+        public WireBuilder WireBuilder
+        {
+            get => wireBuilder;
+            set
+            {
+                wireBuilder = value;
+                wireBuilder.WireReady += wire => Add(wire);
+            }
+        }
+        private WireBuilder wireBuilder;
 
         public WireLayer()
         {
             InitializeComponent();
             Grid.InitGridColumnsAndRows(SchemeView.GridSize);
-            WireBuilder = new WireBuilder();
-            WireBuilder.WireReady += WireReady;
         }
-
-        /// <summary>
-        /// Adds wire to the view and requests scheme validating.
-        /// </summary>
-        /// <param name="wire"></param>
-        private void WireReady(WireView wire) => Add(wire);
 
         private void Wire_Tapped(WireView wire) => Grid.Remove(wire);
 

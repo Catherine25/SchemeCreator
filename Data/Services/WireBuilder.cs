@@ -3,39 +3,57 @@ using SchemeCreator.Data.Extensions;
 using SchemeCreator.UI.Dynamic;
 using System;
 using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
 
 namespace SchemeCreator.Data.Services
 {
     public class WireBuilder
     {
         public Action<WireView> WireReady;
+        
+        public WireBuilder(Grid schemeGrid) => this.schemeGrid = schemeGrid;
 
-        public void SetPoint(bool isStart, Point point, Vector2 location, int? port = null)
+        private readonly Grid schemeGrid;
+
+        public void Connect(GatePortView port, GateView gate) =>
+            SetPoint(
+                port.Type != ConnectionTypeEnum.Input,
+                port.GetCenterRelativeTo(schemeGrid),
+                gate.MatrixLocation,
+                port.Index);
+        
+        public void Connect(ExternalPortView externalPort) =>
+            SetPoint(
+                externalPort.Type == PortType.Input,
+                externalPort.GetCenterRelativeTo(schemeGrid),
+                externalPort.MatrixLocation);
+
+        private void SetPoint(bool isStart, Point point, Vector2 location, int? port = null)
         {
-            WireConnection con = _wire.Connection;
+            WireConnection con = wire.Connection;
 
             if(isStart)
             {
                 con.StartPoint = point;
                 con.MatrixStart = location;
                 con.StartPort = port;
-                _wire.SetConnection(con);
+                wire.SetConnection(con);
             }
             else
             {
                 con.EndPoint = point;
                 con.MatrixEnd = location;
                 con.EndPort = port;
-                _wire.SetConnection(con);
+                wire.SetConnection(con);
             }
 
-            if (_wire.Connection.StartPoint.IsInited() && _wire.Connection.EndPoint.IsInited())
-            {
-                WireReady(_wire);
-                _wire = new WireView();
-            }
+            if (!wire.Connection.StartPoint.IsInited() || !wire.Connection.EndPoint.IsInited())
+                return;
+            
+            WireReady(wire);
+            wire = new WireView();
         }
 
-        private WireView _wire = new();
+        private WireView wire = new();
     }
 }
