@@ -131,6 +131,7 @@
     <Compile Include="Data\Exceptions\Displayable\DisplayableException.cs" />
     <Compile Include="Data\Exceptions\Displayable\NoExternalInputsException.cs" />
     <Compile Include="Data\Exceptions\Displayable\NoExternalOutputsException.cs" />
+    <Compile Include="Data\Exceptions\Displayable\SomeGateHasInvalidConnection.cs" />
     <Compile Include="Data\Exceptions\Displayable\TooManyExternalInputsException.cs" />
     <Compile Include="Data\Exceptions\Displayable\TooManyExternalOutputsException.cs" />
     <Compile Include="Data\Exceptions\Displayable\TooManyGatesWithSameRangeException.cs" />

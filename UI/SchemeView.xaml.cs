@@ -1,5 +1,4 @@
-﻿using SchemeCreator.Data.Extensions;
-using SchemeCreator.Data.Services.History;
+﻿using SchemeCreator.Data.Services.History;
 using SchemeCreator.Data.Services.Serialization;
 using SchemeCreator.UI.Dynamic;
 using System;
