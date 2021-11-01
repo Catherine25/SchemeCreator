@@ -1,11 +1,13 @@
 ﻿using SchemeCreator.Data.Services;
 using SchemeCreator.Data.Services.Alignment;
 using SchemeCreator.Data.Services.Serialization;
-using SchemeCreator.UI;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SchemeCreator.Data.Exceptions.Displayable;
+using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services.History;
+using SchemeCreator.Test;
 using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator
@@ -60,10 +62,20 @@ namespace SchemeCreator
                 Scheme.ShowTracings(result);
         }
 
-        private void AlignBt_Click(object sender, RoutedEventArgs e)
+        private async void AlignBt_Click(object sender, RoutedEventArgs e)
         {
-            Aliner liner = new(Scheme);
-            liner.Run();
+            Aligner liner = new(Scheme);
+            
+            try
+            {
+                liner.Run();
+            }
+            catch (DisplayableException exception)
+            {
+                this.Log(exception.Message);
+                await new Message(exception).ShowAsync();
+            }
+            
             Scheme.ClearTracings();
         }
 

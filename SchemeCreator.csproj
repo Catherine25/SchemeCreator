@@ -128,6 +128,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\Exceptions\Displayable\DisplayableException.cs" />
+    <Compile Include="Data\Exceptions\Displayable\NoExternalInputsException.cs" />
+    <Compile Include="Data\Exceptions\Displayable\NoExternalOutputsException.cs" />
+    <Compile Include="Data\Exceptions\Displayable\TooManyExternalInputsException.cs" />
+    <Compile Include="Data\Exceptions\Displayable\TooManyExternalOutputsException.cs" />
+    <Compile Include="Data\Exceptions\Displayable\TooManyGatesWithSameRangeException.cs" />
+    <Compile Include="Data\Exceptions\NoPlaceForExternalPortException.cs" />
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\ControlExtension.cs" />
     <Compile Include="Data\Extensions\DebugExtension.cs" />
@@ -138,7 +145,7 @@
     <Compile Include="Data\Interfaces\ILayer.cs" />
     <Compile Include="Data\Interfaces\ISchemeComponentExtension.cs" />
     <Compile Include="Data\Interfaces\IValueHolder.cs" />
-    <Compile Include="Data\Services\Alignment\Aliner.cs" />
+    <Compile Include="Data\Services\Alignment\Aligner.cs" />
     <Compile Include="Data\Services\Alignment\ExternalOutputsAligner.cs" />
     <Compile Include="Data\Services\Alignment\ExternalInputsAligner.cs" />
     <Compile Include="Data\Services\Alignment\GatesAligner.cs" />

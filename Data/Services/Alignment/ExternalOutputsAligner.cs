@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using SchemeCreator.Data.Extensions;
+using SchemeCreator.Data.Interfaces;
 using SchemeCreator.Data.Services.Navigation;
 using SchemeCreator.UI;
 using SchemeCreator.UI.Dynamic;
@@ -10,14 +11,14 @@ namespace SchemeCreator.Data.Services.Alignment
 {
     public class ExternalOutputsAligner
     {
-        private SchemeView scheme;
+        private readonly SchemeView scheme;
 
         public ExternalOutputsAligner(SchemeView scheme)
         {
             this.scheme = scheme;
         }
 
-        public void MoveExternalOutputs()
+        public HashSet<ISchemeComponent> MoveExternalOutputs(HashSet<ISchemeComponent> processed)
         {
             this.Log("Running...");
 
@@ -27,18 +28,19 @@ namespace SchemeCreator.Data.Services.Alignment
 
             foreach (var item in externalOutputs)
             {
-                Vector2? place = NavigationHelper.GetNotOccupiedLocationOnColumn(scheme, (int)SchemeView.GridSize.Width - 1);
-                Debug.Assert(place != null); // todo handle no-place error
-                MoveExternalOutput(item, place.Value);
+                var place = NavigationHelper.GetNotOccupiedLocationOnColumn(processed, (int)SchemeView.GridSize.Width - 1);
+                MoveExternalOutput(item, place);
+                processed.Add(item);
             }
 
             this.Log("Done");
+            return processed;
         }
 
         private void MoveExternalOutput(ExternalPortView port, Vector2 newLocation)
         {
             // get connected wires to the port
-            var connectedWires = Navigation.NavigationHelper.ConnectedWires(scheme, port).ToList();
+            var connectedWires = NavigationHelper.ConnectedWires(scheme, port).ToList();
 
             // update location
             port.MatrixLocation = newLocation;

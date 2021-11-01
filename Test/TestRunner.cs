@@ -7,7 +7,7 @@ namespace SchemeCreator.Test
     {
         public TestRunner(SchemeView scheme) => this.scheme = scheme;
 
-        private SchemeView scheme;
+        private readonly SchemeView scheme;
 
         public bool Run(Action<SchemeView> test)
         {

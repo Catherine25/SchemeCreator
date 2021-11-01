@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using SchemeCreator.Data.Exceptions.Displayable;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Services.Navigation;
 using SchemeCreator.UI;
@@ -10,7 +11,7 @@ namespace SchemeCreator.Data.Services.Alignment
 {
     public class GatesAligner
     {
-        private SchemeView scheme;
+        private readonly SchemeView scheme;
 
         public GatesAligner(SchemeView scheme) => this.scheme = scheme;
 
@@ -39,7 +40,9 @@ namespace SchemeCreator.Data.Services.Alignment
                 var locations = destinations.Select(x => x.MatrixLocation);
                 var minRow = locations.Min(l => l.Y);
 
-                // adjust range to skip external ports
+                if (minRow >= SchemeView.GridSize.Height)
+                    throw new TooManyGatesWithSameRangeException();
+
                 MoveGate(gate, range, (int)minRow);
             }
         }

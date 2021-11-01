@@ -25,10 +25,10 @@ namespace SchemeCreator.Test
         {
             source.Tap();
 
-            var destPort = destination.Inputs.ElementAt(index);
+            var destPort = destination.Inputs.ToList().ElementAt(index);
             destPort.Tap();
 
-            var lastWire = scheme.Wires.ToList().Last();
+            var lastWire = scheme.Wires.Last();
 
             Debug.Assert(source.WireStartConnects(lastWire));
             Debug.Assert(destination.WireEndConnects(lastWire));
@@ -42,7 +42,7 @@ namespace SchemeCreator.Test
 
             destination.Tap();
 
-            var lastWire = scheme.Wires.ToList().Last();
+            var lastWire = scheme.Wires.Last();
 
             Debug.Assert(source.WireStartConnects(lastWire));
             Debug.Assert(destination.WireEndConnects(lastWire));
@@ -57,12 +57,12 @@ namespace SchemeCreator.Test
             var destinationPort = destination.Inputs.ElementAt(dstIndex);
             destinationPort.Tap();
 
-            var lastWire = scheme.Wires.ToList().Last();
+            var lastWire = scheme.Wires.Last();
 
             Debug.Assert(source.WireStartConnects(lastWire));
             Debug.Assert(destination.WireEndConnects(lastWire));
             Debug.Assert(lastWire.Connection.StartPort == srcIndex);
-            Debug.Assert(lastWire.Connection.StartPort == dstIndex);
+            Debug.Assert(lastWire.Connection.EndPort == dstIndex);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace SchemeCreator.Test.Builder
         private readonly SchemeView scheme;
         private readonly PortBuilder portBuilder;
         private readonly GateBuilder gateBuilder;
-        private HashSet<Vector2> occupiedPlaces;
-        private Random random;
+        private readonly HashSet<Vector2> occupiedPlaces;
+        private readonly Random random;
 
         public ComponentBuilder(SchemeView scheme)
         {
             this.scheme = scheme;
 
-            this.portBuilder = new PortBuilder();
-            this.gateBuilder = new GateBuilder();
+            portBuilder = new PortBuilder();
+            gateBuilder = new GateBuilder();
 
             occupiedPlaces = new HashSet<Vector2>();
             random = new Random();
@@ -48,10 +48,12 @@ namespace SchemeCreator.Test.Builder
 
         private Vector2 GetPlace()
         {
-            Vector2 place = GeneratePlace();
+            var place = GeneratePlace();
 
             while (occupiedPlaces.Contains(place))
                 place = GeneratePlace();
+
+            occupiedPlaces.Add(place);
 
             return place;
         }

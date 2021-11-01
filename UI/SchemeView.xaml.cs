@@ -8,6 +8,7 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SchemeCreator.Data.Interfaces;
+using SchemeCreator.Data.Services;
 using SchemeCreator.UI.Dialogs;
 
 namespace SchemeCreator.UI
@@ -19,6 +20,8 @@ namespace SchemeCreator.UI
         public SchemeView()
         {
             InitializeComponent();
+
+            WireLayer.WireBuilder = new WireBuilder(XSchemeGrid);
 
             GateLayer.GatePortTapped += GatePortTapped;
             GateLayer.RemoveConnectedWires += RemoveConnectedWires;
@@ -66,18 +69,8 @@ namespace SchemeCreator.UI
 
         public void Recreate() => Clear();
 
-        private void ExternalPortTapped(ExternalPortView externalPort) =>
-            WireLayer.WireBuilder.SetPoint(
-                externalPort.Type == PortType.Input,
-                externalPort.GetCenterRelativeTo(XSchemeGrid),
-                externalPort.MatrixLocation);
-
-        private void GatePortTapped(GatePortView port, GateView gate) =>
-            WireLayer.WireBuilder.SetPoint(
-                port.Type != ConnectionTypeEnum.Input,
-                port.GetCenterRelativeTo(XSchemeGrid),
-                gate.MatrixLocation,
-                port.Index);
+        private void ExternalPortTapped(ExternalPortView externalPort) => WireLayer.WireBuilder.Connect(externalPort);
+        private void GatePortTapped(GatePortView port, GateView gate) => WireLayer.WireBuilder.Connect(port, gate);
 
         private async void DotTappedEventAsync(DotView dot)
         {

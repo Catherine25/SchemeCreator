@@ -57,13 +57,7 @@ namespace SchemeCreator.UI.Dynamic
             List<bool?> resultValues = Type == GateEnum.Custom
                 ? CustomWorkFunction(initialValues)
                 : StandardGateWorkPatterns.ActionByType[Type](initialValues);
-            
-            this.Log(resultValues[0].ToString());
-            this.Log(resultValues[0].ToString());
-            this.Log(resultValues[0].ToString());
-            this.Log(resultValues[0].ToString());
-            this.Log(resultValues[0].ToString());
-            
+
             var outPorts = Outputs.ToList();
 
             for (int i = 0; i < outPorts.Count; i++)

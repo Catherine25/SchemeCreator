@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SchemeCreator.Data.Interfaces;
 using System.Numerics;
+using SchemeCreator.Data.Exceptions;
 
 namespace SchemeCreator.Data.Services.Navigation
 {
@@ -54,28 +55,24 @@ namespace SchemeCreator.Data.Services.Navigation
             return gate == null ? port : gate;
         }
 
-        public static Vector2? GetNotOccupiedLocationOnColumn(SchemeView scheme, int column)
+        public static Vector2 GetNotOccupiedLocationOnColumn(HashSet<ISchemeComponent> processed, int column)
         {
-            var locs = scheme.ExternalPorts.Select(e => e.MatrixLocation).ToList();
-            var locs2 = scheme.Gates.Select(e => e.MatrixLocation).ToList();
-            locs.AddRange(locs2);
+            var locs = processed.Select(e => e.MatrixLocation).ToList();
 
-            var occupiedColumns = locs.Where(l => l.X == column).Select(x => x.Y);
+            var occupiedColumns = locs.Where(l => (int)l.X == column).Select(x => x.Y).ToList();
 
             for (int i = 0; i < SchemeView.GridSize.Width; i++)
                 if(!occupiedColumns.Contains(i))
                     return new Vector2(column, i);
 
-            return null;
+            throw new NoPlaceForExternalPortException();
         }
 
-        public static Vector2? GetNotOccupiedLocationOnRow(SchemeView scheme, int row)
+        public static Vector2? GetNotOccupiedLocationOnRow(HashSet<ISchemeComponent> processed, int row)
         {
-            var locs = scheme.ExternalPorts.Select(e => e.MatrixLocation).ToList();
-            var locs2 = scheme.Gates.Select(e => e.MatrixLocation).ToList();
-            locs.AddRange(locs2);
+            var locs = processed.Select(e => e.MatrixLocation).ToList();
 
-            var occupiedRows = locs.Where(l => l.Y == row).Select(x => x.X);
+            var occupiedRows = locs.Where(l => (int)l.Y == row).Select(x => x.X).ToList();
 
             for (int i = 0; i < SchemeView.GridSize.Height; i++)
                 if(!occupiedRows.Contains(i))
