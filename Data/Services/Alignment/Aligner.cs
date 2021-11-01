@@ -4,6 +4,7 @@ using SchemeCreator.Data.Exceptions.Displayable;
 using SchemeCreator.UI;
 using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
+using SchemeCreator.Data.Services.Navigation;
 
 namespace SchemeCreator.Data.Services.Alignment
 {
@@ -55,6 +56,24 @@ namespace SchemeCreator.Data.Services.Alignment
                 throw new TooManyExternalInputsException();
             if(!scheme.ExternalInputs.Any())
                 throw new NoExternalInputsException();
+
+            if (!AllGatesPortsHaveConnectedWires(scheme))
+                throw new SomeGateHasInvalidConnection();
+        }
+
+        private bool AllGatesPortsHaveConnectedWires(SchemeView scheme)
+        {
+            var gates = scheme.Gates;
+            return gates.All(g =>
+            {
+                var connectedInWires = NavigationHelper.ConnectedInputWires(scheme, g).Count();
+                var connectedOutWires = NavigationHelper.ConnectedOutputWires(scheme, g).Count();
+                
+                var inputsCount = g.Inputs.Count();
+                var outputsCount = g.Outputs.Count();
+                
+                return connectedInWires == inputsCount && connectedOutWires >= outputsCount;
+            });
         }
     }
 }
