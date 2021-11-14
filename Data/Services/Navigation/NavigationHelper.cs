@@ -16,19 +16,19 @@ namespace SchemeCreator.Data.Services.Navigation
             var wires = scheme.Wires;
 
             if (port.Type == PortType.Input)
-                return wires.Where(w => port.WireStartConnects(w));
+                return wires.Where(port.WireStartConnects);
             else
-                return wires.Where(w => port.WireEndConnects(w));
+                return wires.Where(port.WireEndConnects);
         }
 
         public static IEnumerable<WireView> ConnectedInputWires(SchemeView scheme, GateView gate)
         {
-            return scheme.Wires.Where(w => gate.WireEndConnects(w));
+            return scheme.Wires.Where(gate.WireEndConnects);
         }
 
         public static IEnumerable<WireView> ConnectedOutputWires(SchemeView scheme, GateView gate)
         {
-            return scheme.Wires.Where(w => gate.WireStartConnects(w));
+            return scheme.Wires.Where(gate.WireStartConnects);
         }
 
         public static ISchemeComponent GetSource(SchemeView scheme, WireView wire)

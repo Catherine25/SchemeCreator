@@ -23,16 +23,16 @@ namespace SchemeCreator.Data.Services.Alignment
             this.Log("Running...");
 
             // get external outputs of the scheme.
-            var externalOutputs = scheme.ExternalOutputs.ToList();
-            this.Log($"Got {externalOutputs.Count()} external outputs.");
+            var ports = scheme.ExternalOutputs.ToList();
 
-            foreach (var item in externalOutputs)
+            foreach (var item in ports)
             {
                 var place = NavigationHelper.GetNotOccupiedLocationOnColumn(processed, (int)SchemeView.GridSize.Width - 1);
                 MoveExternalOutput(item, place);
                 processed.Add(item);
             }
 
+            this.Log($"Processed {ports.Count()} external outputs");
             this.Log("Done");
             return processed;
         }

@@ -17,34 +17,35 @@ namespace SchemeCreator.Data.Services.Alignment
 
         public void MoveGates()
         {
+            this.Log("Running");
             if(!scheme.Gates.Any())
                 return;
 
-            // get logic gates of the scheme
             var gates = scheme.Gates.ToList();
-            this.Log($"Got {gates.Count} to move");
-
             var gatesWithRanges = gates.Select(x => (gate: x, range: new RangeHelper(scheme).GetRange(x))).ToList();
-            this.Log($"gatesWithRanges = {string.Join(", ", gatesWithRanges.Select(x => $"{x.gate.Type} with range = {x.range}"))}");
-
             var gatesToProcess = new Queue<GateView>(gatesWithRanges.OrderByDescending(x => x.range).Select(g => g.gate));
+
             while(gatesToProcess.Any())
             {
                 var gate = gatesToProcess.Dequeue();
+
                 // will be used to set column
                 int range = gatesWithRanges.Find(x => x.gate == gate).range;
 
                 var outputWires = NavigationHelper.ConnectedOutputWires(scheme, gate);
                 var destinations = outputWires.Select(w => NavigationHelper.GetDestination(scheme, w));
-
                 var locations = destinations.Select(x => x.MatrixLocation);
-                var minRow = locations.Min(l => l.Y);
 
+                int minRow = (int)locations.Min(l => l.Y);
+                
                 if (minRow >= SchemeView.GridSize.Height)
                     throw new TooManyGatesWithSameRangeException();
 
                 MoveGate(gate, range, (int)minRow);
             }
+            
+            this.Log($"Processed {gates.Count} gates");
+            this.Log($"Done");
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace SchemeCreator.Data.Services.Alignment
                 if (c2.EndPort != null)
                 {
                     // todo investigate why it's null
-                    var port = g.Inputs.ElementAt(c2.EndPort.Value);
+                    var port = g.Inputs.ToList()[c2.EndPort.Value];
                     c2.EndPoint = port.GetCenterRelativeTo(scheme);
                 }
                 w.SetConnection(c2);
@@ -93,7 +94,7 @@ namespace SchemeCreator.Data.Services.Alignment
                 if (c2.StartPort != null)
                 {
                     // todo investigate why it's null
-                    var port = g.Outputs.ElementAt(c2.StartPort.Value);
+                    var port = g.Outputs.ToList()[c2.StartPort.Value];
                     c2.StartPoint = port.GetCenterRelativeTo(scheme);
                 }
 

@@ -47,21 +47,23 @@ namespace SchemeCreator.Data.Services.Alignment
 
         private void Validate()
         {
-            if (scheme.ExternalOutputs.Count() > SchemeView.GridSize.Height)
-                throw new TooManyExternalOutputsException();
+            if(!scheme.ExternalInputs.Any())
+                throw new NoExternalInputsException();
+            
             if(!scheme.ExternalOutputs.Any())
                 throw new NoExternalOutputsException();
             
             if (scheme.ExternalInputs.Count() > SchemeView.GridSize.Height)
                 throw new TooManyExternalInputsException();
-            if(!scheme.ExternalInputs.Any())
-                throw new NoExternalInputsException();
 
-            if (!AllGatesPortsHaveConnectedWires(scheme))
+            if (scheme.ExternalOutputs.Count() > SchemeView.GridSize.Height)
+                throw new TooManyExternalOutputsException();
+            
+            if (!AllGatesPortsHaveConnectedWires())
                 throw new SomeGateHasInvalidConnection();
         }
 
-        private bool AllGatesPortsHaveConnectedWires(SchemeView scheme)
+        private bool AllGatesPortsHaveConnectedWires()
         {
             var gates = scheme.Gates;
             return gates.All(g =>

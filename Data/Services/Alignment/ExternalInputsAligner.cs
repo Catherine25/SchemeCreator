@@ -22,20 +22,17 @@ namespace SchemeCreator.Data.Services.Alignment
         {
             this.Log("Running...");
 
-            // get external inputs of the scheme.
-            var externalInputs = scheme.ExternalInputs;
-            this.Log($"Got {externalInputs.Count()} external inputs.");
-
+            var externalInputs = scheme.ExternalInputs.ToList();
             var portsWithIndexes = new List<(ExternalPortView port, int destLoc, int portIdx)>();
 
             foreach (var i in externalInputs)
             {
-                var wires = NavigationHelper.ConnectedWires(scheme, i);
-                var dests = wires.Select(x => NavigationHelper.GetDestination(scheme, x));
-                var minLocDest = dests.OrderBy(x => x.MatrixLocation.X).ThenBy(x => x.MatrixLocation.Y).First();
+                var wires = NavigationHelper.ConnectedWires(scheme, i).ToList();
+                var destinations = wires.Select(x => NavigationHelper.GetDestination(scheme, x));
+                var minLocDest = destinations.OrderBy(x => x.MatrixLocation.X).ThenBy(x => x.MatrixLocation.Y).First();
                 var minLoc = minLocDest.MatrixLocation;
 
-                var minPortIndex = 0;
+                int minPortIndex = 0;
                 if(minLocDest is GateView gate)
                 {
                     var connectingWires = wires.Where(w => gate.WireEndConnects(w));
@@ -54,25 +51,25 @@ namespace SchemeCreator.Data.Services.Alignment
                 processed.Add(port);
             }
 
+            this.Log($"Processed {externalInputs.Count} external inputs.");
             this.Log("Done");
             return processed;
         }
 
         private void MoveExternalInput(ExternalPortView port, Vector2 newPosition)
         {
-            var oldLocation = port.MatrixLocation;
-            var newLocation = newPosition;
-            port.MatrixLocation = newLocation;
-
             // get connected wires to the port by its old location
-            var connectedWires = scheme.Wires.Where(w => w.Connection.MatrixStart == oldLocation).ToList();
-
+            var connectedWires = NavigationHelper.ConnectedWires(scheme, port).ToList();
+            
+            // update location
+            port.MatrixLocation = newPosition;
+            
             // adjust connected wires location
             foreach (var w in connectedWires)
             {
                 var c2 = w.Connection;
 
-                c2.MatrixStart = newLocation;
+                c2.MatrixStart = newPosition;
                 c2.StartPoint = port.GetCenterRelativeTo(scheme);
 
                 w.SetConnection(c2);

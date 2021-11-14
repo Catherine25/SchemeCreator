@@ -20,10 +20,10 @@ namespace SchemeCreator.Data.Services.Alignment
             // initial range for gates
             int range = 1;
 
-            List<GateView> gates = GetSourceGates(gate).ToList();;
+            var gates = GetSourceGates(gate).ToList();;
             while (gates.Any())
             {
-                gates = gates.SelectMany(g => GetSourceGates(g)).ToList();
+                gates = gates.SelectMany(GetSourceGates).ToList();
                 range++;
             }
 
@@ -35,11 +35,9 @@ namespace SchemeCreator.Data.Services.Alignment
             var inputWires = Navigation.NavigationHelper.ConnectedInputWires(scheme, gate);
             var sources = inputWires.Select(x => Navigation.NavigationHelper.GetSource(scheme, x));
 
-            var gates = sources.Where(x => x is GateView)
-                .Select(x => x as GateView);
+            var gates = sources.OfType<GateView>().ToList();
 
             this.Log($"Found {gates.Count()} source gates");
-
             return gates;
         }
     }
