@@ -152,6 +152,7 @@
     <Compile Include="Data\Services\Alignment\GatesAligner.cs" />
     <Compile Include="Data\Services\Alignment\RangeHelper.cs" />
     <Compile Include="Data\Services\Colorer.cs" />
+    <Compile Include="Data\Services\Serialization\PortDto.cs" />
     <Compile Include="Data\Services\StandardGateWorkPatterns.cs" />
     <Compile Include="Data\Services\MessageData.cs" />
     <Compile Include="Data\Services\Messages.cs" />
@@ -159,9 +160,9 @@
     <Compile Include="Data\Services\Navigation\NavigationHelper.cs" />
     <Compile Include="Data\Services\Navigation\Source.cs" />
     <Compile Include="Data\Services\SchemeValidator.cs" />
-    <Compile Include="Data\Services\Serialization\Gate.cs" />
+    <Compile Include="Data\Services\Serialization\GateDto.cs" />
     <Compile Include="Data\Services\Serialization\Serializer.cs" />
-    <Compile Include="Data\Services\Serialization\Wire.cs" />
+    <Compile Include="Data\Services\Serialization\WireDto.cs" />
     <Compile Include="Data\Services\Tracer.cs" />
     <Compile Include="Data\Services\WorkAlgorithm.cs" />
     <Compile Include="Data\Services\History\HistoryService.cs" />

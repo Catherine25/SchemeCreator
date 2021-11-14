@@ -110,14 +110,6 @@ namespace SchemeCreator.UI
             ExternalPortsLayer.Add(port);
         }
 
-        public (IEnumerable<GateDto>, IEnumerable<WireDto>) PrepareForSerialization() 
-        {
-            var gateDtos = GateLayer.Items.Select(gate => new GateDto(gate));
-            var wireDtos = WireLayer.Items.Select(wire => new WireDto(wire));
-
-            return(gateDtos, wireDtos);
-        }
-
         public void ShowTracings(HistoryService historyService) => TraceLayer.ShowTracings(historyService);
         public void ClearTracings() => TraceLayer.Clear();
     }

@@ -49,16 +49,7 @@ namespace SchemeCreator.UI.Dynamic
 
             InitLine();
 
-            SetConnection(new());
-        }
-
-        public WireView(WireConnection connection)
-        {
-            InitializeComponent();
-
-            InitLine();
-
-            this.connection = connection;
+            SetConnection(new WireConnection());
         }
 
         public void InitLine()

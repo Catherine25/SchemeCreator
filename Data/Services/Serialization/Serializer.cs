@@ -11,18 +11,10 @@ namespace SchemeCreator.Data.Services.Serialization
 {
     static partial class Serializer
     {
-        public const string gatePath = "gateData.txt";
-        public const string linePath = "lineData.txt";
-
-        public static List<string> serializeGateData;
-        public static List<string> serializeLineData;
-
-        static Serializer()
-        {
-            serializeGateData = new List<string>();
-            serializeLineData = new List<string>();
-        }
-
+        private const string GatePath = "gateData.txt";
+        private const string WirePath = "wireData.txt";
+        private const string PortPath = "portData.txt";
+        
         public static async Task Load(SchemeView scheme)
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
@@ -30,41 +22,61 @@ namespace SchemeCreator.Data.Services.Serialization
             scheme.Recreate();
 
             //serialization of gates
-            StorageFile gateFile = await folder.GetFileAsync(gatePath);
-
-            if (gateFile == null)
-                await folder.CreateFileAsync(gatePath);
+            StorageFile gateFile = await folder.CreateFileAsync(GatePath, CreationCollisionOption.OpenIfExists);
 
             var gates = JsonConvert.DeserializeObject<List<GateDto>>(await FileIO.ReadTextAsync(gateFile));
             var gatesToAdd = new List<GateView>(gates.Select(g => new GateView(g.Type, g.Location, g.Inputs, g.Outputs)));
-            gatesToAdd.ForEach(g => scheme.AddToView(g));
+            gatesToAdd.ForEach(scheme.AddToView);
+
+            // serialization of ports
+            StorageFile portFile = await folder.CreateFileAsync(PortPath, CreationCollisionOption.OpenIfExists);
+
+            var ports = JsonConvert.DeserializeObject<List<PortDto>>(await FileIO.ReadTextAsync(portFile));
+            var portsToAdd = new List<ExternalPortView>(ports.Select(p => new ExternalPortView(p.Type, p.Location)));
+            portsToAdd.ForEach(scheme.AddToView);
 
             //serialization of wires
-            StorageFile lineFile = await folder.GetFileAsync(linePath);
+            StorageFile wireFile = await folder.CreateFileAsync(WirePath, CreationCollisionOption.OpenIfExists);
 
-            if (lineFile == null)
-                await folder.CreateFileAsync(linePath);
-
-            var wires = JsonConvert.DeserializeObject<List<WireDto>>(await FileIO.ReadTextAsync(lineFile));
-            var wiresToAdd = new List<WireView>(wires.Select(w => new WireView(w.Connection)));
-            wiresToAdd.ForEach(w => scheme.AddToView(w));
+            var wires = JsonConvert.DeserializeObject<List<WireDto>>(await FileIO.ReadTextAsync(wireFile));
+            var wiresToAdd = new List<WireView>(wires.Select(w =>
+            {
+                WireView wireView = new();
+                wireView.SetConnection(w.Connection);
+                return wireView;
+            }));
+            wiresToAdd.ForEach(scheme.AddToView);
         }
 
         public static async Task Save(SchemeView scheme)
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
 
-            var serialized = scheme.PrepareForSerialization();
+            var serialized = PrepareForSerialization(scheme);
 
-            //serialization of gates
-            StorageFile gateFile = await folder.CreateFileAsync(gatePath, CreationCollisionOption.OpenIfExists);
+            await Save(folder, GatePath, JsonConvert.SerializeObject(serialized.gates));
+            await Save(folder, PortPath, JsonConvert.SerializeObject(serialized.ports));
+            await Save(folder, WirePath, JsonConvert.SerializeObject(serialized.wires));
+        }
 
-            await FileIO.WriteTextAsync(gateFile, JsonConvert.SerializeObject(serialized.Item1));
+        private static async Task Save(StorageFolder folder, string path, string serializedData)
+        {
+            StorageFile file = await folder.CreateFileAsync(path, CreationCollisionOption.OpenIfExists);
+            await FileIO.WriteTextAsync(file, serializedData);
+        }
 
-            //serialization of wires
-            StorageFile lineFile = await folder.CreateFileAsync(linePath, CreationCollisionOption.OpenIfExists);
+        /// <summary>
+        /// Prepares Scheme components for serialization.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <returns></returns>
+        private static (IEnumerable<GateDto> gates, IEnumerable<PortDto> ports, IEnumerable<WireDto> wires) PrepareForSerialization(SchemeView scheme)
+        {
+            var gates = scheme.Gates.Select(gate => new GateDto(gate));
+            var ports = scheme.ExternalPorts.Select(port => new PortDto(port));
+            var wires = scheme.Wires.Select(wire => new WireDto(wire));
 
-            await FileIO.WriteTextAsync(lineFile, JsonConvert.SerializeObject(serialized.Item2));
+            return (gates, ports, wires);
         }
     }
 }
