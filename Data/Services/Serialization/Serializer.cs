@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SchemeCreator.Data.Services.Serialization
 {
-    static partial class Serializer
+    public static class Serializer
     {
         private const string GatePath = "gateData.txt";
         private const string WirePath = "wireData.txt";
@@ -17,9 +17,9 @@ namespace SchemeCreator.Data.Services.Serialization
         
         public static async Task Load(SchemeView scheme)
         {
-            StorageFolder folder = ApplicationData.Current.LocalFolder;
-
             scheme.Recreate();
+            
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
 
             //serialization of gates
             StorageFile gateFile = await folder.CreateFileAsync(GatePath, CreationCollisionOption.OpenIfExists);
