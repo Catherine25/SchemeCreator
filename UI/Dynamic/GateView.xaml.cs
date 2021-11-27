@@ -98,7 +98,7 @@ namespace SchemeCreator.UI.Dynamic
 
         private void CreateOutputs(int count)
         {
-            bool hasExtendedPort = Type == GateEnum.Not || Type == GateEnum.Nand || Type == GateEnum.Nor || Type == GateEnum.Xnor;
+            bool hasExtendedPort = Type is GateEnum.Not or GateEnum.Nand or GateEnum.Nor or GateEnum.Xnor;
             OutputsView.CreatePorts(ConnectionTypeEnum.Output, count, hasExtendedPort);
             OutputsView.Tapped += (port) => GatePortTapped(port, this);
         }
