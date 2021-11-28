@@ -49,9 +49,9 @@ namespace SchemeCreator.UI.Dynamic
 
             Colorer.SetFillByValue(Ellipse, null);
 
-            Ellipse.Tapped += (sender, e) => Tapped(this);
-            Ellipse.PointerEntered += (sender, e) => Ellipse.Activate();
-            Ellipse.PointerExited += (sender, e) => Ellipse.Deactivate();
+            Ellipse.Tapped += (_, _) => Tapped(this);
+            Ellipse.PointerEntered += (_, _) => Ellipse.Stroke = Colorer.ActivatedColor;
+            Ellipse.PointerExited += (_, _) => Ellipse.Stroke = Colorer.DeactivatedColor;
         }
 
         #region ValueHolder

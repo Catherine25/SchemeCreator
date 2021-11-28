@@ -139,7 +139,6 @@
     <Compile Include="Data\Extensions\ButtonExtension.cs" />
     <Compile Include="Data\Extensions\ControlExtension.cs" />
     <Compile Include="Data\Extensions\DebugExtension.cs" />
-    <Compile Include="Data\Extensions\EllipseExtension.cs" />
     <Compile Include="Data\Extensions\GridExtension.cs" />
     <Compile Include="Data\Extensions\LineExtension.cs" />
     <Compile Include="Data\Interfaces\IGridComponent.cs" />
