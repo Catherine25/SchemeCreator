@@ -56,15 +56,15 @@ namespace SchemeCreator.UI.Dynamic
 
         public bool? Value
         {
-            get => _value;
+            get => value;
             set
             {
-                _value = value;
+                this.value = value;
                 XEllipse.Fill = Colorer.GetBrushByValue(value);
-                ValueChanged?.Invoke(_value);
+                ValueChanged?.Invoke(this.value);
             }
         }
-        private bool? _value;
+        private bool? value;
         
         public void SwitchValue() => this.SwitchControlValue();
         
