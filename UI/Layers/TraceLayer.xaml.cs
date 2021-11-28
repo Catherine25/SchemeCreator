@@ -32,7 +32,7 @@ namespace SchemeCreator.UI.Layers
                 var x = (startPoint.X + endPoint.X) / 2;
                 var y = (startPoint.Y + endPoint.Y) / 2;
 
-                var traceLabel = new TraceLabel(i, x, y);
+                var traceLabel = new TraceLabel(i + 1, x, y);
 
                 Add(traceLabel);
             }
