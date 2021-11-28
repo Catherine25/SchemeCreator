@@ -17,7 +17,6 @@ namespace SchemeCreator.UI.Dynamic
     {
         public new Action<GatePortView> Tapped;
      
-        public static readonly Size ExtendedGatePortSize = new(20, 20);
         public static readonly Size GatePortSize = new(10, 10);
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace SchemeCreator.UI.Dynamic
 
         public readonly int Index;
 
-        public Point Center { get => CenterPoint.TransformToPoint(); }
+        private readonly bool extended;
 
         public GatePortView() => InitializeComponent();
 
@@ -38,20 +37,30 @@ namespace SchemeCreator.UI.Dynamic
         /// <param name="index"></param>
         public GatePortView(ConnectionTypeEnum connectionType, int index, bool extended = false)
         {
-            Type = connectionType;
-            Index = index;
-
             InitializeComponent();
             
-            this.SetSize(extended == true ? ExtendedGatePortSize : GatePortSize);
+            Type = connectionType;
+            Index = index;
+            this.extended = extended;
 
+            this.SetSize(GatePortSize);
             Grid.SetRow(this, index);
 
-            Colorer.SetFillByValue(Ellipse, null);
+            if (extended)
+            {
+                Ellipse.Fill = Colorer.DeactivatedColor;
+                Ellipse.Stroke = Colorer.ErrorBrush;
+                Ellipse.StrokeThickness = 2;
+            }
+            else
+            {
+                Ellipse.Fill = Colorer.ErrorBrush;
+                Ellipse.Stroke = Colorer.ErrorBrush;
+            }
 
             Ellipse.Tapped += (_, _) => Tapped(this);
             Ellipse.PointerEntered += (_, _) => Ellipse.Stroke = Colorer.ActivatedColor;
-            Ellipse.PointerExited += (_, _) => Ellipse.Stroke = Colorer.DeactivatedColor;
+            Ellipse.PointerExited += (_, _) => Ellipse.Stroke = Colorer.GetBrushByValue(Value);
         }
 
         #region ValueHolder
@@ -60,17 +69,17 @@ namespace SchemeCreator.UI.Dynamic
 
         public bool? Value
         {
-            get => _value;
+            get => value;
             set
             {
-                _value = value;
-                Ellipse.Fill = Colorer.GetBrushByValue(value);
+                this.value = value;
+                Ellipse.Fill = extended ? Colorer.DeactivatedColor : Colorer.GetBrushByValue(value);
                 Ellipse.Stroke = Colorer.GetBrushByValue(value);
-                ValueChanged?.Invoke(_value);
+                ValueChanged(this.value);
                 UpdateLayout();
             }
         }
-        private bool? _value;
+        private bool? value;
         
         public void SwitchValue() => this.SwitchControlValue();
 

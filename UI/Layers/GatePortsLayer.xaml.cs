@@ -12,22 +12,18 @@ namespace SchemeCreator.UI.Layers
         public new Action<GatePortView> Tapped;
         public Action ValuesChanged;
 
-        public GatePortsLayer()
-        {
-            InitializeComponent();
-        }
+        public GatePortsLayer() => InitializeComponent();
 
         public void CreatePorts(ConnectionTypeEnum type, int count, bool extended = false)
         {
-            Grid.SetSize(extended? GatePortView.ExtendedGatePortSize.Width : GatePortView.GatePortSize.Width, GateBodyView.LogicGateSize.Height);
-
+            Grid.SetSize(GatePortView.GatePortSize.Width, GateBodyView.LogicGateSize.Height);
             Grid.InitRows(count);
 
             for (int i = 0; i < count; i++)
             {
                 GatePortView port = new(type, i, extended);
-                port.Tapped += (p) => Tapped(p);
-                port.ValueChanged += (newValue) => ValuesChanged?.Invoke();
+                port.Tapped += p => Tapped(p);
+                port.ValueChanged += _ => ValuesChanged?.Invoke();
                 Add(port);
             }
         }

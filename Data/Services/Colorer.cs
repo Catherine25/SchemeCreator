@@ -1,111 +1,45 @@
 ﻿using System.Collections.Generic;
 using Windows.UI;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 namespace SchemeCreator.Data.Services
 {
-    static class Colorer
+    public static class Colorer
     {
-        private enum AccentEnum { accent, dark1, dark2, dark3, light1, light2, light3, background, foreground, accent2 }
+        private enum AccentEnum { Accent, Dark1, Dark2, Dark3, Light1, Light2, Light3, Background, Foreground }
 
-        private static Dictionary<AccentEnum, SolidColorBrush> brushes = new Dictionary<AccentEnum, SolidColorBrush>
+        private static readonly Dictionary<AccentEnum, SolidColorBrush> Brushes = new()
         {
-            { AccentEnum.accent, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Accent)) },
-            { AccentEnum.background, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Background)) },
-            { AccentEnum.foreground, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Foreground)) },
+            { AccentEnum.Accent, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Accent)) },
+            { AccentEnum.Background, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Background)) },
+            { AccentEnum.Foreground, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.Foreground)) },
 
-            { AccentEnum.dark1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark1)) },
-            { AccentEnum.dark2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark2)) },
-            { AccentEnum.dark3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark3)) },
+            { AccentEnum.Dark1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark1)) },
+            { AccentEnum.Dark2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark2)) },
+            { AccentEnum.Dark3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentDark3)) },
 
-            { AccentEnum.light1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight1)) },
-            { AccentEnum.light2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight2)) },
-            { AccentEnum.light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) },
-
-            { AccentEnum.accent2, new SolidColorBrush(Windows.UI.Colors.Maroon) }
+            { AccentEnum.Light1, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight1)) },
+            { AccentEnum.Light2, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight2)) },
+            { AccentEnum.Light3, new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) }
         };
+        
+        public static readonly SolidColorBrush ActiveBrush;
+        public static readonly SolidColorBrush InactiveBrush;
+        public static readonly Brush ActivatedColor;
+        public static readonly Brush ErrorBrush;
+        public static readonly Brush DeactivatedColor;
 
         static Colorer()
         {
-            ActiveBrush = brushes[AccentEnum.light1];
-            InactiveBrush = brushes[AccentEnum.dark1];
-            UnknownBrush = brushes[AccentEnum.accent2];
+            ActiveBrush = Brushes[AccentEnum.Light1];
+            InactiveBrush = Brushes[AccentEnum.Dark1];
+            DeactivatedColor = Brushes[AccentEnum.Background];
+            ActivatedColor = new SolidColorBrush(Colors.White);
+            ErrorBrush = new SolidColorBrush(Colors.Maroon);
         }
-
-        private static SolidColorBrush ActiveBrush;
-        private static SolidColorBrush InactiveBrush;
-        private static SolidColorBrush UnknownBrush;
-
-        public static SolidColorBrush GetBrushByValue(bool? value) =>
-            value == true ? ActiveBrush : value == false ? InactiveBrush : UnknownBrush;
-
-        public static SolidColorBrush GetGateForegroundBrush() => ActiveBrush;
-        public static SolidColorBrush GetGateBackgroundBrush() => InactiveBrush;
-
-        public static void SetFillByValue(Button button, bool? value)
-        {
-            if (value == true)
-            {
-                button.Foreground = InactiveBrush;
-                button.Background = ActiveBrush;
-            }
-            else if (value == false)
-            {
-                button.Foreground = ActiveBrush;
-                button.Background = InactiveBrush;
-            }
-            else
-            {
-                button.Foreground = ActiveBrush;
-                button.Background = UnknownBrush;
-            }
-        }
-
-        public static void SetFillByValue(Ellipse ellipse, bool? value)
-        {
-            if (value == true)
-                ellipse.Fill = ActiveBrush;
-            else if (value == false)
-                ellipse.Fill = InactiveBrush;
-            else
-                ellipse.Fill = UnknownBrush;
-            ellipse.Stroke = GetBrushByValue(value);
-        }
-
-        public static void SetFillByValue(Line line, bool? value)
-        {
-            if (value == true)
-            {
-                line.Stroke = ActiveBrush;
-                line.Fill = InactiveBrush;
-            }
-            else if (value == false)
-            {
-                line.Stroke = InactiveBrush;
-                line.Fill = ActiveBrush;
-            }
-            else
-            {
-                line.Stroke = UnknownBrush;
-                line.Fill = UnknownBrush;
-            }
-        }
-
-        public static void ColorGrid(StackPanel grid) => grid.Background = InactiveBrush;
-
-        public static void ColorMenuButton(Button button)
-        {
-            button.Background = InactiveBrush;
-            button.Foreground = ActiveBrush;
-        }
-
-        public static void ColorMenuButtonBorderByValue(Button button, bool value) =>
-            button.BorderBrush = value ? ActiveBrush : InactiveBrush;
-
-        public static Brush ActivatedColor = new SolidColorBrush(Colors.White);
-        public static Brush DeactivatedColor = new SolidColorBrush(Colors.Transparent);
+        
+        public static Brush GetBrushByValue(bool? value) =>
+            value == true ? ActiveBrush : value == false ? InactiveBrush : ErrorBrush;
     }
 }

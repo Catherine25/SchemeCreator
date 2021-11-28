@@ -15,18 +15,11 @@ namespace SchemeCreator.Data.Services
 
         private readonly Grid schemeGrid;
 
-        public void Connect(GatePortView port, GateView gate) =>
-            SetPoint(
-                port.Type != ConnectionTypeEnum.Input,
-                port.GetCenterRelativeTo(schemeGrid),
-                gate.MatrixLocation,
-                port.Index);
+        public void Connect(GatePortView port, GateView gate) => SetPoint(port.Type != ConnectionTypeEnum.Input, 
+            port.GetCenterRelativeTo(schemeGrid), gate.MatrixLocation, port.Index);
         
-        public void Connect(ExternalPortView externalPort) =>
-            SetPoint(
-                externalPort.Type == PortType.Input,
-                externalPort.GetCenterRelativeTo(schemeGrid),
-                externalPort.MatrixLocation);
+        public void Connect(ExternalPortView externalPort) => SetPoint(externalPort.Type == PortType.Input, 
+            externalPort.GetCenterRelativeTo(schemeGrid), externalPort.MatrixLocation);
 
         private void SetPoint(bool isStart, Point point, Vector2 location, int? port = null)
         {
@@ -47,7 +40,7 @@ namespace SchemeCreator.Data.Services
                 wire.SetConnection(con);
             }
 
-            if (!wire.Connection.StartPoint.IsInited() || !wire.Connection.EndPoint.IsInited())
+            if (!wire.Connection.StartPoint.IsInitialized() || !wire.Connection.EndPoint.IsInitialized())
                 return;
             
             WireReady(wire);

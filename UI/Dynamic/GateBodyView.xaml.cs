@@ -16,16 +16,16 @@ namespace SchemeCreator.UI.Dynamic
 
             this.SetSize(LogicGateSize);
 
-            Button.Foreground = Colorer.GetGateForegroundBrush();
-            Button.Background = Colorer.GetGateBackgroundBrush();
+            Button.Foreground = Colorer.ActiveBrush;
+            Button.Background = Colorer.InactiveBrush;
         }
 
         public GateEnum GateType
         {
             set => Button.Content = GateNames[value];
         }
-        
-        public static readonly Dictionary<GateEnum, string> GateNames = new()
+
+        private static readonly Dictionary<GateEnum, string> GateNames = new()
         {
             { GateEnum.And, "&" },
             { GateEnum.Buffer, "1" },

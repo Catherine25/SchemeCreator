@@ -13,19 +13,21 @@ namespace SchemeCreator.UI.Dynamic
         public new Action<DotView> Tapped;
         public new Action<DotView> RightTapped;
         private readonly Size dotSize = new(15, 15);
+        private readonly Size activeDotSize = new(25, 25);
 
         public DotView()
         {
             InitializeComponent();
             this.SetCenterAlignment();
             this.SetSize(dotSize);
+            
+            Ellipse.Fill = Colorer.InactiveBrush;
+            Ellipse.Stroke = Colorer.ActiveBrush;
 
-            Ellipse.PointerEntered += (sender, args) => Ellipse.Activate();
-            Ellipse.PointerExited += (sender, args) => Ellipse.Deactivate();
-            Ellipse.Tapped += (sender, args) => Tapped(this);
-            Ellipse.RightTapped += (sender, args) => RightTapped(this);
-
-            Colorer.SetFillByValue(Ellipse, false);
+            Ellipse.PointerEntered += (_, _) => this.SetSize(activeDotSize);
+            Ellipse.PointerExited += (_, _) => this.SetSize(dotSize);
+            Ellipse.Tapped += (_, _) => Tapped(this);
+            Ellipse.RightTapped += (_, _) => RightTapped(this);
         }
 
         public Vector2 MatrixLocation
