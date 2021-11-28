@@ -17,15 +17,15 @@ namespace SchemeCreator.Data.Services
             TransferFromExternalInputsToWires(scheme);
 
             bool traced = true;
-            while (scheme.Gates.Any(g => !g.AreOutputsReady) && traced)
+            while (scheme.Gates.Any(g => !g.AreOutputsReady || !g.AreInputsReady) && traced)
             {
                 traced = false;
 
                 // transfer from wires to gates, then make gates work
-                traced = TransferFromWiresToGates(scheme);
+                traced = TransferFromWiresToGates(scheme) || traced;
 
                 // transfer from gates that are ready to wires
-                traced = TransferFromGatesToWires(scheme);
+                traced = TransferFromGatesToWires(scheme) || traced;
 
                 // handle scheme errors
                 if (!traced)

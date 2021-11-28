@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Windows.UI.Xaml.Controls;
-using SchemeCreator.Data.Extensions;
 using SchemeCreator.Data.Interfaces;
 using SchemeCreator.UI.Dialogs;
 
@@ -84,7 +83,7 @@ namespace SchemeCreator.UI.Dynamic
 
         #region Ports
 
-        public IEnumerable<GatePortView> Inputs { get => InputsView.Items; }
+        public IEnumerable<GatePortView> Inputs => InputsView.Items;
 
         private void CreateInputs(int count)
         {
@@ -94,7 +93,7 @@ namespace SchemeCreator.UI.Dynamic
         }
         public void Reset() => Inputs.ToList().ForEach(x => x.Value = null);
 
-        public IEnumerable<GatePortView> Outputs { get => OutputsView.Items; }
+        public IEnumerable<GatePortView> Outputs => OutputsView.Items;
 
         private void CreateOutputs(int count)
         {
@@ -103,7 +102,8 @@ namespace SchemeCreator.UI.Dynamic
             OutputsView.Tapped += (port) => GatePortTapped(port, this);
         }
 
-        public bool AreOutputsReady => Outputs.Any(p => p.Value != null);
+        public bool AreInputsReady => Inputs.All(p => p.Value != null);
+        public bool AreOutputsReady => Outputs.All(p => p.Value != null);
 
         #endregion
 
