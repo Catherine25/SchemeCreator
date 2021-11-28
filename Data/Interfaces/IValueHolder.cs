@@ -13,16 +13,9 @@ namespace SchemeCreator.Data.Interfaces
     
     public static class ValueHolderExtension
     {
-        public static void SwitchControlValue<T>(this T control)
-            where T : FrameworkElement, IValueHolder
-        {
+        public static void SwitchControlValue<T>(this T control) where T : FrameworkElement, IValueHolder =>
             control.Value = control.Value == true ? false : control.Value == false ? null : true;
-        }
 
-        public static void ResetControlValue<T>(this T control)
-            where T : FrameworkElement, IValueHolder
-        {
-            control.Value = null;
-        }
+        public static void ResetControlValue<T>(this T control) where T : FrameworkElement, IValueHolder => control.Value = null;
     }
 }
